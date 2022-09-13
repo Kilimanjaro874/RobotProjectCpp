@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_barrel.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_box.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_cone.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_cone_cylinder.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_cylinder.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_disk.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_disk_ring.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_dome.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_from_height_map.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_half_barrel.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_hollw_out_disk_plane.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_obj.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_plane.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_sphere.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_torus.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_triangle_equilateral.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_triangle_isosceles.cpp" />
+    <ClCompile Include="program\dxlib_ext\create_mesh\dxlib_ext_mesh_triangle_right.cpp" />
+    <ClCompile Include="program\dxlib_ext\dxlib_ext.cpp" />
+    <ClCompile Include="program\dxlib_ext\dxlib_ext_data.cpp" />
+    <ClCompile Include="program\dxlib_ext\dxlib_ext_mesh.cpp" />
+    <ClCompile Include="program\dxlib_ext\dxlib_ext_texture.cpp" />
+    <ClCompile Include="program\dxlib_ext\OBJLoader.cpp" />
+    <ClCompile Include="program\game\gm_camera.cpp" />
+    <ClCompile Include="program\game\gm_main.cpp" />
+    <ClCompile Include="program\game\gm_manager.cpp" />
+    <ClCompile Include="program\game\model\gm_airplane.cpp" />
+    <ClCompile Include="program\game\model\gm_anim_sprite3d.cpp" />
+    <ClCompile Include="program\game\model\gm_link.cpp" />
+    <ClCompile Include="program\game\model\gm_model.cpp" />
+    <ClCompile Include="program\game\model\gm_parts.cpp" />
+    <ClCompile Include="program\game\scene\gm_scene_play.cpp" />
+    <ClCompile Include="program\game\scene\gm_scene_result.cpp" />
+    <ClCompile Include="program\game\scene\gm_scene_title.cpp" />
+    <ClCompile Include="program\library\tnl_font_texture.cpp" />
+    <ClCompile Include="program\library\tnl_input.cpp" />
+    <ClCompile Include="program\library\tnl_intersect.cpp" />
+    <ClCompile Include="program\library\tnl_json.cpp" />
+    <ClCompile Include="program\library\tnl_math.cpp" />
+    <ClCompile Include="program\library\tnl_matrix.cpp" />
+    <ClCompile Include="program\library\tnl_quaternion.cpp" />
+    <ClCompile Include="program\library\tnl_seek_unit.cpp" />
+    <ClCompile Include="program\library\tnl_util.cpp" />
+    <ClCompile Include="program\library\tnl_vector.cpp" />
+    <ClCompile Include="program\system\sys_main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="program\dxlib_ext\dxlib_ext.h" />
+    <ClInclude Include="program\dxlib_ext\dxlib_ext_camera.h" />
+    <ClInclude Include="program\dxlib_ext\dxlib_ext_data.h" />
+    <ClInclude Include="program\dxlib_ext\dxlib_ext_mesh.h" />
+    <ClInclude Include="program\dxlib_ext\dxlib_ext_texture.h" />
+    <ClInclude Include="program\dxlib_ext\OBJLoader.h" />
+    <ClInclude Include="program\game\gm_camera.h" />
+    <ClInclude Include="program\game\gm_main.h" />
+    <ClInclude Include="program\game\gm_manager.h" />
+    <ClInclude Include="program\game\model\gm_airplane.h" />
+    <ClInclude Include="program\game\model\gm_anim_sprite3d.h" />
+    <ClInclude Include="program\game\model\gm_link.h" />
+    <ClInclude Include="program\game\model\gm_model.h" />
+    <ClInclude Include="program\game\model\gm_parts.h" />
+    <ClInclude Include="program\game\scene\gm_scene_base.h" />
+    <ClInclude Include="program\game\scene\gm_scene_play.h" />
+    <ClInclude Include="program\game\scene\gm_scene_result.h" />
+    <ClInclude Include="program\game\scene\gm_scene_title.h" />
+    <ClInclude Include="program\library\picojson.h" />
+    <ClInclude Include="program\library\stb_image.h" />
+    <ClInclude Include="program\library\tnl_flyweight_map.h" />
+    <ClInclude Include="program\library\tnl_font_texture.h" />
+    <ClInclude Include="program\library\tnl_hierarchy_tree.h" />
+    <ClInclude Include="program\library\tnl_input.h" />
+    <ClInclude Include="program\library\tnl_intersect.h" />
+    <ClInclude Include="program\library\tnl_json.h" />
+    <ClInclude Include="program\library\tnl_link_linear.h" />
+    <ClInclude Include="program\library\tnl_math.h" />
+    <ClInclude Include="program\library\tnl_matrix.h" />
+    <ClInclude Include="program\library\tnl_quaternion.h" />
+    <ClInclude Include="program\library\tnl_seek_unit.h" />
+    <ClInclude Include="program\library\tnl_sequence.h" />
+    <ClInclude Include="program\library\tnl_shared_factory.h" />
+    <ClInclude Include="program\library\tnl_timer_callback.h" />
+    <ClInclude Include="program\library\tnl_timer_fluct.h" />
+    <ClInclude Include="program\library\tnl_using.h" />
+    <ClInclude Include="program\library\tnl_util.h" />
+    <ClInclude Include="program\library\tnl_vector.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{16B0EE01-D3C9-4C3A-B205-DF401859A35C}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>dx_test</RootNamespace>
+    <ProjectName>dx_game</ProjectName>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>C:\DxLib_VC\プロジェクトに追加すべきファイル_VC用;C:\iconv-1.9.2.win32\include;C:\libxml2-2.7.8.win32\include;C:\zlib125\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\DxLib_VC\プロジェクトに追加すべきファイル_VC用;C:\iconv-1.9.2.win32\lib;C:\libxml2-2.7.8.win32\lib;C:\zlib125\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\DxLib_VC\プロジェクトに追加すべきファイル_VC用;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\DxLib_VC\プロジェクトに追加すべきファイル_VC用;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\DxLib_VC\プロジェクトに追加すべきファイル_VC用;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>C:\DxLib_VC\プロジェクトに追加すべきファイル_VC用;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
