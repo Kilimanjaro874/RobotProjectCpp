@@ -3,21 +3,25 @@
 #include "gm_scene_play.h"
 #include "gm_scene_result.h"
 #include "../model//gm_airplane.h"
+#include "../model//gm_robot_module.h"
 
 tnl::Quaternion	fix_rot;
 
 ScenePlay::~ScenePlay() {
 	delete camera_;
-	delete plane_;
+	//delete plane_;
+	delete arm01_;
 }
 
 
 void ScenePlay::initialzie() {
 	camera_ = new GmCamera();
-	camera_->pos_ = { 0, 150, -300 };
+	camera_->pos_ = { 0, 0, -200 };
 
 	// -- 試験：飛行機を出す -- //
-	plane_ = MdlAirPlane::Create();
+	//plane_ = MdlAirPlane::Create();
+	// -- 自作ロボットモジュールを出す -- //
+	arm01_ = MdlRobotModule::Create();
 
 }
 
@@ -44,12 +48,16 @@ void ScenePlay::update(float delta_time)
 	if (tnl::Input::IsKeyDown(eKeys::KB_X)) {
 		camera_->target_distance_ -= 1.0f;
 
-	}	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
+	}	
+	
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
 		mgr->chengeScene(new SceneResult());
 	}
 
 	// -- 試験：飛行機の計算 -- //
-	plane_->update(delta_time);
+	//plane_->update(delta_time);
+	// -- 自作ロボットモジュールの計算
+	arm01_->update(delta_time);
 }
 
 void ScenePlay::render()
@@ -61,5 +69,6 @@ void ScenePlay::render()
 	//DrawOBB(plane_->pos_, plane_->rot_, { 32, 48, 32 });
 
 	// -- 試験：飛行機の描画 -- //
-	plane_->render(camera_);
+	//plane_->render(camera_);
+	arm01_->render(camera_);
 }

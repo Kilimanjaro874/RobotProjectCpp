@@ -1,17 +1,18 @@
 #include "gm_scene_base.h"
 
 class GmCamera;
-class MdlAirPlane;
+//class MdlAirPlane;
+class MdlRobotModule;
 class ScenePlay : public SceneBase {
 public :
 	ScenePlay(){}
 	~ScenePlay();
 
 	GmCamera* camera_ = nullptr;
-	MdlAirPlane* plane_ = nullptr;
+	//MdlAirPlane* plane_ = nullptr;
 	// -- ここにロボットクラスを宣言して使用したい -- //
-
-
+	MdlRobotModule* arm01_ = nullptr;
+	
 
 	void initialzie() override;
 	void update(float delta_time) override;

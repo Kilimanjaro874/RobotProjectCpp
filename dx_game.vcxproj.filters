@@ -163,7 +163,7 @@
     <ClCompile Include="program\game\gm_camera.cpp">
       <Filter>program\game</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_link.cpp">
+    <ClCompile Include="program\game\model\gm_robot_module.cpp">
       <Filter>program\game\model</Filter>
     </ClCompile>
   </ItemGroup>
@@ -279,7 +279,7 @@
     <ClInclude Include="program\game\gm_camera.h">
       <Filter>program\game</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_link.h">
+    <ClInclude Include="program\game\model\gm_robot_module.h">
       <Filter>program\game\model</Filter>
     </ClInclude>
   </ItemGroup>
