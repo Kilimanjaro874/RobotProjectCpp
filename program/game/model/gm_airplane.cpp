@@ -5,7 +5,7 @@ MdlAirPlane* MdlAirPlane::Create() {
 
 	MdlAirPlane* mdl = new MdlAirPlane();
 	mdl->parts_.resize(e_parts_max);
-
+	
 	Parts* body = new Parts();
 	body->mesh_ = dxe::Mesh::CreateCylinder(5, 70);
 	body->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
