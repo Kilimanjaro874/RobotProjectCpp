@@ -4,6 +4,7 @@
 #include "gm_scene_result.h"
 #include "../model//gm_airplane.h"
 #include "../model//gm_robot_module.h"
+#include "../model/gm_robot_agent.h"
 
 tnl::Quaternion	fix_rot;
 
@@ -11,6 +12,7 @@ ScenePlay::~ScenePlay() {
 	delete camera_;
 	//delete plane_;
 	delete arm01_;
+	delete armAgnt01_;
 }
 
 
@@ -21,7 +23,8 @@ void ScenePlay::initialzie() {
 	// -- 試験：飛行機を出す -- //
 	//plane_ = MdlAirPlane::Create();
 	// -- 自作ロボットモジュールを出す -- //
-	arm01_ = MdlRobotModule::Create();
+	//arm01_ = MdlRobotModule::Create();
+	armAgnt01_ = MdlRobotAgent_Rarms::Create();
 
 }
 
@@ -57,7 +60,8 @@ void ScenePlay::update(float delta_time)
 	// -- 試験：飛行機の計算 -- //
 	//plane_->update(delta_time);
 	// -- 自作ロボットモジュールの計算
-	arm01_->update(delta_time);
+	//arm01_->update(delta_time);
+	armAgnt01_->update(delta_time);
 }
 
 void ScenePlay::render()
@@ -70,5 +74,7 @@ void ScenePlay::render()
 
 	// -- 試験：飛行機の描画 -- //
 	//plane_->render(camera_);
-	arm01_->render(camera_);
+	//arm01_->render(camera_);
+	armAgnt01_->render(camera_);
+
 }
