@@ -21,5 +21,6 @@ public:
 	std::vector<MdlRobotModule*>modules_;	// モデルのベクトル型
 
 	void update(float delta_time);
+	void render(dxe::Camera* camera);
 	static MdlRobotAgent_Rarms* Create();
 };

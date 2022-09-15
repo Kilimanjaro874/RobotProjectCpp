@@ -3,6 +3,8 @@
 class GmCamera;
 //class MdlAirPlane;
 class MdlRobotModule;
+class MdlRobotAgent_Rarms;
+
 class ScenePlay : public SceneBase {
 public :
 	ScenePlay(){}
@@ -12,6 +14,7 @@ public :
 	//MdlAirPlane* plane_ = nullptr;
 	// -- ここにロボットクラスを宣言して使用したい -- //
 	MdlRobotModule* arm01_ = nullptr;
+	MdlRobotAgent_Rarms* armAgnt01_ = nullptr;
 	
 
 	void initialzie() override;
