@@ -67,6 +67,8 @@ void ScenePlay::update(float delta_time)
 	//armAgnt01_->directKinematics();
 	//armAgnt01_->update(delta_time);
 	//armAgnt01_->directKinematics();
+	armAgnt01_->directKinematics();
+
 	tnl::Vector3 euler0 = armAgnt01_->modules_[0]->rot_.getEuler();
 	DrawStringEx(50, 30, -1, "P0.x = %f, P0.y = %f, rotz = %f", 
 		armAgnt01_->modules_[0]->pos_.x, armAgnt01_->modules_[0]->pos_.y,
@@ -82,6 +84,10 @@ void ScenePlay::update(float delta_time)
 		armAgnt01_->modules_[2]->pos_.x, armAgnt01_->modules_[2]->pos_.y,
 		tnl::ToDegree(euler2.z));
 	
+	DrawStringEx(50, 90, -1, "L0.x = %f, L0.y = %f",
+		armAgnt01_->modules_[0]->parts_[0]->ofs_pos_.x,
+		armAgnt01_->modules_[0]->parts_[0]->ofs_pos_.y);
+
 
 }
 

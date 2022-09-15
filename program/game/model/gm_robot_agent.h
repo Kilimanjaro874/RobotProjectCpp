@@ -19,6 +19,8 @@ public:
 	tnl::Vector3 posLi_;
 	tnl::Vector3 oLi = { 0, 0, 0 };
 
+	
+
 	std::vector<MdlRobotModule*>modules_;	// モデルのベクトル型
 
 	void update(float delta_time);
