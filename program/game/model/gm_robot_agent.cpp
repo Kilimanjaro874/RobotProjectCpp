@@ -34,3 +34,19 @@ void MdlRobotAgent_Rarms::render(dxe::Camera* camera) {
 	}
 }
 
+void MdlRobotAgent_Rarms::directKinematics() {
+	for (int i = 0; i < e_models_max; i++) {
+		if (i == 0) {
+			this->modules_[i]->localDK(this->rot_, this->oLi);
+		}
+		else if(i == e_models_max) {
+			break;
+		}
+		else {
+			tnl::Vector3 oLi = modules_[i - 1]->oLi_;
+			tnl::Quaternion oqi = modules_[i - 1]->rot_;
+			this->modules_[i]->localDK(oqi, oLi);
+		}
+	}
+}
+
