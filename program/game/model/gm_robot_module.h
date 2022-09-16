@@ -29,6 +29,4 @@ public:
 	static MdlRobotModule* Create();
 	void localDK(tnl::Quaternion q_back, tnl::Vector3 l_back);
 
-	void localDK(tnl::Quaternion q_back, tnl::Vector3 l_back);			// 本モジュールでの順運動計算実施
-
 };

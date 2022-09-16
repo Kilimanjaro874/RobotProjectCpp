@@ -24,10 +24,10 @@ void ScenePlay::initialzie() {
 	//plane_ = MdlAirPlane::Create();
 	// -- 自作ロボットモジュールを出す -- //
 	//arm01_ = MdlRobotModule::Create();
-	armAgnt01_ = MdlRobotAgent_Rarms::Create();
+	/*armAgnt01_ = MdlRobotAgent_Rarms::Create();
 	armAgnt01_->rot_ = tnl::Quaternion::RotationAxis(tnl::Vector3{ 0, 0, 1 }, 0);
 	armAgnt01_->directKinematics();
-	armAgnt01_->directKinematics();
+	armAgnt01_->directKinematics();*/
 
 }
 
@@ -67,7 +67,9 @@ void ScenePlay::update(float delta_time)
 	//armAgnt01_->directKinematics();
 	//armAgnt01_->update(delta_time);
 	//armAgnt01_->directKinematics();
-	armAgnt01_->directKinematics();
+
+
+	/*armAgnt01_->directKinematics();
 
 	tnl::Vector3 euler0 = armAgnt01_->modules_[0]->rot_.getEuler();
 	DrawStringEx(50, 30, -1, "P0.x = %f, P0.y = %f, rotz = %f", 
@@ -86,7 +88,7 @@ void ScenePlay::update(float delta_time)
 	
 	DrawStringEx(50, 90, -1, "L0.x = %f, L0.y = %f",
 		armAgnt01_->modules_[0]->parts_[0]->ofs_pos_.x,
-		armAgnt01_->modules_[0]->parts_[0]->ofs_pos_.y);
+		armAgnt01_->modules_[0]->parts_[0]->ofs_pos_.y);*/
 
 
 }
@@ -102,6 +104,6 @@ void ScenePlay::render()
 	// -- 試験：飛行機の描画 -- //
 	//plane_->render(camera_);
 	//arm01_->render(camera_);
-	armAgnt01_->render(camera_);
+	/*armAgnt01_->render(camera_);*/
 
 }
