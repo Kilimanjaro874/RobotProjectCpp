@@ -5,6 +5,8 @@ class GmCamera;
 class MdlRobotModule;
 class MdlRobotAgent_Rarms;
 
+class MdlArm_r;
+
 class ScenePlay : public SceneBase {
 public :
 	ScenePlay(){}
@@ -16,6 +18,7 @@ public :
 	MdlRobotModule* arm01_ = nullptr;
 	MdlRobotAgent_Rarms* armAgnt01_ = nullptr;
 	
+	MdlArm_r* arm_r_ = nullptr;
 
 	void initialzie() override;
 	void update(float delta_time) override;

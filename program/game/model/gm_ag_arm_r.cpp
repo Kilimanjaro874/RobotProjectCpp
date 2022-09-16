@@ -1,13 +1,14 @@
 #include "gm_ag_arm_r.h"
 
 MdlArm_r* MdlArm_r::Create() {
-	// ----- 管理するモジュール作成 ----- //
+	// ----- 管理するモジュール作成 開始 ----- //
 	// ---- 0. 自身：エージェント作成 ---- //
 	MdlArm_r* agn = new MdlArm_r();
-	agn->parts_.resize(e_models_max);
+	agn->modules_.resize(e_models_max);
 	// 位置・姿勢設定
 	agn->pos_ = tnl::Vector3{ 0, 10, 0 };
 	agn->rotAi_ = tnl::Vector3{ 0, 0, 1 };	
+
 
 	// ---- 1. 肩モジュール作成 ---- //
 	Module* shoulder = new Module();
@@ -20,7 +21,7 @@ MdlArm_r* MdlArm_r::Create() {
 	link101->mesh_ = dxe::Mesh::CreateCylinder(2.5, 20);
 	link101->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
 	// 位置・姿勢設定
-	link101->ofs_pos_ += shoulder->pos_ / 2;
+	link101->ofs_pos_ += tnl::Vector3{ 0, 10, 0 };
 	// 1.1 : 回転軸パーツ1
 	Parts* axis101 = new Parts();
 	axis101->mesh_ = dxe::Mesh::CreateCylinder(5, 5);
@@ -32,14 +33,12 @@ MdlArm_r* MdlArm_r::Create() {
 	axis102->mesh_ = dxe::Mesh::CreateDisk(5);
 	axis102->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
 	// 位置・姿勢設定
-	axis102->ofs_rot_ = tnl::Quaternion::RotationAxis({ 1,0,0 }, tnl::ToRadian(90));
 	axis102->ofs_pos_ += tnl::Vector3{ 0, 0, -2.5 };
 	// 1.3 : 回転軸パーツ3
 	Parts* axis103 = new Parts();
 	axis103->mesh_ = dxe::Mesh::CreateDisk(5);
 	axis103->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
 	// 位置・姿勢設定
-	axis103->ofs_rot_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(180));
 	axis103->ofs_pos_ += tnl::Vector3{ 0, 0, 2.5 };
 
 	// --- モジュールに登録 ---
@@ -50,9 +49,90 @@ MdlArm_r* MdlArm_r::Create() {
 	// --- エージェントに登録 ---
 	agn->modules_[e_shoulder] = shoulder;
 
+
 	// ---- 2, 腕モジュール作成 ---- //
+	Module* arm = new Module();
+	// 位置・姿勢設定
+	arm->pos_ = tnl::Vector3{ 0, 30, 0 };
+	arm->rotAi_ = tnl::Vector3{ 0, 0, 1 };
+	// --- パーツを登録していく ---
+	// 1.0 : リンク
+	Parts* link201 = new Parts();
+	link201->mesh_ = dxe::Mesh::CreateCylinder(2.5, 20);
+	link201->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	// 位置・姿勢設定
+	link201->ofs_pos_ += tnl::Vector3{ 0, 10, 0 };
+	// 1.1 : 回転軸パーツ1
+	Parts* axis201 = new Parts();
+	axis201->mesh_ = dxe::Mesh::CreateCylinder(5, 5);
+	axis201->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	// 位置・姿勢設定
+	axis201->ofs_rot_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(90));
+	// 1.2 : 回転軸パーツ2
+	Parts* axis202 = new Parts();
+	axis202->mesh_ = dxe::Mesh::CreateDisk(5);
+	axis202->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	// 位置・姿勢設定
+	axis202->ofs_pos_ += tnl::Vector3{ 0, 0, -2.5 };
+	// 1.3 : 回転軸パーツ3
+	Parts* axis203 = new Parts();
+	axis203->mesh_ = dxe::Mesh::CreateDisk(5);
+	axis203->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	// 位置・姿勢設定
+	axis203->ofs_pos_ += tnl::Vector3{ 0, 0, 2.5 };
+
+	// --- モジュールに登録 ---
+	arm->parts_.push_back(link201);
+	arm->parts_.push_back(axis201);
+	arm->parts_.push_back(axis202);
+	arm->parts_.push_back(axis203);
+	// --- エージェントに登録 ---
+	agn->modules_[e_arm] = arm;
 	
 
+	// ---- 3, 手首モジュール作成 ---- //
+	Module* wrist = new Module();
+	// 位置・姿勢設定
+	wrist->pos_ = tnl::Vector3{ 0, 50, 0 };
+	wrist->rotAi_ = tnl::Vector3{ 0, 0, 1 };
+	// --- パーツを登録していく ---
+	// 1.0 : リンク
+	Parts* link301 = new Parts();
+	link301->mesh_ = dxe::Mesh::CreateCylinder(2.5, 20);
+	link301->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	// 位置・姿勢設定
+	link301->ofs_pos_ += tnl::Vector3{ 0, 10, 0 };
+	// 1.1 : 回転軸パーツ1
+	Parts* axis301 = new Parts();
+	axis301->mesh_ = dxe::Mesh::CreateCylinder(5, 5);
+	axis301->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	// 位置・姿勢設定
+	axis301->ofs_rot_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(90));
+	// 1.2 : 回転軸パーツ2
+	Parts* axis302 = new Parts();
+	axis302->mesh_ = dxe::Mesh::CreateDisk(5);
+	axis302->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	// 位置・姿勢設定
+	axis302->ofs_pos_ += tnl::Vector3{ 0, 0, -2.5 };
+	// 1.3 : 回転軸パーツ3
+	Parts* axis303 = new Parts();
+	axis303->mesh_ = dxe::Mesh::CreateDisk(5);
+	axis303->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	// 位置・姿勢設定
+	axis303->ofs_pos_ += tnl::Vector3{ 0, 0, 2.5 };
+
+	// --- モジュールに登録 ---
+	wrist->parts_.push_back(link301);
+	wrist->parts_.push_back(axis301);
+	wrist->parts_.push_back(axis302);
+	wrist->parts_.push_back(axis303);
+	// --- エージェントに登録 ---
+	agn->modules_[e_wrist] = wrist;
+	// ----- 管理するモジュール作成 終了 ----- //
+
+	agn->update(0);	// 上記初期位置＆姿勢をゲーム描画前に適応させる。
+
+	return agn;
 }
 
 void MdlArm_r::update(float delta_time) {

@@ -6,6 +6,8 @@
 #include "../model//gm_robot_module.h"
 #include "../model/gm_robot_agent.h"
 
+#include "../model/gm_ag_arm_r.h";
+
 tnl::Quaternion	fix_rot;
 
 ScenePlay::~ScenePlay() {
@@ -13,6 +15,8 @@ ScenePlay::~ScenePlay() {
 	//delete plane_;
 	delete arm01_;
 	delete armAgnt01_;
+
+	delete arm_r_;
 }
 
 
@@ -29,6 +33,8 @@ void ScenePlay::initialzie() {
 	armAgnt01_->directKinematics();
 	armAgnt01_->directKinematics();*/
 
+	arm_r_ = MdlArm_r::Create();
+	
 }
 
 void ScenePlay::update(float delta_time)
@@ -90,6 +96,7 @@ void ScenePlay::update(float delta_time)
 		armAgnt01_->modules_[0]->parts_[0]->ofs_pos_.x,
 		armAgnt01_->modules_[0]->parts_[0]->ofs_pos_.y);*/
 
+	arm_r_->update(delta_time);
 
 }
 
@@ -106,4 +113,5 @@ void ScenePlay::render()
 	//arm01_->render(camera_);
 	/*armAgnt01_->render(camera_);*/
 
+	arm_r_->render(camera_);
 }

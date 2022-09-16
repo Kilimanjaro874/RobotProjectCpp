@@ -6,6 +6,8 @@ class MdlArm_r : public Module {
 public:
 	enum {
 		e_shoulder,		// 肩
+		e_arm,			// 腕
+		e_wrist,		// 手首
 		e_models_max	// おわり
 	};
 	std::vector<Module*>modules_;	// モジュールのベクター型
