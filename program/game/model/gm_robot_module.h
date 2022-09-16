@@ -12,6 +12,9 @@ public:
 		e_axis03,		// 回転軸パーツ
 		e_parts_max
 	};
+
+
+
 	// ---- メンバ変数定義 ---- //
 	// --- DKパラメータ追加 ---
 	// pos_ : モジュール原点の位置ベクトルとして使用(oΣi基準)
@@ -23,5 +26,7 @@ public:
 	
 	void update(float delta_time) override;
 	static MdlRobotModule* Create();
+
+	void localDK(tnl::Quaternion q_back, tnl::Vector3 l_back);			// 本モジュールでの順運動計算実施
 
 };

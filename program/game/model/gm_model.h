@@ -32,6 +32,8 @@ public :
 
 	virtual void render(dxe::Camera* camera);
 
+
+
 };
 
 

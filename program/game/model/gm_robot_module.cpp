@@ -56,3 +56,19 @@ void MdlRobotModule::update(float delta_time) {
 	// ----- 本ロボットモジュール特有の処理記述 ----- //
 
 }
+
+void MdlRobotModule::localDK(tnl::Quaternion q_back, tnl::Vector3 l_back) {
+	// ----- 本モジュール以前のΣ0準拠の回転量oqi-1, oli-1を用い、本モジュールの
+	// 座標系をΣ0基準に更新＆新たな回転oqi, oli作成
+
+	// ---- 座標系0Σi更新 ----
+	rotAi_ = tnl::Vector3::TransformCoord(rotAi_, q_back);
+	pos_ = tnl::Vector3::TransformCoord(pos_, q_back) + l_back;
+	posLi_ = tnl::Vector3::TransformCoord(posLi_, q_back);
+	
+
+	// 実験：微小角度回転させる & 局所的な回転iqi生成
+	tnl::Quaternion iqi = tnl::Quaternion::RotationAxis(rotAi_, tnl::ToRadian(1));
+
+}
+
