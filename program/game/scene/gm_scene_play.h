@@ -24,6 +24,11 @@ public :
 
 	Player* player_ = nullptr;
 
+	tnl::Vector3 pos_ = { 0, 0, 0 };
+	tnl::Vector3 forward_ = { 1, 0, 0 };
+	tnl::Vector3 rotAi_ = { 0, 1, 0 };
+	tnl::Quaternion tempQ_;
+
 	void initialzie() override;
 	void update(float delta_time) override;
 	void render() override;

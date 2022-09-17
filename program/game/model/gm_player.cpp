@@ -79,7 +79,7 @@ void Player::calcLDK() {
 
 	// --- •ÛŽƒ‚ƒWƒ…[ƒ‹‚ÌLDKŽÀs ---
 	for (auto mod : modules_) {
-		mod->calcLDK(q_back, l_back);
+		//mod->calcLDK(q_back, l_back);
 	}
 
 

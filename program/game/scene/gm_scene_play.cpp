@@ -40,11 +40,12 @@ void ScenePlay::initialzie() {
 
 	arm_r_ = MdlArm_r::Create();
 	
+	tnl::Vector3 tmp_pos = tnl::Vector3{ 0, 0, 0 };
 	tnl::Quaternion tmp_q_back = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
 	tnl::Vector3 tmp_l_back = { 0, 0, 0 };
-	arm_r_->calcLDK(tmp_q_back, tmp_l_back);
+	arm_r_->calcLDK(tmp_pos, tmp_q_back, tmp_l_back);
 	arm_r_->update(0);
-
+	arm_r_->render(camera_);
 
 
 //	player_ = Player::Create();
@@ -109,12 +110,35 @@ void ScenePlay::update(float delta_time)
 		armAgnt01_->modules_[0]->parts_[0]->ofs_pos_.x,
 		armAgnt01_->modules_[0]->parts_[0]->ofs_pos_.y);*/
 
+	
+
+	if (tnl::Input::IsKeyDown(eKeys::KB_UP)) {
+		pos_ += forward_ * 10;
+	}
+	else if (tnl::Input::IsKeyDown(eKeys::KB_DOWN)) {
+		pos_ -= forward_ * 10;
+	}
+
+	if (tnl::Input::IsKeyDown(eKeys::KB_RIGHT)) {
+		tempQ_ = tnl::Quaternion::RotationAxis(rotAi_, tnl::ToRadian(3));
+		forward_ = tnl::Vector3::TransformCoord(forward_, tempQ_);
+
+	}
+	else if (tnl::Input::IsKeyDown(eKeys::KB_LEFT)) {
+		tempQ_ = tnl::Quaternion::RotationAxis(rotAi_, tnl::ToRadian(-3));
+		forward_ = tnl::Vector3::TransformCoord(forward_, tempQ_);
+	}
+	else {
+		tempQ_ = tnl::Quaternion::RotationAxis(rotAi_, tnl::ToRadian(0));
+	}
 
 
 
-	tnl::Quaternion tmp_q_back = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
+	//arm_r_->testmove();
+	tnl::Vector3 tmp_pos = pos_;
+	tnl::Quaternion tmp_q_back = tempQ_;
 	tnl::Vector3 tmp_l_back = { 0, 0, 0 };
-	arm_r_->calcLDK(tmp_q_back, tmp_l_back);
+	arm_r_->calcLDK(tmp_pos, tmp_q_back, tmp_l_back);
 	arm_r_->update(delta_time);
 
 

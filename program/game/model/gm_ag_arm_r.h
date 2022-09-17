@@ -12,10 +12,15 @@ public:
 	};
 	std::vector<Module*>modules_;	// モジュールのベクター型
 
+	tnl::Vector3 forward_;
+	tnl::Quaternion tempQ_;
+
 	void update(float delta_time) override;
 	void render(dxe::Camera* camera) override;
 	// ---- 各モジュールのLocalDirectKinematicsをエージェントとして実施 ---- //
-	void calcLDK(const tnl::Quaternion& q_back, const tnl::Vector3& l_back);
+	void calcLDK(const tnl::Vector3& p_back, const tnl::Quaternion& q_back, const tnl::Vector3& l_back);
+
+	void testmove();
 
 	static MdlArm_r* Create();
 };
