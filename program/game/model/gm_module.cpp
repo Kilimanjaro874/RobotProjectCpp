@@ -26,7 +26,7 @@ void Module::localDirectKinematics(const tnl::Quaternion& q_back, const tnl::Vec
 	rotAi_ = tnl::Vector3::TransformCoord(rotAi_, q_back);
 	// --- 逆運動学処理 ---
 	// test
-	float dth = tnl::ToRadian(5.0);
+	float dth = tnl::ToRadian(100.0);
 	// --- 本モジュールの局所的な回転iΣiから回転量、平行移動量生成 ---
 	tnl::Quaternion iqi = tnl::Quaternion::RotationAxis(rotAi_, dth);
 	tnl::Vector3 ili = pos_ - tnl::Vector3::TransformCoord(pos_, iqi);
@@ -37,3 +37,4 @@ void Module::localDirectKinematics(const tnl::Quaternion& q_back, const tnl::Vec
 	xli_ = tnl::Vector3::TransformCoord(l_back, iqi) + ili;
 
 }
+

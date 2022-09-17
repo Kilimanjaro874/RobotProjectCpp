@@ -8,6 +8,8 @@
 
 #include "../model/gm_ag_arm_r.h";
 
+#include "../model/gm_player.h"
+
 tnl::Quaternion	fix_rot;
 
 ScenePlay::~ScenePlay() {
@@ -33,12 +35,19 @@ void ScenePlay::initialzie() {
 	armAgnt01_->directKinematics();
 	armAgnt01_->directKinematics();*/
 
+	
+
+
 	arm_r_ = MdlArm_r::Create();
 	
-	tnl::Quaternion tmp_q_back = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, 0);
+	tnl::Quaternion tmp_q_back = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
 	tnl::Vector3 tmp_l_back = { 0, 0, 0 };
-	//arm_r_->calcLDK(tmp_q_back, tmp_l_back);
-	//arm_r_->update(0);
+	arm_r_->calcLDK(tmp_q_back, tmp_l_back);
+	arm_r_->update(0);
+
+
+
+//	player_ = Player::Create();
 }
 
 void ScenePlay::update(float delta_time)
@@ -100,11 +109,29 @@ void ScenePlay::update(float delta_time)
 		armAgnt01_->modules_[0]->parts_[0]->ofs_pos_.x,
 		armAgnt01_->modules_[0]->parts_[0]->ofs_pos_.y);*/
 
-	tnl::Quaternion tmp_q_back = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, 0);
+
+
+
+	tnl::Quaternion tmp_q_back = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
 	tnl::Vector3 tmp_l_back = { 0, 0, 0 };
 	arm_r_->calcLDK(tmp_q_back, tmp_l_back);
 	arm_r_->update(delta_time);
 
+
+	float p1length = (arm_r_->modules_[1]->pos_ - arm_r_->modules_[0]->pos_).length();
+	DrawStringEx(50, 30, -1, "length1 = %f", p1length);
+	float p2length = (arm_r_->modules_[2]->pos_ - arm_r_->modules_[1]->pos_).length();
+	DrawStringEx(50, 50, -1, "length2 = %f", p2length);
+
+
+
+	
+
+	/*player_->move(delta_time);
+	tnl::Quaternion tmp_q_back = player_->rot_;
+	tnl::Vector3 tmp_l_back = player_->pos_;
+	player_->calcLDK();
+	player_->update(delta_time);*/
 	
 	
 }
@@ -123,4 +150,5 @@ void ScenePlay::render()
 	/*armAgnt01_->render(camera_);*/
 
 	arm_r_->render(camera_);
+	//player_->render(camera_);
 }

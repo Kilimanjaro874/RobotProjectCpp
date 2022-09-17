@@ -6,14 +6,14 @@ MdlArm_r* MdlArm_r::Create() {
 	MdlArm_r* agn = new MdlArm_r();
 	agn->modules_.resize(e_models_max);
 	// 位置・姿勢設定
-	agn->pos_ = tnl::Vector3{ 0, 10, 0 };
+	agn->pos_ = tnl::Vector3{ 0, 0, 0 };
 	agn->rotAi_ = tnl::Vector3{ 0, 0, 1 };	
 
 
 	// ---- 1. 肩モジュール作成 ---- //
 	Module* shoulder = new Module();
 	// 位置・姿勢設定
-	shoulder->pos_ = tnl::Vector3{ 0, 10, 0 };
+	shoulder->pos_ = tnl::Vector3{ 0, 0, 0 };
 	shoulder->rotAi_ = tnl::Vector3{ 0, 0, 1 };
 	// --- パーツを登録していく ---
 	// 1.0 : リンク
@@ -53,7 +53,7 @@ MdlArm_r* MdlArm_r::Create() {
 	// ---- 2, 腕モジュール作成 ---- //
 	Module* arm = new Module();
 	// 位置・姿勢設定
-	arm->pos_ = tnl::Vector3{ 0, 30, 0 };
+	arm->pos_ = tnl::Vector3{ 0, 20, 0 };
 	arm->rotAi_ = tnl::Vector3{ 0, 0, 1 };
 	// --- パーツを登録していく ---
 	// 1.0 : リンク
@@ -93,7 +93,7 @@ MdlArm_r* MdlArm_r::Create() {
 	// ---- 3, 手首モジュール作成 ---- //
 	Module* wrist = new Module();
 	// 位置・姿勢設定
-	wrist->pos_ = tnl::Vector3{ 0, 50, 0 };
+	wrist->pos_ = tnl::Vector3{ 0, 40, 0 };
 	wrist->rotAi_ = tnl::Vector3{ 0, 0, 1 };
 	// --- パーツを登録していく ---
 	// 1.0 : リンク
