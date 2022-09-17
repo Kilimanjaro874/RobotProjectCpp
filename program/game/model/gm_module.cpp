@@ -9,7 +9,7 @@ void Module::update(float delta_time) {
 }
 
 void Module::render(dxe::Camera * camera) {
-	// ----- 本モデルに付属のパーツ群レンダー(Modelのまんま) ----- //
+	// ----- 本モデルに付属のパーツ群レンダー(Modelのまま) ----- //
 	for (auto pts : parts_) {
 		if (!pts->is_render_) continue;
 		pts->mesh_->render(camera);

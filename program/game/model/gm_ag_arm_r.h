@@ -16,5 +16,6 @@ public:
 	void render(dxe::Camera* camera) override;
 	// ---- 各モジュールのLocalDirectKinematicsをエージェントとして実施 ---- //
 	void calcLDK(const tnl::Quaternion& q_back, const tnl::Vector3& l_back);
+
 	static MdlArm_r* Create();
 };

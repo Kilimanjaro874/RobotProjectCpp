@@ -35,6 +35,10 @@ void ScenePlay::initialzie() {
 
 	arm_r_ = MdlArm_r::Create();
 	
+	tnl::Quaternion tmp_q_back = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, 0);
+	tnl::Vector3 tmp_l_back = { 0, 0, 0 };
+	//arm_r_->calcLDK(tmp_q_back, tmp_l_back);
+	//arm_r_->update(0);
 }
 
 void ScenePlay::update(float delta_time)
@@ -96,8 +100,13 @@ void ScenePlay::update(float delta_time)
 		armAgnt01_->modules_[0]->parts_[0]->ofs_pos_.x,
 		armAgnt01_->modules_[0]->parts_[0]->ofs_pos_.y);*/
 
+	tnl::Quaternion tmp_q_back = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, 0);
+	tnl::Vector3 tmp_l_back = { 0, 0, 0 };
+	arm_r_->calcLDK(tmp_q_back, tmp_l_back);
 	arm_r_->update(delta_time);
 
+	
+	
 }
 
 void ScenePlay::render()

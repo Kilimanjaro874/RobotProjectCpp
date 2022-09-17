@@ -146,3 +146,18 @@ void MdlArm_r::render(dxe::Camera* camera) {
 		mdl->render(camera);
 	}
 }
+
+void MdlArm_r::calcLDK(const tnl::Quaternion& q_back, const tnl::Vector3& l_back) {
+	// ----- 外部エージェントからq_back, l_backを貰い、保持モジュール全てでLDK計算実施する関数 ----- //
+	
+	// ---- エージェントのLDK実行 ----- //
+	this->localDirectKinematics(q_back, l_back);
+	// --- 保持モジュールのLDK実行 ---
+	tnl::Quaternion* tmp_q_back = &this->rot_;
+	tnl::Vector3* tmp_l_back = &this->xli_;
+	for (auto mod : modules_) {
+		mod->localDirectKinematics(*tmp_q_back, *tmp_l_back);
+		tmp_q_back = &mod->rot_;
+		tmp_l_back = &mod->xli_;
+	}
+}
