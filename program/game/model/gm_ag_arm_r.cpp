@@ -1,6 +1,6 @@
 #include "gm_ag_arm_r.h"
 
-MdlArm_r* MdlArm_r::Create() {
+MdlArm_r* MdlArm_r::Create(tnl::Vector3& target_pos) {
 	// ----- 管理するモジュール作成 開始 ----- //
 	// ---- 0. 自身：エージェント作成 ---- //
 	MdlArm_r* agn = new MdlArm_r();
@@ -9,8 +9,8 @@ MdlArm_r* MdlArm_r::Create() {
 	agn->pos_ = tnl::Vector3{ 0, 0, 0 };
 	agn->rotAi_ = tnl::Vector3{ 0, 1, 0 };	
 	agn->link_dir = tnl::Vector3{ 0, 1, 0 };
-	agn->link_length = 20;
-
+	agn->link_length = 0;
+	agn->target_pos_ = target_pos;
 
 	// ---- 1. 肩モジュール作成 ---- //
 	Module* shoulder = new Module();
@@ -19,6 +19,7 @@ MdlArm_r* MdlArm_r::Create() {
 	shoulder->rotAi_ = tnl::Vector3{ 0, 0, 1 };
 	shoulder->link_dir = tnl::Vector3{ 0, 1, 0 };
 	shoulder->link_length = 20;
+	shoulder->kp_ = 0.5;
 	// --- パーツを登録していく ---
 	// 1.0 : リンク
 	Parts* link101 = new Parts();
@@ -61,6 +62,7 @@ MdlArm_r* MdlArm_r::Create() {
 	arm->rotAi_ = tnl::Vector3{ 0, 0, 1 };
 	arm->link_dir = tnl::Vector3{ 0, 1, 0 };
 	arm->link_length = 20;
+	arm->kp_ = 0.4;
 	// --- パーツを登録していく ---
 	// 1.0 : リンク
 	Parts* link201 = new Parts();
@@ -103,6 +105,7 @@ MdlArm_r* MdlArm_r::Create() {
 	wrist->rotAi_ = tnl::Vector3{ 0, 0, 1 };
 	wrist->link_dir = tnl::Vector3{ 0, 1, 0 };
 	wrist->link_length = 20;
+	wrist->kp_ = 0.2;
 	// --- パーツを登録していく ---
 	// 1.0 : リンク
 	Parts* link301 = new Parts();
@@ -136,9 +139,21 @@ MdlArm_r* MdlArm_r::Create() {
 	wrist->parts_.push_back(axis303);
 	// --- エージェントに登録 ---
 	agn->modules_[e_wrist] = wrist;
+	
+	// ---- 上記初期位置＆姿勢を反映 ---- //
+	agn->calcLDK(agn->pos_, tnl::Quaternion::RotationAxis(agn->rotAi_, 0));
+	agn->update(0);	// 上記初期位置＆姿勢をゲーム描画前に適応させる。
 	// ----- 管理するモジュール作成 終了 ----- //
 
-	agn->update(0);	// 上記初期位置＆姿勢をゲーム描画前に適応させる。
+	// ----- 手先目標位置のデフォルト設定 
+	tnl::Vector3 tmp_pos_e = agn->modules_[agn->modules_.size()-1]->pos_next;
+	agn->pos_rs_.resize(e_models_max);
+	agn->pos_es_.resize(e_models_max);
+	for (int i = 0; i < agn->modules_.size(); i++) {
+		agn->pos_rs_[i] = target_pos;
+		agn->pos_es_[i] = tmp_pos_e;
+	}
+	agn->target_es = tmp_pos_e;
 
 	return agn;
 }
@@ -180,25 +195,37 @@ void MdlArm_r::testmove() {
 }
 
 
-void MdlArm_r::calcLDK(const tnl::Vector3& p_back, const tnl::Quaternion& q_back, const tnl::Vector3& l_back) {
+void MdlArm_r::calcLDK(const tnl::Vector3& p_back, const tnl::Quaternion& q_back) {
 	// ----- 外部エージェントからq_back, l_backを貰い、保持モジュール全てでLDK計算実施する関数 ----- //
+	// 逆運動学計算はしない。
 	
 	// ---- エージェントのLDK実行 ----- //
-
-
-	this->localDirectKinematics(p_back, q_back, l_back);
+	this->localDK(p_back, q_back);
 	
-
 	// --- 保持モジュールのLDK実行 ---
-	tnl::Vector3* tmp_p_back = &this->pos_;
+	tnl::Vector3* tmp_p_back = &this->pos_next;
 	tnl::Quaternion* tmp_q_back = &this->rot_;
-	tnl::Vector3* tmp_l_back = &this->xli_;
 	for (auto mod : modules_) {
-		mod->localDirectKinematics(*tmp_p_back, *tmp_q_back, *tmp_l_back);
+		mod->localDK(*tmp_p_back, *tmp_q_back);
 		tmp_p_back = &mod->pos_next;
 		tmp_q_back = &mod->rot_;
-		tmp_l_back = &mod->xli_;
 	}
 
 	tempQ_ = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
+}
+
+void MdlArm_r::calcLDKwithLIK(float delta_time, const tnl::Vector3& p_back, const tnl::Quaternion& q_back,
+	const tnl::Vector3& pos_e, const tnl::Vector3& pos_r) {
+
+	// ---- エージェントのLDK,LIK実行 ---- //
+	this->localDKwithLIK(delta_time, p_back, q_back, pos_e, pos_r);
+	// --- 保持モジュールのLDK＆LIK実行 ---
+	tnl::Vector3 tmp_p_back = this->pos_next;
+	tnl::Quaternion tmp_q_back = this->rot_;
+	for (int i = 0; i < modules_.size(); i++) {
+		modules_[i]->localDKwithLIK(delta_time, tmp_p_back, tmp_q_back, pos_es_[i], pos_rs_[i]);
+		tmp_p_back = modules_[i]->pos_next;
+		tmp_q_back = modules_[i]->rot_;
+		this->target_es = modules_[i]->pos_next;
+	}
 }

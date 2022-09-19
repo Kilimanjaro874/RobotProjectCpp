@@ -8,7 +8,6 @@
 
 #include "../model/gm_ag_arm_r.h";
 
-#include "../model/gm_player.h"
 
 tnl::Quaternion	fix_rot;
 
@@ -26,29 +25,17 @@ void ScenePlay::initialzie() {
 	camera_ = new GmCamera();
 	camera_->pos_ = { 0, 0, -200 };
 
-	// -- 試験：飛行機を出す -- //
-	//plane_ = MdlAirPlane::Create();
-	// -- 自作ロボットモジュールを出す -- //
-	//arm01_ = MdlRobotModule::Create();
-	/*armAgnt01_ = MdlRobotAgent_Rarms::Create();
-	armAgnt01_->rot_ = tnl::Quaternion::RotationAxis(tnl::Vector3{ 0, 0, 1 }, 0);
-	armAgnt01_->directKinematics();
-	armAgnt01_->directKinematics();*/
-
+	arm_r_ = MdlArm_r::Create(targetPos_);
 	
 
-
-	arm_r_ = MdlArm_r::Create();
-	
-	tnl::Vector3 tmp_pos = tnl::Vector3{ 0, 0, 0 };
-	tnl::Quaternion tmp_q_back = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
-	tnl::Vector3 tmp_l_back = { 0, 0, 0 };
-	arm_r_->calcLDK(tmp_pos, tmp_q_back, tmp_l_back);
+	//tnl::Vector3 tmp_pos = tnl::Vector3{ 0, 0, 0 };
+	//tnl::Quaternion tmp_q_back = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
+	//tnl::Vector3 tmp_l_back = { 0, 0, 0 };
+	//arm_r_->calcLDK(tmp_pos, tmp_q_back, tmp_l_back);
 	arm_r_->update(0);
 	arm_r_->render(camera_);
 
 
-//	player_ = Player::Create();
 }
 
 void ScenePlay::update(float delta_time)
@@ -79,37 +66,6 @@ void ScenePlay::update(float delta_time)
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
 		mgr->chengeScene(new SceneResult());
 	}
-
-	// -- 試験：飛行機の計算 -- //
-	//plane_->update(delta_time);
-	// -- 自作ロボットモジュールの計算
-	//arm01_->update(delta_time);
-	//armAgnt01_->directKinematics();
-	//armAgnt01_->update(delta_time);
-	//armAgnt01_->directKinematics();
-
-
-	/*armAgnt01_->directKinematics();
-
-	tnl::Vector3 euler0 = armAgnt01_->modules_[0]->rot_.getEuler();
-	DrawStringEx(50, 30, -1, "P0.x = %f, P0.y = %f, rotz = %f", 
-		armAgnt01_->modules_[0]->pos_.x, armAgnt01_->modules_[0]->pos_.y,
-		tnl::ToDegree(euler0.z));
-	
-	tnl::Vector3 euler1 = armAgnt01_->modules_[1]->rot_.getEuler();
-	DrawStringEx(50, 50, -1, "P1.x = %f, P1.y = %f, rotz = %f",
-		armAgnt01_->modules_[1]->pos_.x, armAgnt01_->modules_[1]->pos_.y,
-		tnl::ToDegree(euler1.z));
-
-	tnl::Vector3 euler2 = armAgnt01_->modules_[2]->rot_.getEuler();
-	DrawStringEx(50, 70, -1, "P2.x = %f, P2.y = %f, rotz = %f",
-		armAgnt01_->modules_[2]->pos_.x, armAgnt01_->modules_[2]->pos_.y,
-		tnl::ToDegree(euler2.z));
-	
-	DrawStringEx(50, 90, -1, "L0.x = %f, L0.y = %f",
-		armAgnt01_->modules_[0]->parts_[0]->ofs_pos_.x,
-		armAgnt01_->modules_[0]->parts_[0]->ofs_pos_.y);*/
-
 	
 
 	if (tnl::Input::IsKeyDown(eKeys::KB_UP)) {
@@ -137,10 +93,13 @@ void ScenePlay::update(float delta_time)
 	//arm_r_->testmove();
 	tnl::Vector3 tmp_pos = pos_;
 	tnl::Quaternion tmp_q_back = tempQ_;
-	tnl::Vector3 tmp_l_back = { 0, 0, 0 };
-	arm_r_->calcLDK(tmp_pos, tmp_q_back, tmp_l_back);
+
+	arm_r_->calcLDKwithLIK(delta_time, tmp_pos, tmp_q_back, arm_r_->target_es, arm_r_->target_pos_);
 	arm_r_->update(delta_time);
 
+	for (int i = 0; i < arm_r_->modules_.size(); i++) {
+		arm_r_->pos_es_[i] = arm_r_->target_es;
+	}
 
 	float p1length = (arm_r_->modules_[1]->pos_ - arm_r_->modules_[0]->pos_).length();
 	DrawStringEx(50, 30, -1, "length1 = %f", p1length);

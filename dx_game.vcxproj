@@ -41,7 +41,6 @@
     <ClCompile Include="program\game\model\gm_airplane.cpp" />
     <ClCompile Include="program\game\model\gm_anim_sprite3d.cpp" />
     <ClCompile Include="program\game\model\gm_module.cpp" />
-    <ClCompile Include="program\game\model\gm_player.cpp" />
     <ClCompile Include="program\game\model\gm_robot_agent.cpp" />
     <ClCompile Include="program\game\model\gm_robot_module.cpp" />
     <ClCompile Include="program\game\model\gm_model.cpp" />
@@ -76,7 +75,6 @@
     <ClInclude Include="program\game\model\gm_airplane.h" />
     <ClInclude Include="program\game\model\gm_anim_sprite3d.h" />
     <ClInclude Include="program\game\model\gm_module.h" />
-    <ClInclude Include="program\game\model\gm_player.h" />
     <ClInclude Include="program\game\model\gm_robot_agent.h" />
     <ClInclude Include="program\game\model\gm_robot_module.h" />
     <ClInclude Include="program\game\model\gm_model.h" />

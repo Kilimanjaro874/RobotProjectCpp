@@ -170,9 +170,6 @@
       <Filter>program\game\model</Filter>
     </ClCompile>
     <ClCompile Include="program\game\model\Module.cpp" />
-    <ClCompile Include="program\game\model\gm_player.cpp">
-      <Filter>program\game\model</Filter>
-    </ClCompile>
     <ClCompile Include="program\game\model\gm_module.cpp">
       <Filter>program\game\model</Filter>
     </ClCompile>
@@ -296,9 +293,6 @@
       <Filter>program\game\model</Filter>
     </ClInclude>
     <ClInclude Include="program\game\model\gm_robot_agent.h">
-      <Filter>program\game\model</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\model\gm_player.h">
       <Filter>program\game\model</Filter>
     </ClInclude>
     <ClInclude Include="program\game\model\gm_module.h">

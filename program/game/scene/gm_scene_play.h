@@ -29,6 +29,8 @@ public :
 	tnl::Vector3 rotAi_ = { 0, 1, 0 };
 	tnl::Quaternion tempQ_;
 
+	tnl::Vector3 targetPos_ = { 100, 0, 0 };	// èæ–Ú•WˆÊ’u‰Šú’l
+
 	void initialzie() override;
 	void update(float delta_time) override;
 	void render() override;
