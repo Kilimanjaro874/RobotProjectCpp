@@ -84,3 +84,30 @@ void Module::localDK(const tnl::Vector3& p_back, const tnl::Quaternion& q_back) 
 	link_dir.normalize();
 	pos_next = pos_ + link_dir * link_length;
 }
+
+tnl::Quaternion Module::localInverseKinematics(float delta_time, const tnl::Vector3& pos_e, const tnl::Vector3& pos_r) {
+	// ----- 局所逆運動学実施 ----- // 
+	// 本モジュールの回転軸に垂直な平面上で、手先位置pos_e, 目標位置pos_rを近づける回転量(クォータニオン）を生成、
+	// ただし、回転量は次モジュールへ次々と大きく伝播していくため、回転量を微小回転とするため比例定数kpを乗ずる事で、
+	// 手先位置が目標位置へ漸近していくような挙動の実現を目指す。
+	// また、回転軸周りの微小角度dthはフレームレート変化で挙動が損なわれないよう、刻み時間を乗じておく(標準60fps想定)。
+	// 外積結果：右手系
+	// ---- 微小角度計算 -----
+	tnl::Vector3 x = tnl::Vector3::Cross((pos_e - pos_), rotAi_);
+	tnl::Vector3 y = tnl::Vector3::Cross((pos_r - pos_), rotAi_);
+	float dth = 0;
+
+	// 回転軸延長上に手先目標位置、制御手先位置がある場合は微小角度を0とする
+	dth = delta_time * 60.0 * kp_ * std::acosf(std::clamp(
+		x.dot(y) / x.length() / y.length()
+		, (float)-1, float(1)));
+	if (!isfinite(dth)) { dth = 0; }
+	// ---- 回転方向の決定 ---- 
+	tnl::Vector3 axis = x.cross(y) / x.length() / y.length();
+	float sign = rotAi_.dot(axis) > 0 ? 1 : -1;
+	dth *= sign;		// 方向決定
+
+	// ---- 局所的(iΣi)な回転量：クォータニオンを返す ---- //
+	return tnl::Quaternion::RotationAxis(rotAi_, dth);
+
+}

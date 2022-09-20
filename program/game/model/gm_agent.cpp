@@ -12,3 +12,5 @@ void Agent::render(dxe::Camera* camera) {
 	}
 }
 
+
+
