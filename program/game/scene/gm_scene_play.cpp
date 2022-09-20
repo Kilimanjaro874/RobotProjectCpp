@@ -8,6 +8,7 @@
 
 #include "../model/gm_ag_arm_r.h";
 
+#include "../model/gm_parts.h"
 
 tnl::Quaternion	fix_rot;
 
@@ -23,7 +24,7 @@ ScenePlay::~ScenePlay() {
 
 void ScenePlay::initialzie() {
 	camera_ = new GmCamera();
-	camera_->pos_ = { 0, 0, -200 };
+	camera_->pos_ = { 50, 0, -100 };
 
 	arm_r_ = MdlArm_r::Create(targetPos_);
 	
@@ -35,6 +36,14 @@ void ScenePlay::initialzie() {
 	arm_r_->update(0);
 	arm_r_->render(camera_);
 
+	//targetBall = new Parts();
+	//targetBall->mesh_ = dxe::Mesh::CreateSphere(1);
+	//targetBall->mesh->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	//targetBall->mesh->pos_ = targetPos_;
+	ball_ = new Parts();
+	ball_->mesh_ = dxe::Mesh::CreateSphere(5);
+	ball_->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	ball_->mesh_->pos_ = targetPos_;
 
 }
 
@@ -133,5 +142,6 @@ void ScenePlay::render()
 	/*armAgnt01_->render(camera_);*/
 
 	arm_r_->render(camera_);
+	ball_->mesh_->render(camera_);
 	//player_->render(camera_);
 }

@@ -1,4 +1,5 @@
 #include "gm_scene_base.h"
+#include "../model/gm_model.h"
 
 class GmCamera;
 //class MdlAirPlane;
@@ -22,7 +23,8 @@ public :
 	
 	MdlArm_r* arm_r_ = nullptr;
 
-	Player* player_ = nullptr;
+	Parts* ball_ = nullptr;
+
 
 	tnl::Vector3 pos_ = { 0, 0, 0 };
 	tnl::Vector3 forward_ = { 1, 0, 0 };

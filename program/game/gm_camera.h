@@ -8,7 +8,7 @@ public :
 	//tnl::Vector3 free_look_angle_xy_ = { tnl::ToRadian(30), 0, 0 };
 	tnl::Vector3 free_look_angle_xy_ = { 0, 0, 0 };
 
-	float target_distance_ = 300;
+	float target_distance_ =200;
 
 	void update();
 };

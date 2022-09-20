@@ -8,18 +8,18 @@ public:
 	virtual ~Module() {
 		for (auto pts : parts_) delete pts;
 	}
+
 	// ---- 順運動学計算に必要な変数 ----
-	tnl::Vector3 pos_;		// 座標xΣiからの位置
-	tnl::Vector3 pos_next;	// 次モジュールの位置を計算する
-	float link_length;		// 本モジュールのリンク長さ
-	tnl::Vector3 link_dir;			// リンクの方向
-	tnl::Quaternion rot_;	// LDK：本座標の局所的な回転クォータニオン
-	tnl::Quaternion rot_sum_;	// 初期姿勢からの合計の回転を表すクォータニオン(パーツの位置・姿勢更新に使用)
-	tnl::Vector3 rotAi_;	// モジュールの回転軸ベクトル(本モジュールΣi原点に対して立てる運用とする)
-	// ---- 逆運動学計算に必要な変数 ----
-	float kp_;				// 局所逆運動学の微小角度計算に用いる比例定数kp
+	tnl::Vector3 pos_;			// エージェント座標xΣaiからの位置
+	tnl::Vector3 pos_next;		// 次モジュール[i+1]の位置を計算＆格納
+	float link_length;			// 本モジュールのリンク長さ
+	tnl::Vector3 link_dir;		// 本モジュールから次のモジュールへの方向単位ベクトル
+	tnl::Quaternion rot_;		// LDK：本座標の局所的な回転クォータニオン
+	tnl::Quaternion rot_sum_;	// 初期姿勢からの合計の回転を表すクォータニオン(パーツの位置・姿勢更新に使用)：また、いずれ関節動作角度制限のための情報にもなるはず
+	tnl::Vector3 rotAi_;		// モジュールの回転軸ベクトル(本モジュールxΣi原点に対して。本単位ベクトル周りに回転を与える)
+	float kp_;					// 局所逆運動学の微小角度計算に用いる比例定数kp
 	
-	// ---- シェーダー系 ----
+	// ---- パーツ管理 ----
 	std::vector<Parts*> parts_;
 
 	virtual void update(float delta_time);
