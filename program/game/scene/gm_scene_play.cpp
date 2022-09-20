@@ -2,8 +2,8 @@
 #include "../gm_camera.h"
 #include "gm_scene_play.h"
 #include "gm_scene_result.h"
-#include "../model//gm_airplane.h"
-#include "../model//gm_robot_module.h"
+#include "../model/gm_airplane.h"
+#include "../model/gm_robot_module.h"
 #include "../model/gm_robot_agent.h"
 
 #include "../model/gm_ag_arm_r.h";

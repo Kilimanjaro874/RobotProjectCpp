@@ -109,4 +109,5 @@ tnl::Quaternion Module::localInverseKinematics(float delta_time, const tnl::Vect
 
 	// ---- 局所的(iΣi)な回転量：クォータニオンを返す ---- //
 	return tnl::Quaternion::RotationAxis(rotAi_, dth);
+
 }
