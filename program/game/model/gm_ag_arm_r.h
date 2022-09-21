@@ -21,8 +21,8 @@ public:
 	void update(float delta_time) override;
 	void render(dxe::Camera* camera) override;
 	// ---- 各モジュールのLocalDirectKinematicsをエージェントとして実施 ---- //
-	void calcLDK(const tnl::Vector3& p_back, const tnl::Quaternion& q_back);
-	void calcLDKwithLIK(float delta_time, const tnl::Vector3& p_back, const tnl::Quaternion& q_back,
+	/*void calcLDK(const tnl::Vector3& p_back, const tnl::Quaternion& q_back);
+	void calcLDKwithLIK(float delta_time, const tnl::Vector3& p_back, const tnl::Quaternion& q_back,*/
 		const tnl::Vector3& pos_e, const tnl::Vector3& pos_r);
 	// --- 各モジュールの目標位置・制御する手先位置のリスト作成 --- //
 	

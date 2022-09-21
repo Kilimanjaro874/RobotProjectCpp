@@ -13,8 +13,8 @@ public:
 
 	void update(float delta_time) override;
 	void render(dxe::Camera* camera) override;
-	// ----- 順運動学を解く関数：LDK for Agent版 ----- //
-	void localDKwithLIK(float delta_time, const tnl::Vector3& p_back, const tnl::Quaternion& q_back,
-		const tnl::Vector3& pos_e, const tnl::Vector3& pos_r) override;
-	void localDK(const tnl::Vector3& p_back, const tnl::Quaternion& q_back) override;
+	//// ----- 順運動学を解く関数：LDK for Agent版 ----- //
+	//void localDKwithLIK(float delta_time, const tnl::Vector3& p_back, const tnl::Quaternion& q_back,
+	//	const tnl::Vector3& pos_e, const tnl::Vector3& pos_r) override;
+	//void localDK(const tnl::Vector3& p_back, const tnl::Quaternion& q_back) override;
 };

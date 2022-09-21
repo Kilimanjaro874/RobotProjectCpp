@@ -193,39 +193,39 @@ void MdlArm_r::testmove() {
 	}
 
 }
-
-
-void MdlArm_r::calcLDK(const tnl::Vector3& p_back, const tnl::Quaternion& q_back) {
-	// ----- 外部エージェントからq_back, l_backを貰い、保持モジュール全てでLDK計算実施する関数 ----- //
-	// 逆運動学計算はしない。
-	
-	// ---- エージェントのLDK実行 ----- //
-	this->localDK(p_back, q_back);
-	
-	// --- 保持モジュールのLDK実行 ---
-	tnl::Vector3* tmp_p_back = &this->pos_next;
-	tnl::Quaternion* tmp_q_back = &this->rot_;
-	for (auto mod : modules_) {
-		mod->localDK(*tmp_p_back, *tmp_q_back);
-		tmp_p_back = &mod->pos_next;
-		tmp_q_back = &mod->rot_;
-	}
-
-	tempQ_ = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
-}
-
-void MdlArm_r::calcLDKwithLIK(float delta_time, const tnl::Vector3& p_back, const tnl::Quaternion& q_back,
-	const tnl::Vector3& pos_e, const tnl::Vector3& pos_r) {
-
-	// ---- エージェントのLDK,LIK実行 ---- //
-	this->localDKwithLIK(delta_time, p_back, q_back, pos_e, pos_r);
-	// --- 保持モジュールのLDK＆LIK実行 ---
-	tnl::Vector3 tmp_p_back = this->pos_next;
-	tnl::Quaternion tmp_q_back = this->rot_;
-	for (int i = 0; i < modules_.size(); i++) {
-		modules_[i]->localDKwithLIK(delta_time, tmp_p_back, tmp_q_back, pos_es_[i], pos_rs_[i]);
-		tmp_p_back = modules_[i]->pos_next;
-		tmp_q_back = modules_[i]->rot_;
-		this->target_es = modules_[i]->pos_next;
-	}
-}
+//
+//
+//void MdlArm_r::calcLDK(const tnl::Vector3& p_back, const tnl::Quaternion& q_back) {
+//	// ----- 外部エージェントからq_back, l_backを貰い、保持モジュール全てでLDK計算実施する関数 ----- //
+//	// 逆運動学計算はしない。
+//	
+//	// ---- エージェントのLDK実行 ----- //
+//	this->localDK(p_back, q_back);
+//	
+//	// --- 保持モジュールのLDK実行 ---
+//	tnl::Vector3* tmp_p_back = &this->pos_next;
+//	tnl::Quaternion* tmp_q_back = &this->rot_;
+//	for (auto mod : modules_) {
+//		mod->localDK(*tmp_p_back, *tmp_q_back);
+//		tmp_p_back = &mod->pos_next;
+//		tmp_q_back = &mod->rot_;
+//	}
+//
+//	tempQ_ = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
+//}
+//
+//void MdlArm_r::calcLDKwithLIK(float delta_time, const tnl::Vector3& p_back, const tnl::Quaternion& q_back,
+//	const tnl::Vector3& pos_e, const tnl::Vector3& pos_r) {
+//
+//	// ---- エージェントのLDK,LIK実行 ---- //
+//	this->localDKwithLIK(delta_time, p_back, q_back, pos_e, pos_r);
+//	// --- 保持モジュールのLDK＆LIK実行 ---
+//	tnl::Vector3 tmp_p_back = this->pos_next;
+//	tnl::Quaternion tmp_q_back = this->rot_;
+//	for (int i = 0; i < modules_.size(); i++) {
+//		modules_[i]->localDKwithLIK(delta_time, tmp_p_back, tmp_q_back, pos_es_[i], pos_rs_[i]);
+//		tmp_p_back = modules_[i]->pos_next;
+//		tmp_q_back = modules_[i]->rot_;
+//		this->target_es = modules_[i]->pos_next;
+//	}
+//}

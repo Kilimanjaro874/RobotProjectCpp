@@ -173,10 +173,10 @@
     <ClCompile Include="program\game\model\gm_module.cpp">
       <Filter>program\game\model</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_ag_arm_r.cpp">
+    <ClCompile Include="program\game\model\gm_agent.cpp">
       <Filter>program\game\model</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_agent.cpp">
+    <ClCompile Include="program\game\model\gm_rb_arm_r.cpp">
       <Filter>program\game\model</Filter>
     </ClCompile>
   </ItemGroup>
@@ -301,10 +301,10 @@
     <ClInclude Include="program\game\model\gm_module.h">
       <Filter>program\game\model</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_ag_arm_r.h">
+    <ClInclude Include="program\game\model\gm_agent.h">
       <Filter>program\game\model</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_agent.h">
+    <ClInclude Include="program\game\model\gm_rb_arm_r.h">
       <Filter>program\game\model</Filter>
     </ClInclude>
   </ItemGroup>
