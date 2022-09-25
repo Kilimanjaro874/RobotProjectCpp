@@ -12,8 +12,6 @@ public :
 	tnl::Quaternion rot_;
 	std::vector<Parts*> parts_;
 
-	tnl::Quaternion rot_total;
-
 	//----------------------------------------------------------------------------------------------------------
 	// バイナリ形式保存
 	// arg1... 保存先ファイルパス
@@ -32,8 +30,6 @@ public :
 
 
 	virtual void render(dxe::Camera* camera);
-
-
 
 };
 

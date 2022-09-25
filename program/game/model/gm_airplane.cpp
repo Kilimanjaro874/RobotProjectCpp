@@ -5,7 +5,7 @@ MdlAirPlane* MdlAirPlane::Create() {
 
 	MdlAirPlane* mdl = new MdlAirPlane();
 	mdl->parts_.resize(e_parts_max);
-	
+
 	Parts* body = new Parts();
 	body->mesh_ = dxe::Mesh::CreateCylinder(5, 70);
 	body->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
@@ -73,8 +73,6 @@ MdlAirPlane* MdlAirPlane::Create() {
 	propeller->ofs_pos_ = { 0, 0, 40 };
 	mdl->parts_[e_propeller] = propeller;
 
-	// --- 試験: モデル自体をy軸周りに回転：クォータニオン初期化 --- //
-	mdl->rot_ = tnl::Quaternion::RotationAxis( { 0, 1, 0 }, tnl::ToRadian(1));
 	mdl->update(0);
 
 	return mdl;
@@ -84,11 +82,6 @@ MdlAirPlane* MdlAirPlane::Create() {
 
 void MdlAirPlane::update(float delta_time) {
 	Model::update( delta_time );
-	
-	// --- 試験：モデル自体をy軸周りに回転　--- //
-	Model::rot_ *= tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0.01);
-
-	// - プロペラの回転
 
 	propeller_angle_ += tnl::ToRadian(30);
 	parts_[e_propeller]->mesh_->rot_q_ = rot_;

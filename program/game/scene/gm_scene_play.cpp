@@ -1,56 +1,67 @@
 #include "../gm_manager.h"
 #include "../gm_camera.h"
+#include "../model/gm_anim_sprite3d.h"
 #include "gm_scene_play.h"
 #include "gm_scene_result.h"
-#include "../model/gm_airplane.h"
-#include "../model/gm_robot_module.h"
-#include "../model/gm_robot_agent.h"
-
-#include "../model/gm_ag_arm_r.h";
-
-#include "../model/gm_parts.h"
 
 tnl::Quaternion	fix_rot;
 
 ScenePlay::~ScenePlay() {
 	delete camera_;
-	//delete plane_;
-	delete arm01_;
-	delete armAgnt01_;
-
-	delete arm_r_;
+	delete sprite_;
 }
 
 
 void ScenePlay::initialzie() {
 	camera_ = new GmCamera();
-	camera_->pos_ = { 50, 0, -100 };
+	camera_->pos_ = { 0, 150, -300 };
 
-	arm_r_ = MdlArm_r::Create(targetPos_);
-	
+	sprite_ = new AnimSprite3D(camera_);
+	sprite_->regist(32, 48, "walk_front", "graphics/c1_anim_up.png", tnl::SeekUnit::ePlayMode::REPEAT, 1.0f, 4, 48, 0);
+	sprite_->regist(32, 48, "walk_back", "graphics/c1_anim_down.png", tnl::SeekUnit::ePlayMode::REPEAT, 1.0f, 4, 48, 0);
+	sprite_->regist(32, 48, "walk_left", "graphics/c1_anim_left.png", tnl::SeekUnit::ePlayMode::REPEAT, 1.0f, 4, 48, 0);
+	sprite_->regist(32, 48, "walk_right", "graphics/c1_anim_right.png", tnl::SeekUnit::ePlayMode::REPEAT, 1.0f, 4, 48, 0);
 
-	//tnl::Vector3 tmp_pos = tnl::Vector3{ 0, 0, 0 };
-	//tnl::Quaternion tmp_q_back = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
-	//tnl::Vector3 tmp_l_back = { 0, 0, 0 };
-	//arm_r_->calcLDK(tmp_pos, tmp_q_back, tmp_l_back);
-	arm_r_->update(0);
-	arm_r_->render(camera_);
-
-	//targetBall = new Parts();
-	//targetBall->mesh_ = dxe::Mesh::CreateSphere(1);
-	//targetBall->mesh->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	//targetBall->mesh->pos_ = targetPos_;
-	ball_ = new Parts();
-	ball_->mesh_ = dxe::Mesh::CreateSphere(5);
-	ball_->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	ball_->mesh_->pos_ = targetPos_;
+	sprite_->setCurrentAnim("walk_front");
 
 }
 
 void ScenePlay::update(float delta_time)
 {
 	GameManager* mgr = GameManager::GetInstance();
-	
+
+	//------------------------------------------------------------------
+	//
+	// 移動制御
+	//
+	int t = tnl::GetXzRegionPointAndOBB(
+		camera_->pos_
+		, sprite_->pos_
+		, {32, 48, 32}
+		, sprite_->rot_);
+
+	std::string anim_names[4] = {
+		"walk_back", "walk_right", "walk_front", "walk_left"
+	};
+	sprite_->setCurrentAnim(anim_names[t]);
+
+	tnl::Vector3 move_v = { 0,0,0 };
+	tnl::Vector3 dir[4] = {
+		camera_->front().xz(), 
+		camera_->right().xz(), 
+		camera_->back().xz(),
+		camera_->left().xz(), 
+	};
+	tnl::Input::RunIndexKeyDown([&](uint32_t idx) {
+		move_v += dir[idx];
+	}, eKeys::KB_UP, eKeys::KB_RIGHT, eKeys::KB_DOWN, eKeys::KB_LEFT);
+
+	if (tnl::Input::IsKeyDown(eKeys::KB_UP, eKeys::KB_RIGHT, eKeys::KB_DOWN, eKeys::KB_LEFT)) {
+		move_v.normalize();
+		sprite_->rot_.slerp( tnl::Quaternion::LookAtAxisY(sprite_->pos_, sprite_->pos_ + move_v), 0.3f);
+		sprite_->pos_ += move_v * 2.0f;
+	}
+
 	//------------------------------------------------------------------
 	//
 	// カメラ制御
@@ -69,63 +80,12 @@ void ScenePlay::update(float delta_time)
 	}
 	if (tnl::Input::IsKeyDown(eKeys::KB_X)) {
 		camera_->target_distance_ -= 1.0f;
+	}
 
-	}	
-	
+	sprite_->update(delta_time);
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
 		mgr->chengeScene(new SceneResult());
 	}
-	
-
-	if (tnl::Input::IsKeyDown(eKeys::KB_UP)) {
-		pos_ += forward_ * 10;
-	}
-	else if (tnl::Input::IsKeyDown(eKeys::KB_DOWN)) {
-		pos_ -= forward_ * 10;
-	}
-
-	if (tnl::Input::IsKeyDown(eKeys::KB_RIGHT)) {
-		tempQ_ = tnl::Quaternion::RotationAxis(rotAi_, tnl::ToRadian(3));
-		forward_ = tnl::Vector3::TransformCoord(forward_, tempQ_);
-
-	}
-	else if (tnl::Input::IsKeyDown(eKeys::KB_LEFT)) {
-		tempQ_ = tnl::Quaternion::RotationAxis(rotAi_, tnl::ToRadian(-3));
-		forward_ = tnl::Vector3::TransformCoord(forward_, tempQ_);
-	}
-	else {
-		tempQ_ = tnl::Quaternion::RotationAxis(rotAi_, tnl::ToRadian(0));
-	}
-
-
-
-	//arm_r_->testmove();
-	tnl::Vector3 tmp_pos = pos_;
-	tnl::Quaternion tmp_q_back = tempQ_;
-
-	arm_r_->calcLDKwithLIK(delta_time, tmp_pos, tmp_q_back, arm_r_->target_es, arm_r_->target_pos_);
-	arm_r_->update(delta_time);
-
-	for (int i = 0; i < arm_r_->modules_.size(); i++) {
-		arm_r_->pos_es_[i] = arm_r_->target_es;
-	}
-
-	float p1length = (arm_r_->modules_[1]->pos_ - arm_r_->modules_[0]->pos_).length();
-	DrawStringEx(50, 30, -1, "length1 = %f", p1length);
-	float p2length = (arm_r_->modules_[2]->pos_ - arm_r_->modules_[1]->pos_).length();
-	DrawStringEx(50, 50, -1, "length2 = %f", p2length);
-
-
-
-	
-
-	/*player_->move(delta_time);
-	tnl::Quaternion tmp_q_back = player_->rot_;
-	tnl::Vector3 tmp_l_back = player_->pos_;
-	player_->calcLDK();
-	player_->update(delta_time);*/
-	
-	
 }
 
 void ScenePlay::render()
@@ -134,14 +94,13 @@ void ScenePlay::render()
 
 	DrawGridGround(50, 20);
 
-	//DrawOBB(plane_->pos_, plane_->rot_, { 32, 48, 32 });
+	sprite_->render(camera_);
+	DrawOBB(sprite_->pos_, sprite_->rot_, { 32, 48, 32 });
 
-	// -- 試験：飛行機の描画 -- //
-	//plane_->render(camera_);
-	//arm01_->render(camera_);
-	/*armAgnt01_->render(camera_);*/
 
-	arm_r_->render(camera_);
-	ball_->mesh_->render(camera_);
-	//player_->render(camera_);
+	DrawStringEx(50, 50, -1, "scene play");
+	DrawStringEx(50, 70, -1, "camera [ ← : A ] [ ↑ : W ] [ → : D ] [ ↓ : S ]");
+	DrawStringEx(50, 90, -1, "camera [ 遠 : Z ] [ 近 : X ] ");
+	DrawStringEx(50, 120, -1, "character [ 左 : ← ] [ 奥 : ↑ ] [ 右 : → ] [ 手前 : ↓ ] ");
+
 }
