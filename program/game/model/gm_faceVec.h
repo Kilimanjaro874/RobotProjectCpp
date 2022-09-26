@@ -16,8 +16,13 @@ public:
 	tnl::Quaternion rot_sum_;	// 本クラス初期姿勢からどれだけ回転したかを格納しておく。
 	// --- for render --- 
 	std::vector<Parts*> parts_;		// パーツクラス
-
-	// ----- メンバ関数 ----- //
+	enum {
+		e_origine_,
+		e_dir_z_,
+		e_dir_x_,
+		e_parts_max
+	};
+	// ---- メンバ関数 ---- //
 	// 必要な機能を都度、追加していく予定
 	virtual void update(float delta_time);
 	virtual void render(dxe::Camera* camera);

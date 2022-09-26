@@ -5,7 +5,6 @@ class Module {
 public:
 	Module() {};
 
-
 	// ---- Direct Kinematics : DKに必要な変数 ---- //
 	tnl::Vector3 pos_a_;		// エージェント座標系xΣaiからの本モジュール座標系原点位置
 	tnl::Vector3 pos_o_;		// ワールド座標oΣからの本モジュールiの座標系原点位置
@@ -17,6 +16,11 @@ public:
 	tnl::Quaternion rot_sum;	// 本モジュールが初期姿勢からどれだけ回転したかを格納しておく。
 	std::vector<float> kp_num;	// IK：微小角度計算の際に使用する比例定数 ※目標位置・姿勢が複数個ある場合にも対応のためvector表現
 	
+								// ---- Render ----- //
+	std::vector<Parts*> parts_;
+	// ---- メンバ関数 ---- //
+	void update(float delta_time);
+	void render(dxe::Camera* camera);
 	
 
 };
