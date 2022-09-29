@@ -5,18 +5,34 @@
 
 ScenePlay::~ScenePlay() {
 	delete camera_;
-	delete cont_tar01_;
+	delete elbow_r_tar;
+	delete aim_tar_;
+	delete arm_r;
 }
 
 
 void ScenePlay::initialzie() {
 	camera_ = new GmCamera();
-	camera_->pos_ = { 0, 150, -300 };
+	camera_->pos_ = { 100, 0, -300 };
 
 	// ---- Œ± ----- //
-	cont_tar01_ = new FaceVec();
-	FaceVec::Create({ 0, 0, 0 }, { 0, 0, 1 }, { 1, 0, 0 });
+	aim_tar_ = new FaceVec();
+	aim_tar_ = FaceVec::Create({ 30, 0, 50});
+	aim_tar_->Rotate(tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(-90)));
+	aim_tar_->update(0);
 
+	aim_obj_ = new FaceVec();
+	aim_obj_ = FaceVec::Create({ 0, 50, 0 });
+	//aim_obj_->Rotate(tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(-90)));
+	aim_obj_->update(0);
+
+
+	arm_r = Agn_armR001::Create(tnl::Vector3{ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 1, 0, 0 }, 0));
+	arm_r->update(0);
+	arm_r->aimTarget_initialize(*aim_tar_, *aim_obj_, *aim_obj_);
+
+	arm_r->cnt_objects_.push_back(aim_obj_);
+	arm_r->cnt_objects_.push_back(aim_tar_);
 }
 
 void ScenePlay::update(float delta_time)
@@ -47,6 +63,13 @@ void ScenePlay::update(float delta_time)
 		mgr->chengeScene(new SceneResult());
 	}
 
+	// ---- Œ± ---- //
+	arm_r->update(delta_time);
+	arm_r->aimTarget_update(delta_time, *aim_tar_);
+	aim_tar_->pos_ += tnl::Vector3{ 0.1, 0.10, -0.10 };
+
+	aim_tar_->update(0);
+	aim_obj_->update(0);
 }
 
 void ScenePlay::render()
@@ -55,7 +78,11 @@ void ScenePlay::render()
 
 	DrawGridGround(50, 20);
 
-	cont_tar01_->render(camera_);
+	// ---- Œ± ---- //
+	aim_tar_->render(camera_);
+	aim_obj_->render(camera_);
+	arm_r->render(camera_);
+
 
 
 }
