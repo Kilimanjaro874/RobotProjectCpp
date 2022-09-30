@@ -223,7 +223,7 @@ void ScenePlay::update(float delta_time)
 	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_LEFT)) {
 		aim_tar_->pos_ += tnl::Vector3{ 0, 0, -10 };
 	}
-	//aim_tar_->Rotate(tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(1)));
+	aim_tar_->Rotate(tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(1)));
 	aim_tar_->update(0);
 	DrawStringEx(10, 395, -1, "T.G. pos: x=%f, y=%f, z=%f", aim_tar_->pos_.x, aim_tar_->pos_.y, aim_tar_->pos_.z);
 	DrawStringEx(10, 410, -1, "T.G. drz: x=%f, y=%f, z=%f", aim_tar_->dir_z_.x, aim_tar_->dir_z_.y, aim_tar_->dir_z_.z);
