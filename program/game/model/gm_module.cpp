@@ -65,8 +65,8 @@ tnl::Quaternion Module::InverseKinematics(float delta_time) {
 	float dth_sum = 0;
 	if (is_posIK) {
 		for (int i = 0; i < kp_p_nums_.size(); i++) {
-			tnl::Vector3 x = tnl::Vector3::Cross((cnt_objects_[i]->pos_), rot_axis_);
-			tnl::Vector3 y = tnl::Vector3::Cross((cnt_targets_[i]->pos_), rot_axis_);
+			tnl::Vector3 x = tnl::Vector3::Cross((cnt_objects_[i]->pos_ - pos_o_), rot_axis_);
+			tnl::Vector3 y = tnl::Vector3::Cross((cnt_targets_[i]->pos_ - pos_o_), rot_axis_);
 			dth = delta_time * 60.0 * kp_p_nums_[i] * std::acosf(std::clamp(
 				x.dot(y) / x.length() / y.length(),
 				(float)-1, (float)1
@@ -76,6 +76,9 @@ tnl::Quaternion Module::InverseKinematics(float delta_time) {
 			tnl::Vector3 axis = x.cross(y) / x.length() / y.length();
 			dth *= rot_axis_.dot(axis) > 0 ? 1 : -1;
 			dth_sum += dth;
+			if (std::abs(dth_sum) > 1) {
+				dth_sum = dth_sum < 0 ? -0.1 : 0.1;
+			}
 		}
 	}
 

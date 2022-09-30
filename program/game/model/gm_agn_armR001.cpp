@@ -16,7 +16,7 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 	sho_x->dir_z_ =	tnl::Vector3{ 0, 0, 1 };
 	sho_x->dir_x_ =	tnl::Vector3{ 1, 0, 0 };
 	sho_x->link_length_ = 0;
-	sho_x->kp_p_nums_.push_back(0.3);
+	sho_x->kp_p_nums_.push_back(0.5);
 	sho_x->is_posIK = true;
 	Parts* sho_x_rot01 = new Parts();
 	sho_x_rot01->mesh_ = dxe::Mesh::CreateCylinder(5, 4);
@@ -46,11 +46,11 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 	// ---- 2. e_sho_y ---- //
 	Module* sho_y = new Module();
 	sho_y->id_ = 2;
-	sho_y->rot_axis_ = tnl::Vector3{ 0, 0, 1 };
+	sho_y->rot_axis_ = tnl::Vector3{ 0, 1, 0 };
 	sho_y->dir_z_ =	tnl::Vector3{ 0, 0, 1 };
 	sho_y->dir_x_ = tnl::Vector3{ 1, 0, 0 };
 	sho_y->link_length_ = 30;
-	sho_y->kp_p_nums_.push_back(0.2);
+	sho_y->kp_p_nums_.push_back(0.5);
 	sho_y->is_posIK = true;
 	Parts* sho_y_ln01 = new Parts();
 	sho_y_ln01->mesh_ = dxe::Mesh::CreateCylinder(2.0, 20);
@@ -89,7 +89,7 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 	arm_x->dir_z_ = tnl::Vector3{ 0, 0, 1 };
 	arm_x->dir_x_ = tnl::Vector3{ 1, 0, 0 };
 	arm_x->link_length_ = 0;
-	arm_x->kp_p_nums_.push_back(0.2);
+	arm_x->kp_p_nums_.push_back(0.5);
 	arm_x->is_posIK = true;
 	Parts* arm_x_rot01 = new Parts();
 	arm_x_rot01->mesh_ = dxe::Mesh::CreateCylinder(5, 4);
@@ -125,7 +125,7 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 	arm_z->dir_z_ = tnl::Vector3{ 0, 0, 1 };
 	arm_z->dir_x_ = tnl::Vector3{ 1, 0, 0 };
 	arm_z->link_length_ = 20;
-	arm_z->kp_p_nums_.push_back(0.2);
+	arm_z->kp_p_nums_.push_back(0.5);
 	arm_z->is_posIK= true;
 	Parts* arm_z_ln01 = new Parts();
 	arm_z_ln01->mesh_ = dxe::Mesh::CreateCylinder(2.5, 20);
@@ -348,15 +348,15 @@ void Agn_armR001::aimTarget_initialize(FaceVec& target, FaceVec& cnt_obj, FaceVe
 	// Žp¨zŽQÆ
 	modules_[e_wrist_z2]->cnt_targets_.push_back(&target);
 
-	// --- cnt_obj‰Šú‰» --- //
-	cnt_obj.pos_ = modules_[e_wrist_z2]->pos_o_next_;
-	cnt_obj.dir_z_ = modules_[e_wrist_z2]->dir_z_;
-	cnt_obj.dir_x_ = modules_[e_wrist_z2]->dir_x_;
-	cnt_obj.rot_sum_ = modules_[e_wrist_z2]->rot_sum_;
-	cnt_obj.update(0);
-	for (auto mod : modules_) {
-		mod->cnt_objects_.clear();
-	}
+	//// --- cnt_obj‰Šú‰» --- //
+	//cnt_obj.pos_ = modules_[e_wrist_z2]->pos_o_next_;
+	//cnt_obj.dir_z_ = modules_[e_wrist_z2]->dir_z_;
+	//cnt_obj.dir_x_ = modules_[e_wrist_z2]->dir_x_;
+	//cnt_obj.rot_sum_ = modules_[e_wrist_z2]->rot_sum_;
+	//cnt_obj.update(0);
+	//for (auto mod : modules_) {
+	//	mod->cnt_objects_.clear();
+	//}
 	// --- 1. e_sho_x --- //
 	// ˆÊ’uŽQÆ * 2
 	modules_[e_sho_x]->cnt_objects_.push_back(&cnt_obj);

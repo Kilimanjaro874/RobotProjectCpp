@@ -1,8 +1,6 @@
 #include "gm_faceVec.h"
 
 void FaceVec::update(float delta_time) {
-	//dir_z_ = tnl::Vector3::TransformCoord(dir_z_, rot_sum_);
-	//dir_x_ = tnl::Vector3::TransformCoord(dir_x_, rot_sum_);
 	for (auto pts : parts_) {
 		pts->mesh_->pos_ = pos_ + tnl::Vector3::TransformCoord(pts->ofs_pos_, rot_sum_);
 		pts->mesh_->rot_q_ = pts->ofs_rot_ * rot_sum_;
@@ -51,13 +49,15 @@ FaceVec* FaceVec::Create(tnl::Vector3 pos_) {
 	return fv;
 }
 
+
+
 void FaceVec::Rotate(tnl::Quaternion rot_temp) {
 	// --- 1ƒtƒŒ[ƒ€ŠÔ‚Ì‰ñ“]—Ê•Ï‰»Frot_temp‚Ì‰e‹¿‚ð–{ƒNƒ‰ƒX‚Ö”½‰f --- //
-	for (auto pts : parts_) {
-		rot_sum_ *= rot_temp;
-		pts->mesh_->pos_ = pos_ + tnl::Vector3::TransformCoord(pts->ofs_pos_, rot_sum_);
-		pts->mesh_->rot_q_ = pts->ofs_rot_ * rot_sum_;
-	}
-
+	
+	dir_z_ = tnl::Vector3::TransformCoord(dir_z_, rot_temp);
+	dir_z_.normalize();
+	dir_x_ = tnl::Vector3::TransformCoord(dir_x_, rot_temp);
+	dir_x_.normalize();
+	rot_sum_ *= rot_temp;
 }
 
