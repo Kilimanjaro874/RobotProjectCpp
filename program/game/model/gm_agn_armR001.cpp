@@ -4,19 +4,20 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 	// ----- エージェントが管理するモジュールをインスタンス化＆参照リストに追加 ----- //
 	Agn_armR001* agn = new Agn_armR001();
 	agn->modules_.resize(e_modules_max);
-	agn->rot_axis_ = tnl::Vector3{ 1, 0, 0 };
-	agn->dir_z_ = tnl::Vector3{ 0, 0, 1 };
-	agn->dir_x_ = tnl::Vector3{ 1, 0, 0 };
+	agn->init_rot_axis_ = tnl::Vector3{ 1, 0, 0 };
+	agn->init_dir_z_ = tnl::Vector3{ 0, 0, 1 };
+	agn->init_dir_x_ = tnl::Vector3{ 1, 0, 0 };
 	agn->link_length_ = 0;
 
 	// ---- 1. e_sho_x ---- //
 	Module* sho_x = new Module();
 	sho_x->id_ = 1;
-	sho_x->rot_axis_ = tnl::Vector3{ 1, 0, 0 };
-	sho_x->dir_z_ =	tnl::Vector3{ 0, 0, 1 };
-	sho_x->dir_x_ =	tnl::Vector3{ 1, 0, 0 };
+	sho_x->init_rot_axis_ = tnl::Vector3{ 1, 0, 0 };
+	sho_x->init_dir_z_ =	tnl::Vector3{ 0, 0, 1 };
+	sho_x->init_dir_x_ =	tnl::Vector3{ 1, 0, 0 };
+	sho_x->rot_sum_ = tnl::Quaternion::RotationAxis(sho_x->init_rot_axis_, 0);
 	sho_x->link_length_ = 0;
-	sho_x->kp_p_nums_.push_back(0.5);
+	sho_x->kp_p_nums_.push_back(0.4);
 	sho_x->is_posIK = true;
 	Parts* sho_x_rot01 = new Parts();
 	sho_x_rot01->mesh_ = dxe::Mesh::CreateCylinder(5, 4);
@@ -46,16 +47,17 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 	// ---- 2. e_sho_y ---- //
 	Module* sho_y = new Module();
 	sho_y->id_ = 2;
-	sho_y->rot_axis_ = tnl::Vector3{ 0, 1, 0 };
-	sho_y->dir_z_ =	tnl::Vector3{ 0, 0, 1 };
-	sho_y->dir_x_ = tnl::Vector3{ 1, 0, 0 };
+	sho_y->init_rot_axis_ = tnl::Vector3{ 0, 1, 0 };
+	sho_y->init_dir_z_ =	tnl::Vector3{ 0, 0, 1 };
+	sho_y->init_dir_x_ = tnl::Vector3{ 1, 0, 0 };
+	sho_y->rot_sum_ = tnl::Quaternion::RotationAxis(sho_y->init_rot_axis_, 0);
 	sho_y->link_length_ = 30;
-	sho_y->kp_p_nums_.push_back(0.5);
+	sho_y->kp_p_nums_.push_back(0.4);
 	sho_y->is_posIK = true;
 	Parts* sho_y_ln01 = new Parts();
 	sho_y_ln01->mesh_ = dxe::Mesh::CreateCylinder(2.0, 20);
 	sho_y_ln01->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue_green.bmp"));
-	sho_y_ln01->ofs_pos_ += sho_y->dir_z_ * sho_y->link_length_ / 2;
+	sho_y_ln01->ofs_pos_ += sho_y->init_dir_z_ * sho_y->link_length_ / 2;
 	sho_y_ln01->ofs_rot_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(-90));
 	Parts* sho_y_rot01 = new Parts();
 	sho_y_rot01->mesh_ = dxe::Mesh::CreateCylinder(5, 4);
@@ -85,11 +87,12 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 	// ---- 3. e_arm_x ---- //
 	Module* arm_x = new Module();
 	arm_x->id_ = 3;
-	arm_x->rot_axis_ = tnl::Vector3{ 1, 0, 0 };
-	arm_x->dir_z_ = tnl::Vector3{ 0, 0, 1 };
-	arm_x->dir_x_ = tnl::Vector3{ 1, 0, 0 };
+	arm_x->init_rot_axis_ = tnl::Vector3{ 1, 0, 0 };
+	arm_x->init_dir_z_ = tnl::Vector3{ 0, 0, 1 };
+	arm_x->init_dir_x_ = tnl::Vector3{ 1, 0, 0 };
+	arm_x->rot_sum_ = tnl::Quaternion::RotationAxis(arm_x->init_rot_axis_, 0);
 	arm_x->link_length_ = 0;
-	arm_x->kp_p_nums_.push_back(0.5);
+	arm_x->kp_p_nums_.push_back(0.4);
 	arm_x->is_posIK = true;
 	Parts* arm_x_rot01 = new Parts();
 	arm_x_rot01->mesh_ = dxe::Mesh::CreateCylinder(5, 4);
@@ -121,16 +124,17 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 	// ---- 4. e_arm_z ---- //
 	Module* arm_z = new Module();
 	arm_z->id_ = 4;
-	arm_z->rot_axis_ = tnl::Vector3{ 0, 0, 1 };
-	arm_z->dir_z_ = tnl::Vector3{ 0, 0, 1 };
-	arm_z->dir_x_ = tnl::Vector3{ 1, 0, 0 };
+	arm_z->init_rot_axis_ = tnl::Vector3{ 0, 0, 1 };
+	arm_z->init_dir_z_ = tnl::Vector3{ 0, 0, 1 };
+	arm_z->init_dir_x_ = tnl::Vector3{ 1, 0, 0 };
+	arm_z->rot_sum_ = tnl::Quaternion::RotationAxis(arm_z->init_rot_axis_, 0);
 	arm_z->link_length_ = 20;
-	arm_z->kp_p_nums_.push_back(0.5);
+	arm_z->kp_p_nums_.push_back(0.4);
 	arm_z->is_posIK= true;
 	Parts* arm_z_ln01 = new Parts();
 	arm_z_ln01->mesh_ = dxe::Mesh::CreateCylinder(2.5, 20);
 	arm_z_ln01->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/red_blue.bmp"));
-	arm_z_ln01->ofs_pos_ += arm_z->dir_z_ * arm_z->link_length_ / 2;
+	arm_z_ln01->ofs_pos_ += arm_z->init_dir_z_ * arm_z->link_length_ / 2;
 	arm_z_ln01->ofs_rot_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(-90));
 	Parts* arm_z_rot01 = new Parts();
 	arm_z_rot01->mesh_ = dxe::Mesh::CreateCylinder(5, 5);
@@ -159,16 +163,17 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 	// ---- 5. e_wrist_z ---- //
 	Module* wrist_z = new Module();
 	wrist_z->id_ = 5;
-	wrist_z->rot_axis_ = tnl::Vector3{ 0, 0, 1 };
-	wrist_z->dir_z_ = tnl::Vector3{ 0, 0, 1 };
-	wrist_z->dir_x_ = tnl::Vector3{ 1, 0, 0 };
+	wrist_z->init_rot_axis_ = tnl::Vector3{ 0, 0, 1 };
+	wrist_z->init_dir_z_ = tnl::Vector3{ 0, 0, 1 };
+	wrist_z->init_dir_x_ = tnl::Vector3{ 1, 0, 0 };
+	wrist_z->rot_sum_ = tnl::Quaternion::RotationAxis(wrist_z->init_rot_axis_, 0);
 	wrist_z->link_length_ = 10;
-	wrist_z->kp_p_nums_.push_back(0.2);
-	wrist_z->is_posIK = true;
+	wrist_z->kp_rx_nums_.push_back(0.4);
+	wrist_z->is_dir_xIK = true;
 	Parts* wrist_z_ln01 = new Parts();
 	wrist_z_ln01->mesh_ = dxe::Mesh::CreateCylinder(2.5, 10);
 	wrist_z_ln01->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/red.bmp"));
-	wrist_z_ln01->ofs_pos_ += wrist_z->dir_z_ * wrist_z->link_length_ / 2;
+	wrist_z_ln01->ofs_pos_ += wrist_z->init_dir_z_ * wrist_z->link_length_ / 2;
 	wrist_z_ln01->ofs_rot_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(-90));
 	Parts* wrist_z_rot01 = new Parts();
 	wrist_z_rot01->mesh_ = dxe::Mesh::CreateCylinder(5, 5);
@@ -197,12 +202,13 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 	// ---- 6. e_wrist_x ---- //
 	Module* wrist_x = new Module();
 	wrist_x->id_ = 6;
-	wrist_x->rot_axis_ = tnl::Vector3{ 1, 0, 0 };
-	wrist_x->dir_z_ = tnl::Vector3{ 0, 0, 1 };
-	wrist_x->dir_x_ = tnl::Vector3{ 1, 0, 0 };
+	wrist_x->init_rot_axis_ = tnl::Vector3{ 1, 0, 0 };
+	wrist_x->init_dir_z_ = tnl::Vector3{ 0, 0, 1 };
+	wrist_x->init_dir_x_ = tnl::Vector3{ 1, 0, 0 };
+	wrist_x->rot_sum_ = tnl::Quaternion::RotationAxis(wrist_x->init_rot_axis_, 0);
 	wrist_x->link_length_ = 0;
-	wrist_x->kp_p_nums_.push_back(0.2);
-	wrist_x->is_posIK = true;
+	wrist_x->kp_rz_nums_.push_back(0.4);
+	wrist_x->is_dir_zIK = true;
 	Parts* wrist_x_rot01 = new Parts();
 	wrist_x_rot01->mesh_ = dxe::Mesh::CreateCylinder(5, 4);
 	wrist_x_rot01->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue.bmp"));
@@ -232,9 +238,9 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 
 	// ---- 7. e_wrist_y ---- //
 	/*Module* wrist_y = new Module();
-	wrist_y->rot_axis_ = tnl::Vector3{ 0, 0, 1 };
+	wrist_y->init_rot_axis_ = tnl::Vector3{ 0, 0, 1 };
 	wrist_y->dir_z_ = tnl::Vector3{ 0, 0, 1 };
-	wrist_y->dir_x_ = tnl::Vector3{ 1, 0, 0 };
+	wrist_y->init_dir_x_ = tnl::Vector3{ 1, 0, 0 };
 	wrist_y->link_length_ = 10;
 	wrist_y->kp_p_nums_.push_back(0.2);
 	wrist_y->is_posIK = true;
@@ -271,16 +277,17 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 	// ---- 7. e_wrist_z22 ---- //
 	Module* wrist_z2 = new Module();
 	wrist_z2->id_ = 7;
-	wrist_z2->rot_axis_ = tnl::Vector3{ 0, 0, 1 };
-	wrist_z2->dir_z_ = tnl::Vector3{ 0, 0, 1 };
-	wrist_z2->dir_x_ = tnl::Vector3{ 1, 0, 0 };
+	wrist_z2->init_rot_axis_ = tnl::Vector3{ 0, 0, 1 };
+	wrist_z2->init_dir_z_ = tnl::Vector3{ 0, 0, 1 };
+	wrist_z2->init_dir_x_ = tnl::Vector3{ 1, 0, 0 };
+	wrist_z2->rot_sum_ = tnl::Quaternion::RotationAxis(wrist_z2->init_rot_axis_, 0);
 	wrist_z2->link_length_ = 10;
-	wrist_z2->kp_p_nums_.push_back(0.2);
-	wrist_z2->is_posIK = true;
+	wrist_z2->kp_rx_nums_.push_back(0.4);
+	wrist_z2->is_dir_xIK = true;
 	Parts* wrist_z2_ln01 = new Parts();
 	wrist_z2_ln01->mesh_ = dxe::Mesh::CreateCylinder(2.5, 10);
 	wrist_z2_ln01->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/red.bmp"));
-	wrist_z2_ln01->ofs_pos_ += wrist_z2->dir_z_ * wrist_z2->link_length_ / 2;
+	wrist_z2_ln01->ofs_pos_ += wrist_z2->init_dir_z_ * wrist_z2->link_length_ / 2;
 	wrist_z2_ln01->ofs_rot_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(-90));
 	Parts* wrist_z2_rot01 = new Parts();
 	wrist_z2_rot01->mesh_ = dxe::Mesh::CreateCylinder(5, 5);

@@ -19,18 +19,27 @@ void Module::DirectKinematics_world(const tnl::Vector3& p_back, const tnl::Quate
 	// 逆運動学計算無しVer.
 	// --- 位置・回転軸更新 ---
 	pos_o_ = p_back;
-	rot_axis_ = tnl::Vector3::TransformCoord(rot_axis_, q_back);
-	rot_axis_.normalize();		// 丸め誤差対策：正規化
-	// --- IK無し：無回転のクォータニオン生成
-	tnl::Quaternion iqi = tnl::Quaternion::RotationAxis(rot_axis_, 0);
-	rot_tmp_ = iqi * q_back;		// 本モジュールの局所的な回転を生成
-	rot_sum_ *= rot_tmp_;		// 初期姿勢からどれだけ回転したかを格納
-	// --- 方向ベクトル更新 ---
-	dir_z_ = tnl::Vector3::TransformCoord(dir_z_, rot_tmp_);
-	dir_z_.normalize();			// 丸め誤差対策：正規化
-	dir_x_ = tnl::Vector3::TransformCoord(dir_x_, rot_tmp_);
-	dir_x_.normalize();			// 丸め誤差対策：正規化
-	pos_o_next_ = pos_o_ + dir_z_ * link_length_;	// 次モジュールの位置を格納 
+	rot_sum_ = rot_sum_ * q_back;
+	rot_axis_ = tnl::Vector3::TransformCoord(init_rot_axis_, rot_sum_);
+	//rot_axis_.normalize();		// 丸め誤差対策：正規化
+	rot_tmp_ = tnl::Quaternion::RotationAxis(rot_axis_, 0);
+	rot_sum_ = rot_sum_ * rot_tmp_;
+	dir_z_ = tnl::Vector3::TransformCoord(init_dir_z_, rot_sum_);
+	//dir_z_.normalize();			// 丸め誤差対策：正規化
+	dir_x_ = tnl::Vector3::TransformCoord(init_dir_x_, rot_sum_);
+	//dir_x_.normalize();			// 丸め誤差対策：正規化
+	pos_o_next_ = pos_o_ + dir_z_ * link_length_;	// 次モジュールの位置を格納
+	
+	//// --- IK無し：無回転のクォータニオン生成
+	//tnl::Quaternion iqi = tnl::Quaternion::RotationAxis(rot_axis_, 0);
+	//rot_tmp_ = iqi * q_back;		// 本モジュールの局所的な回転を生成
+	//
+	//// --- 方向ベクトル更新 ---
+	//dir_z_ = tnl::Vector3::TransformCoord(dir_z_, rot_tmp_);
+	//dir_z_.normalize();			// 丸め誤差対策：正規化
+	//dir_x_ = tnl::Vector3::TransformCoord(dir_x_, rot_tmp_);
+	//dir_x_.normalize();			// 丸め誤差対策：正規化
+	//pos_o_next_ = pos_o_ + dir_z_ * link_length_;	// 次モジュールの位置を格納 
 }
 
 void Module::DirectKinematicsWithIK_world(float delta_time, const tnl::Vector3& p_back, const tnl::Quaternion& q_back) {
@@ -38,18 +47,30 @@ void Module::DirectKinematicsWithIK_world(float delta_time, const tnl::Vector3& 
 	// 逆運動学計算有りVer.
 	// --- 位置・回転軸更新 ---
 	pos_o_ = p_back;
-	rot_axis_ = tnl::Vector3::TransformCoord(rot_axis_, q_back);
-	rot_axis_.normalize();		// 丸め誤差対策：正規化
-	// --- IK有り：位置 or 姿勢のクォータニオン生成
+	rot_sum_ *= q_back;
+	rot_axis_ = tnl::Vector3::TransformCoord(init_rot_axis_, rot_sum_);
+	rot_axis_.normalize();
 	tnl::Quaternion iqi = InverseKinematics(delta_time);
-	rot_tmp_ = iqi * q_back;
-	rot_sum_ *= rot_tmp_;
-	// --- 方向ベクトル更新 --- 
-	dir_z_ = tnl::Vector3::TransformCoord(dir_z_, rot_tmp_);
+	rot_tmp_ = q_back * InverseKinematics(delta_time);
+	rot_sum_ *= iqi;
+	dir_z_ = tnl::Vector3::TransformCoord(init_dir_z_, rot_sum_);
 	dir_z_.normalize();			// 丸め誤差対策：正規化
-	dir_x_ = tnl::Vector3::TransformCoord(dir_x_, rot_tmp_);
+	dir_x_ = tnl::Vector3::TransformCoord(init_dir_x_, rot_sum_);
 	dir_x_.normalize();			// 丸め誤差対策：正規化
-	pos_o_next_ = pos_o_ + dir_z_ * link_length_;	// 次モジュールの位置を格納 
+	pos_o_next_ = pos_o_ + dir_z_ * link_length_;	// 次モジュールの位置を格納
+
+	//rot_axis_ = tnl::Vector3::TransformCoord(rot_axis_, q_back);
+	//rot_axis_.normalize();		// 丸め誤差対策：正規化
+	//// --- IK有り：位置 or 姿勢のクォータニオン生成
+	//tnl::Quaternion iqi = InverseKinematics(delta_time);
+	//rot_tmp_ = iqi * q_back;
+	//rot_sum_ *= rot_tmp_;
+	//// --- 方向ベクトル更新 --- 
+	//dir_z_ = tnl::Vector3::TransformCoord(dir_z_, rot_tmp_);
+	//dir_z_.normalize();			// 丸め誤差対策：正規化
+	//dir_x_ = tnl::Vector3::TransformCoord(dir_x_, rot_tmp_);
+	//dir_x_.normalize();			// 丸め誤差対策：正規化
+	//pos_o_next_ = pos_o_ + dir_z_ * link_length_;	// 次モジュールの位置を格納 
 }
 
 tnl::Quaternion Module::InverseKinematics(float delta_time) {
@@ -76,9 +97,6 @@ tnl::Quaternion Module::InverseKinematics(float delta_time) {
 			tnl::Vector3 axis = x.cross(y) / x.length() / y.length();
 			dth *= rot_axis_.dot(axis) > 0 ? 1 : -1;
 			dth_sum += dth;
-			if (std::abs(dth_sum) > 1) {
-				dth_sum = dth_sum < 0 ? -0.1 : 0.1;
-			}
 		}
 	}
 
