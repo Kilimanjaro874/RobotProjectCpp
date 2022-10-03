@@ -8,6 +8,10 @@ class FaceVec {
 	// Module IK計算の制御目標位置・姿勢 or 制御対象位置・姿勢の表現のため、本クラスを使用する。
 	// 可視化したければ、Partsクラスを本クラスに登録すれば良い。
 public:
+	FaceVec() {};
+	virtual ~FaceVec() {
+		for (auto pts : parts_) delete pts;
+	}
 	// ---- メンバ変数 ---- //
 	// --- for DK, IK --- 
 	tnl::Vector3 pos_;		// 位置（どの座標系Σに属するかはユーザーの設定次第：位置参照用)
@@ -26,5 +30,6 @@ public:
 	// 必要な機能を都度、追加していく予定
 	virtual void update(float delta_time);
 	virtual void render(dxe::Camera* camera);
-	static FaceVec* Create(tnl::Vector3 pos_, tnl::Vector3 dir_z, tnl::Vector3 dir_x);
+	static FaceVec* Create(tnl::Vector3 pos_);
+	void Rotate(tnl::Quaternion rot_temp);
 };
