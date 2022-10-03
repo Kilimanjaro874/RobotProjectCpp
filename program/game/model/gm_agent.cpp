@@ -11,3 +11,19 @@ void Agent::render(dxe::Camera* camera) {
 		mod->render(camera);
 	}
 }
+
+void Agent::mode01_init() {
+
+}
+
+void Agent::mode01_update() {
+
+}
+
+void Agent::mode02_init() {
+
+}
+
+void Agent::mode02_update() {
+
+}

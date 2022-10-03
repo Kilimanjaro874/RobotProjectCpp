@@ -405,3 +405,13 @@ void Agn_armR001::aimTarget_update(float delta_time, const FaceVec& target) {
 	cnt_objects_[0]->update(0);
 
 }
+
+void Agn_armR001::mode01_init() {
+	// ----- ターゲットに向かってエイム動作：初期化 ----- //
+	// ---- リストの初期化 ---- //
+	targets_.clear();
+	cnt_objects_.clear();
+
+	// ---- リストに登録していく ---- //
+
+}
