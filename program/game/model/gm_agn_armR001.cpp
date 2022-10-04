@@ -17,7 +17,8 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 	sho_x->init_dir_x_ =	tnl::Vector3{ 1, 0, 0 };
 	sho_x->rot_sum_ = tnl::Quaternion::RotationAxis(sho_x->init_rot_axis_, 0);
 	sho_x->link_length_ = 0;
-	sho_x->kp_p_nums_.push_back(0.4);
+	sho_x->kp_p_nums_.push_back(0.4);	// 標的位置へのkp付与
+	sho_x->kp_p_nums_.push_back(0.6);	// 肘位置へのkp付与
 	sho_x->is_posIK = true;
 	Parts* sho_x_rot01 = new Parts();
 	sho_x_rot01->mesh_ = dxe::Mesh::CreateCylinder(5, 4);
@@ -118,8 +119,6 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 	arm_x->parts_.push_back(arm_x_lid02);
 	arm_x->parts_.push_back(arm_x_dirx01);
 	agn->modules_[e_arm_x] = arm_x;
-
-
 
 	// ---- 4. e_arm_z ---- //
 	Module* arm_z = new Module();
@@ -233,46 +232,6 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 	wrist_x->parts_.push_back(wrist_x_lid02);
 	wrist_x->parts_.push_back(wrist_x_dirx01);
 	agn->modules_[e_wrist_x] = wrist_x;
-
-
-
-	// ---- 7. e_wrist_y ---- //
-	/*Module* wrist_y = new Module();
-	wrist_y->init_rot_axis_ = tnl::Vector3{ 0, 0, 1 };
-	wrist_y->dir_z_ = tnl::Vector3{ 0, 0, 1 };
-	wrist_y->init_dir_x_ = tnl::Vector3{ 1, 0, 0 };
-	wrist_y->link_length_ = 10;
-	wrist_y->kp_p_nums_.push_back(0.2);
-	wrist_y->is_posIK = true;
-	Parts* wrist_y_ln01 = new Parts();
-	wrist_y_ln01->mesh_ = dxe::Mesh::CreateCylinder(2.0, 10);
-	wrist_y_ln01->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue_green.bmp"));
-	wrist_y_ln01->ofs_pos_ += wrist_y->dir_z_ * wrist_y->link_length_ / 2;
-	wrist_y_ln01->ofs_rot_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(-90));
-	Parts* wrist_y_rot01 = new Parts();
-	wrist_y_rot01->mesh_ = dxe::Mesh::CreateCylinder(5, 4);
-	wrist_y_rot01->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/green.bmp"));
-	Parts* wrist_y_lid01 = new Parts();
-	wrist_y_lid01->mesh_ = dxe::Mesh::CreateDisk(5);
-	wrist_y_lid01->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/green.bmp"));
-	wrist_y_lid01->ofs_rot_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(90));
-	wrist_y_lid01->ofs_pos_ += tnl::Vector3{ 0, 2.0, 0 };
-	Parts* wrist_y_lid02 = new Parts();
-	wrist_y_lid02->mesh_ = dxe::Mesh::CreateDisk(5);
-	wrist_y_lid02->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/green.bmp"));
-	wrist_y_lid02->ofs_rot_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(90));
-	wrist_y_lid02->ofs_pos_ += tnl::Vector3{ 0, -2.0, 0 };
-	Parts* wrist_y_dirx01 = new Parts();
-	wrist_y_dirx01->mesh_ = dxe::Mesh::CreateCylinder(1, 15);
-	wrist_y_dirx01->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/green.bmp"));
-	wrist_y_dirx01->ofs_pos_ += tnl::Vector3{ 7.5, 0, 0 };
-	wrist_y_dirx01->ofs_rot_ = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(90));
-	wrist_y->parts_.push_back(wrist_y_ln01);
-	wrist_y->parts_.push_back(wrist_y_rot01);
-	wrist_y->parts_.push_back(wrist_y_lid01);
-	wrist_y->parts_.push_back(wrist_y_lid02);
-	wrist_y->parts_.push_back(wrist_y_dirx01);
-	agn->modules_[e_wrist_y] = wrist_y;*/
 
 	// ---- 7. e_wrist_z22 ---- //
 	Module* wrist_z2 = new Module();
@@ -406,12 +365,46 @@ void Agn_armR001::aimTarget_update(float delta_time, const FaceVec& target) {
 
 }
 
-void Agn_armR001::mode01_init() {
+void Agn_armR001::mode01_init(FaceVec& target){
 	// ----- ターゲットに向かってエイム動作：初期化 ----- //
 	// ---- リストの初期化 ---- //
 	targets_.clear();
 	cnt_objects_.clear();
 
-	// ---- リストに登録していく ---- //
+	// ---- リストに登録していく：目標位置・姿勢 ---- //
+	// --- 1. e_sho_x --- //
+	// 位置参照 * 2
+	modules_[e_sho_x]->cnt_targets_.push_back(&target);
+
+	// --- 2. e_sho_z --- //
+	// 位置参照 * 1
+	modules_[e_sho_y]->cnt_targets_.push_back(&target);
+	// --- 3. e_arm_x --- //
+	// 位置参照 * 1
+	modules_[e_arm_x]->cnt_targets_.push_back(&target);
+	// --- 4. e_arm_y --- //
+	// 姿勢x参照 * 1
+	modules_[e_arm_z]->cnt_targets_.push_back(&target);
+	// --- 5. e_wrist_z --- //
+	// 姿勢x参照
+	modules_[e_wrist_z]->cnt_targets_.push_back(&target);
+	// --- 6. e_wrist_x --- //
+	// 姿勢z参照
+	modules_[e_wrist_x]->cnt_targets_.push_back(&target);
+	// --- 7. e_wrist_y --- //
+	// 姿勢z参照
+	modules_[e_wrist_z2]->cnt_targets_.push_back(&target);
+
+}
+
+void Agn_armR001::mode01_update() {
+
+}
+
+void Agn_armR001::mode02_init(FaceVec& target) {
+
+}
+
+void Agn_armR001::mode02_update() {
 
 }
