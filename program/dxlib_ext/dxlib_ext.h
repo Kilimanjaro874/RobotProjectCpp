@@ -1,6 +1,5 @@
 #pragma once
 #include "../library/tnl_util.h"
-#include "../library/tnl_flyweight_map.h"
 #include "../library/tnl_font_texture.h"
 #include "../library/tnl_hierarchy_tree.h"
 #include "../library/tnl_input.h"
@@ -23,22 +22,25 @@
 
 const int DXE_WINDOW_WIDTH = 1024;
 const int DXE_WINDOW_HEIGHT = 768;
+const float DXE_FIX_FPS = 60.0f;
 
 void DrawStringEx(const int x, const int y, const int color, const char* _str, ...);
 void DrawLineEx(const tnl::Vector3& p, const tnl::Vector3& v, const float length, const int color = -1);
 void DrawBoxEx(const tnl::Vector3& p, const float width, const float height, const bool fill = true, const int color = -1);
 
 // デバッグ用のグリッド地面
-// arg1... グリッドマスのサイズ
-// arg2... グリッドを並べる個数 ( 偶数個で指定 )
-// arg3... 16進数カラー
+// arg1... カメラ
+// arg2... グリッドマスのサイズ
+// arg3... グリッドを並べる個数 ( 偶数個で指定 )
+// arg4... 16進数カラー
 // tips... この関数を使用する前にカメラを生成して update 関数を実行してください
-void DrawGridGround(const float square_size, int row_num, int color = 0x99999999 );
+void DrawGridGround( const dxe::Camera* camera, const float square_size, int row_num, int color = 0x99999999 );
 
-void DrawAxis( const tnl::Vector3& pos, const tnl::Quaternion& rot, const float length);
-void DrawOBB( const tnl::Vector3& pos, const tnl::Quaternion& rot, const tnl::Vector3& size, const int color = 0x00ff00ff );
-void DrawAABB( const tnl::Vector3& pos, const tnl::Vector3& size, const int color = 0x0000ffff);
-void DrawBdSphere(const tnl::Vector3& pos, const float radius);
+
+void DrawAxis( const dxe::Camera* camera, const tnl::Vector3& pos, const tnl::Quaternion& rot, const float length);
+void DrawOBB( const dxe::Camera* camera, const tnl::Vector3& pos, const tnl::Quaternion& rot, const tnl::Vector3& size, const int color = 0x00ff00ff );
+void DrawAABB( const dxe::Camera* camera, const tnl::Vector3& pos, const tnl::Vector3& size, const int color = 0x0000ffff);
+void DrawBdSphere( const dxe::Camera* camera, const tnl::Vector3& pos, const float radius);
 
 
 /***************************************************************************************** 

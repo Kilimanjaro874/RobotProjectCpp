@@ -14,9 +14,9 @@ public:
 	// ---- エージェントで共通の作業を次々追加予定 ---- //
 	virtual void update(float delta_time);
 	virtual void render(dxe::Camera* camera);
-	virtual void mode01_init();		// エージェントに与えるモーション１：初期化
-	virtual void mode01_update();	// 〃 update
-	virtual void mode02_init();
+	virtual void mode01_init(const std::vector<FaceVec*> targets) = 0;		// エージェントに与えるモーション１：初期化
+	virtual void mode01_update(float delta_time);	// 〃 update
+	virtual void mode02_init(FaceVec& target);
 	virtual void mode02_update();
 
 };

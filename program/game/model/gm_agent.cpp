@@ -12,15 +12,15 @@ void Agent::render(dxe::Camera* camera) {
 	}
 }
 
-void Agent::mode01_init() {
+//void Agent::mode01_init(FaceVec& target) {
+//
+//}
+
+void Agent::mode01_update(float delta_time) {
 
 }
 
-void Agent::mode01_update() {
-
-}
-
-void Agent::mode02_init() {
+void Agent::mode02_init(FaceVec& target) {
 
 }
 

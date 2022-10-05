@@ -41,5 +41,7 @@ public:
 	void DirectKinematicsWithIK_world(float delta_time, const tnl::Vector3& p_back, 
 		const tnl::Quaternion& q_back);
 	//void SetCnt_obj(FaceVec& cnt_object);
+	void Clear_kp_IKstate();
 	void UpdateCnt_obj(FaceVec& cnt_object);
+
 };

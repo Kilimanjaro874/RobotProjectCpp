@@ -1,6 +1,7 @@
 #pragma once
 #include "../dxlib_ext/dxlib_ext.h"
 #include "dxlib_ext_texture.h"
+#include "dxlib_ext_render_param.h"
 
 namespace dxe {
 
@@ -26,7 +27,6 @@ namespace dxe {
 			if (mv_hdl_) MV1DeleteModel(mv_hdl_);
 		}
 
-		float			alpha_ = 1.0f;
 		fDebugLine		flg_dbg_line_ = fDebugLine::FLG_NONE;
 		tnl::Vector3	pos_;
 		tnl::Vector3	scl_ = { 1,1,1 };
@@ -78,51 +78,61 @@ namespace dxe {
 			return tex_diffuse_;
 		}
 
+		inline float& alpha() { return render_param_.alpha_; }
+
 		// カリングモード設定
 		// arg1... DX_CULLING_***
-		inline void setCullingMode(const int mode) noexcept { dxlib_culling_mode_ = mode; }
+		inline void setCullingMode(const int mode) noexcept { render_param_.setCullingMode( mode ); }
 
 		// ブレンドモード設定
 		// arg1... DX_BLENDMODE_***
 		// tips... MV メッシュのみ対応 ( dxlib の仕様 )
-		inline void setBlendMode(const int mode) noexcept { dxlib_blend_mode_ = mode; }
+		inline void setBlendMode(const int mode) noexcept { render_param_.setBlendMode(mode); }
 
 		// テクスチャサンプラフィルタ設定
 		// arg1... DX_DRAWMODE_***
 		// tips... MV メッシュのみ対応 ( dxlib の仕様 )
-		inline void setSampleFileterMode(const int mode) noexcept { dxlib_sample_filter_mode_ = mode; }
+		inline void setSampleFileterMode(const int mode) noexcept { render_param_.setSampleFileterMode(mode); }
 
 		// デフォルトライトの有効化
-		inline void setDefaultLightEnable(const bool f) noexcept { is_default_light_enable_ = f; }
+		inline void setDefaultLightEnable(const bool f) noexcept { render_param_.setDefaultLightEnable(f); }
 
 		// 深度テストの有効化
-		inline void setDepthTestEnable(const bool f) noexcept { is_depth_test_enable_ = f; }
+		inline void setDepthTestEnable(const bool f) noexcept { render_param_.setDepthTestEnable(f); }
 
 		// 深度バッファへの書き込み有効化
-		inline void setWriteDepthBufferEnable(const bool f) noexcept { is_write_depth_buffer_enable_ = f; }
+		inline void setWriteDepthBufferEnable(const bool f) noexcept { render_param_.setWriteDepthBufferEnable(f); }
 
 		// ディフューズカラー設定
 		inline void setMtrlDiffuse(const tnl::Vector3& col) noexcept {
-			mtrl_.Diffuse = { col.x, col.y, col.z, 1.0f };
-			if (mesh_format_ == eMeshFormat::MESH_FMT_MV) MV1SetMaterialDifColor(mv_hdl_, 0, mtrl_.Diffuse);
+			render_param_.setMtrlDiffuse(col);
+			if (mesh_format_ == eMeshFormat::MESH_FMT_MV) MV1SetMaterialDifColor(mv_hdl_, 0, render_param_.dxlib_mtrl_.Diffuse);
 		}
 		// スペキュラカラー設定
 		inline void setMtrlSpecular(const tnl::Vector3& col) noexcept {
-			mtrl_.Specular = { col.x, col.y, col.z, 1.0f };
-			if (mesh_format_ == eMeshFormat::MESH_FMT_MV) MV1SetMaterialSpcColor(mv_hdl_, 0, mtrl_.Specular);
+			render_param_.setMtrlSpecular(col);
+			if (mesh_format_ == eMeshFormat::MESH_FMT_MV) MV1SetMaterialSpcColor(mv_hdl_, 0, render_param_.dxlib_mtrl_.Specular);
 		}
 		// エミッシヴカラー設定
 		inline void setMtrlEmissive(const tnl::Vector3& col) noexcept {
-			mtrl_.Emissive = { col.x, col.y, col.z, 1.0f };
-			if (mesh_format_ == eMeshFormat::MESH_FMT_MV) MV1SetMaterialEmiColor(mv_hdl_, 0, mtrl_.Emissive);
+			render_param_.setMtrlEmissive(col);
+			if (mesh_format_ == eMeshFormat::MESH_FMT_MV) MV1SetMaterialEmiColor(mv_hdl_, 0, render_param_.dxlib_mtrl_.Emissive);
 		}
 		// スペキュラパワー設定
 		inline void setMtrlSpecPower(const float pow) noexcept {
-			mtrl_.Power = pow;
-			if (mesh_format_ == eMeshFormat::MESH_FMT_MV) MV1SetMaterialSpcPower(mv_hdl_, 0, mtrl_.Power);
+			render_param_.setMtrlSpecPower( pow );
+			if (mesh_format_ == eMeshFormat::MESH_FMT_MV) MV1SetMaterialSpcPower(mv_hdl_, 0, render_param_.dxlib_mtrl_.Power);
 		}
 
-
+		// 一括設定
+		inline void setRenderParam( const RenderParam& param ) {
+			render_param_ = param;
+			if (mesh_format_ != eMeshFormat::MESH_FMT_MV) return;
+			MV1SetMaterialDifColor(mv_hdl_, 0, render_param_.dxlib_mtrl_.Diffuse);
+			MV1SetMaterialSpcColor(mv_hdl_, 0, render_param_.dxlib_mtrl_.Specular);
+			MV1SetMaterialEmiColor(mv_hdl_, 0, render_param_.dxlib_mtrl_.Emissive);
+			MV1SetMaterialSpcPower(mv_hdl_, 0, render_param_.dxlib_mtrl_.Power);
+		}
 
 		//==========================================================================================================================
 		//
@@ -328,19 +338,7 @@ namespace dxe {
 
 
 	private:
-		Mesh() {
-			mtrl_.Ambient = { 0.1f, 0.1f, 0.1f, 1 };
-			mtrl_.Diffuse = { 1, 1, 1, 1 };
-			mtrl_.Emissive = { 0.4f, 0.4f, 0.4f, 1 };
-			mtrl_.Power = 5;
-			mtrl_.Specular = { 0.25f, 0.25f, 0.25f, 1 };
-		}
-		bool is_default_light_enable_		= true;
-		bool is_depth_test_enable_			= true;
-		bool is_write_depth_buffer_enable_	= true;		
-		int dxlib_blend_mode_				= DX_BLENDMODE_NOBLEND;
-		int dxlib_culling_mode_				= DX_CULLING_NONE;
-		int dxlib_sample_filter_mode_		= DX_DRAWMODE_BILINEAR;
+		Mesh(){}
 
 		int vb_hdl_ = 0;
 		int ib_hdl_ = 0;
@@ -355,16 +353,12 @@ namespace dxe {
 		tnl::Vector3				bd_box_size_;
 		std::vector<uint32_t>		idxs_;
 		std::vector<VERTEX3D>		vtxs_;
-		MATERIALPARAM				mtrl_;
+		RenderParam					render_param_;
 		eMeshFormat					mesh_format_ = eMeshFormat::MESH_FMT_PG;
 
 		void createPlaneIndex(const int div_w, const int div_h, const bool is_left_cycle);
 		void createVBO();
 
-		void drawAxis();
-		void drawOBB();
-		void drawAABB();
-		void drawBdSphere();
 		void drawVtxNormal();
 		static Mesh* CreateConvertMV(Mesh* mesh);
 

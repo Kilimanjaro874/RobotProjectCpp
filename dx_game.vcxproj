@@ -45,6 +45,7 @@
     <ClCompile Include="program\game\model\gm_model.cpp" />
     <ClCompile Include="program\game\model\gm_module.cpp" />
     <ClCompile Include="program\game\model\gm_parts.cpp" />
+    <ClCompile Include="program\game\model\gm_Robot.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_play.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_result.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_title.cpp" />
@@ -78,6 +79,7 @@
     <ClInclude Include="program\game\model\gm_model.h" />
     <ClInclude Include="program\game\model\gm_module.h" />
     <ClInclude Include="program\game\model\gm_parts.h" />
+    <ClInclude Include="program\game\model\gm_Robot.h" />
     <ClInclude Include="program\game\scene\gm_scene_base.h" />
     <ClInclude Include="program\game\scene\gm_scene_play.h" />
     <ClInclude Include="program\game\scene\gm_scene_result.h" />
