@@ -11,25 +11,10 @@ ScenePlay::~ScenePlay() {
 	delete arm_r;
 	delete effector_obj_;
 	delete elbow_obj_;
-
-	delete plane;
-
-	delete box;
 }
 
 
 void ScenePlay::initialzie() {
-
-
-	plane = MdlAirPlane::Create();
-
-	box = new Parts();
-	box->mesh_ = dxe::Mesh::CreateBox(5);
-	box->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	box->mesh_->pos_ = { 0, 20, 0 };
-
-	
-	
 
 	camera_ = new GmCamera();
 	camera_->pos_ = { 100, 0, -300 };
@@ -41,7 +26,9 @@ void ScenePlay::initialzie() {
 	aim_tar_->Rotate(tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(45)));
 	aim_tar_->update(0);
 	// --- •IˆÊ’u --- //
-	elbow_r_tar = FaceVec::Create({ 0, -70, 0 });
+	elbow_r_tar = FaceVec::Create({ 30, -30, 0 });
+	elbow_r_tar->Rotate(tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(90)));
+	//elbow_r_tar->Rotate(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(-90)));
 	elbow_r_tar->update(0);
 	// --- –Ú•WˆÊ’uEp¨Ši”[ ---
 	targets_.clear();
@@ -55,7 +42,7 @@ void ScenePlay::initialzie() {
 	objects_.push_back(effector_obj_);
 	objects_.push_back(elbow_obj_);
 
-	// --- ˜r‚Ìì¬ ---
+	// --- ˜r‚Ìì¬ ---d
 	arm_r = Agn_armR001::Create(tnl::Vector3{ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 1, 0, 0 }, 0));
 	arm_r->update(0);
 
@@ -238,7 +225,7 @@ void ScenePlay::update(float delta_time)
 	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_LEFT)) {
 		aim_tar_->pos_ += tnl::Vector3{ 0, 0, -10 };
 	}
-	aim_tar_->Rotate(tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(1)));
+	//aim_tar_->Rotate(tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(1)));
 	
 	
 	
@@ -252,8 +239,6 @@ void ScenePlay::update(float delta_time)
 	elbow_r_tar->update(0);
 	//effector_obj_->update(0);
 
-
-	plane->update(delta_time);
 
 }
 
@@ -270,8 +255,4 @@ void ScenePlay::render()
 	elbow_obj_->render(camera_);
 
 	arm_r->render(camera_);
-
-	plane->render(camera_);
-
-	box->mesh_->render(camera_);
 }

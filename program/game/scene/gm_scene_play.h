@@ -24,14 +24,6 @@ public :
 
 	Agn_armR001* arm_r = nullptr;
 
-
-	MdlAirPlane* plane = nullptr;
-
-
-	Parts* box = nullptr;									
-	
-
-
 	void initialzie() override;
 	void update(float delta_time) override;
 	void render() override;

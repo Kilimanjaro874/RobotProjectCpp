@@ -13,7 +13,7 @@ void AnimSprite3D::setCurrentAnim(const std::string& anim_name) {
 	anim_current_ = anims_[anim_name];
 	idx = anim_current_->parts_start_index_ ;
 	for (int i = 0; i < anim_current_->seek_->getTotalFrameNum(); ++i) {
-		parts_[idx + i]->mesh_->alpha_ = alpha_;
+		parts_[idx + i]->mesh_->alpha() = alpha_;
 		parts_[idx + i]->mesh_->setBlendMode(dxlib_blend_mode_);
 		parts_[idx + i]->mesh_->setMtrlEmissive(mtrl_emmisive_);
 	}
