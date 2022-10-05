@@ -45,10 +45,10 @@ namespace dxe {
 
 	//----------------------------------------------------------------------------------------
 	void Mesh::createVBO() {
-		vb_hdl_ = CreateVertexBuffer(vtxs_.size(), DX_VERTEX_TYPE_NORMAL_3D);
-		ib_hdl_ = CreateIndexBuffer(idxs_.size(), DX_INDEX_TYPE_32BIT);
-		SetVertexBufferData(0, vtxs_.data(), vtxs_.size(), vb_hdl_);
-		SetIndexBufferData(0, idxs_.data(), idxs_.size(), ib_hdl_);
+		vb_hdl_ = CreateVertexBuffer((int)vtxs_.size(), DX_VERTEX_TYPE_NORMAL_3D);
+		ib_hdl_ = CreateIndexBuffer((int)idxs_.size(), DX_INDEX_TYPE_32BIT);
+		SetVertexBufferData(0, vtxs_.data(), (int)vtxs_.size(), vb_hdl_);
+		SetIndexBufferData(0, idxs_.data(), (int)idxs_.size(), ib_hdl_);
 	}
 
 	//----------------------------------------------------------------------------------------
@@ -80,26 +80,26 @@ namespace dxe {
 
 		// diff
 		//str += "1.000000; 1.000000; 1.000000; 0.000000;;\n";
-		str += std::to_string(mtrl_.Diffuse.r) + ";";
-		str += std::to_string(mtrl_.Diffuse.g) + ";";
-		str += std::to_string(mtrl_.Diffuse.b) + ";";
-		str += std::to_string(mtrl_.Diffuse.a) + ";;\n";
+		str += std::to_string(render_param_.dxlib_mtrl_.Diffuse.r) + ";";
+		str += std::to_string(render_param_.dxlib_mtrl_.Diffuse.g) + ";";
+		str += std::to_string(render_param_.dxlib_mtrl_.Diffuse.b) + ";";
+		str += std::to_string(render_param_.dxlib_mtrl_.Diffuse.a) + ";;\n";
 
 		// power
 		//str += "5.000000;\n";
-		str += std::to_string(mtrl_.Power) + ";\n";
+		str += std::to_string(render_param_.dxlib_mtrl_.Power) + ";\n";
 
 		// spec
 		//str += "0.250000; 0.250000; 0.250000;;\n";
-		str += std::to_string(mtrl_.Specular.r) + ";";
-		str += std::to_string(mtrl_.Specular.g) + ";";
-		str += std::to_string(mtrl_.Specular.b) + ";;\n";
+		str += std::to_string(render_param_.dxlib_mtrl_.Specular.r) + ";";
+		str += std::to_string(render_param_.dxlib_mtrl_.Specular.g) + ";";
+		str += std::to_string(render_param_.dxlib_mtrl_.Specular.b) + ";;\n";
 
 		// emissive
 		//str += "0.000000; 0.000000; 0.000000;;\n";
-		str += std::to_string(mtrl_.Emissive.r) + ";";
-		str += std::to_string(mtrl_.Emissive.g) + ";";
-		str += std::to_string(mtrl_.Emissive.b) + ";;\n";
+		str += std::to_string(render_param_.dxlib_mtrl_.Emissive.r) + ";";
+		str += std::to_string(render_param_.dxlib_mtrl_.Emissive.g) + ";";
+		str += std::to_string(render_param_.dxlib_mtrl_.Emissive.b) + ";;\n";
 
 		str += "TextureFilename{\n";
 		const char t = '"';
@@ -194,7 +194,13 @@ namespace dxe {
 	//----------------------------------------------------------------------------------------
 	void Mesh::render(const Camera* camera) {
 
-		SetLightEnable(is_default_light_enable_);
+		MATRIX view, proj;
+		memcpy(view.m, camera->view_.m, sizeof(float) * 16);
+		memcpy(proj.m, camera->proj_.m, sizeof(float) * 16);
+		SetCameraViewMatrix(view);
+		SetupCamera_ProjectionMatrix(proj);
+
+		SetLightEnable(render_param_.is_default_light_enable_);
 
 		// 頂点の射影変換用行列
 		tnl::Matrix mt_vertex;
@@ -221,28 +227,30 @@ namespace dxe {
 
 		MATRIX dxm;
 		memcpy(dxm.m, mt_obj_world.m, sizeof(float)*16);
-		SetMaterialParam(mtrl_);
+		SetMaterialParam(render_param_.dxlib_mtrl_);
 
-		int i_alpha = (int)( alpha_ * 255.0f );
+		int i_alpha = (int)(render_param_.alpha_ * 255.0f );
 		if (Mesh::eMeshFormat::MESH_FMT_PG == mesh_format_) {
 			SetTransformToWorld(&dxm);
-			SetUseZBuffer3D(is_depth_test_enable_);
-			SetWriteZBuffer3D(is_write_depth_buffer_enable_);
-			SetUseBackCulling(dxlib_culling_mode_);
-			SetDrawBlendMode(dxlib_blend_mode_, i_alpha);	
+			SetUseZBuffer3D(render_param_.is_depth_test_enable_);
+			SetWriteZBuffer3D(render_param_.is_write_depth_buffer_enable_);
+			SetUseBackCulling(render_param_.dxlib_culling_mode_);
+			SetDrawBlendMode(render_param_.dxlib_blend_mode_, i_alpha);
 			//DrawPrimitiveIndexed3D(vtxs_.data(), vtxs_.size(), idxs_.data(), idxs_.size(), DX_PRIMTYPE_TRIANGLELIST, tex_diffuse_hdl_, false);
 			DrawPrimitiveIndexed3D_UseVertexBuffer(vb_hdl_, ib_hdl_, DX_PRIMTYPE_TRIANGLELIST, tex_diffuse_->getGraphHandle(), true);
 		}
 		else {
-			MV1SetUseZBuffer(mv_hdl_, is_depth_test_enable_);
-			MV1SetWriteZBuffer(mv_hdl_, is_write_depth_buffer_enable_);
-			MV1SetMeshBackCulling(mv_hdl_, 0, dxlib_culling_mode_);
-			MV1SetSampleFilterMode(mv_hdl_, dxlib_sample_filter_mode_);
-			MV1SetMeshDrawBlendMode(mv_hdl_, 0, dxlib_blend_mode_);
+			MATRIX dxim;
+			CreateIdentityMatrix(&dxim);
+			SetTransformToWorld(&dxim);
+			MV1SetUseZBuffer(mv_hdl_, render_param_.is_depth_test_enable_);
+			MV1SetWriteZBuffer(mv_hdl_, render_param_.is_write_depth_buffer_enable_);
+			MV1SetMeshBackCulling(mv_hdl_, 0, render_param_.dxlib_culling_mode_);
+			MV1SetSampleFilterMode(mv_hdl_, render_param_.dxlib_sample_filter_mode_);
+			MV1SetMeshDrawBlendMode(mv_hdl_, 0, render_param_.dxlib_blend_mode_);
 			MV1SetMeshDrawBlendParam(mv_hdl_, 0, i_alpha);
 			MV1SetMatrix(mv_hdl_ , dxm);
 			MV1DrawModel(mv_hdl_);
-			SetTransformToWorld(&dxm);
 		}
 
 		//---------------------------------------------------------------------
@@ -251,119 +259,14 @@ namespace dxe {
 		//
 		SetWriteZBuffer3D(FALSE);
 		SetUseZBuffer3D(FALSE);
-		if (flg_dbg_line_ & Mesh::fDebugLine::FLG_AXIS)			drawAxis();
+		if (flg_dbg_line_ & Mesh::fDebugLine::FLG_AXIS)			DrawAxis(camera, pos_, rot_q_, bd_sphere_radius_);
 		SetUseZBuffer3D(TRUE);
-		if (flg_dbg_line_ & Mesh::fDebugLine::FLG_OBB)			drawOBB();
-		if (flg_dbg_line_ & Mesh::fDebugLine::FLG_BD_SPHERE)	drawBdSphere();
+		if (flg_dbg_line_ & Mesh::fDebugLine::FLG_OBB)			DrawOBB(camera, pos_, rot_q_, bd_box_size_);
+		if (flg_dbg_line_ & Mesh::fDebugLine::FLG_BD_SPHERE)	DrawBdSphere(camera, pos_, bd_sphere_radius_);
 		if (flg_dbg_line_ & Mesh::fDebugLine::FLG_VTX_NML)		drawVtxNormal();
-		if (flg_dbg_line_ & Mesh::fDebugLine::FLG_AABB)			drawAABB();
+		if (flg_dbg_line_ & Mesh::fDebugLine::FLG_AABB)			DrawAABB(camera, pos_, bd_box_size_);
 	}
 
-
-	void Mesh::drawAxis() {
-		tnl::Vector3 up(0, bd_sphere_radius_, 0);
-		tnl::Vector3 right(bd_sphere_radius_, 0, 0);
-		tnl::Vector3 depth(0, 0, bd_sphere_radius_);
-		DrawLine3D({ 0, 0, 0 }, { up.x, up.y, up.z }, 0xff00ff00);
-		DrawLine3D({ 0, 0, 0 }, { right.x, right.y, right.z }, 0xff0000ff);
-		DrawLine3D({ 0, 0, 0 }, { depth.x, depth.y, depth.z }, 0xffff0000);
-	}
-
-	void Mesh::drawOBB() {
-		float w = bd_box_size_.x * 0.5f;
-		float h = bd_box_size_.y * 0.5f;
-		float d = bd_box_size_.z * 0.5f;
-		tnl::Vector3 v[8] = {
-			{ -w,  h,  d }, {  w,  h,  d },  {  w,  h,  -d }, { -w,  h, -d },
-			{ -w, -h,  d }, {  w, -h,  d },  {  w, -h,  -d }, { -w, -h, -d }
-		};
-		uint32_t col = 0xff66ff33;
-		for (int i = 0; i < 3; ++i) DrawLine3D({ v[i].x, v[i].y , v[i].z }, { v[i + 1].x, v[i + 1].y , v[i + 1].z }, col);
-		for (int i = 0; i < 3; ++i) DrawLine3D({ v[4 + i].x, v[4 + i].y , v[4 + i].z }, { v[4 + i + 1].x, v[4 + i + 1].y , v[4 + i + 1].z }, col);
-		for (int i = 0; i < 4; ++i) DrawLine3D({ v[i].x, v[i].y , v[i].z }, { v[i + 4].x, v[i + 4].y , v[i + 4].z }, col);
-		DrawLine3D({ v[3].x, v[3].y , v[3].z }, { v[0].x, v[0].y , v[0].z }, col);
-		DrawLine3D({ v[7].x, v[7].y , v[7].z }, { v[4].x, v[4].y , v[4].z }, col);
-	}
-
-	void Mesh::drawAABB() {
-		tnl::Matrix mt_trans;
-		tnl::Matrix mt_scale;
-		tnl::Matrix mt_obj_world;
-
-		// オブジェクトのワールド行列の作成
-		mt_trans = tnl::Matrix::Translation(pos_.x, pos_.y, pos_.z);
-		mt_scale = tnl::Matrix::Scaling(scl_.x, scl_.y, scl_.z);
-
-		float w = bd_box_size_.x * 0.5f;
-		float h = bd_box_size_.y * 0.5f;
-		float d = bd_box_size_.z * 0.5f;
-		tnl::Vector3 v[8] = {
-			{ -w,  h,  d }, {  w,  h,  d },  {  w,  h,  -d }, { -w,  h, -d },
-			{ -w, -h,  d }, {  w, -h,  d },  {  w, -h,  -d }, { -w, -h, -d }
-		};
-		for (int i = 0; i < 8; ++i) v[i] += pos_;
-		uint32_t col = 0xff6633ff;
-
-		MATRIX im;
-		mt_obj_world = mt_scale * mt_trans;
-		memcpy(im.m, mt_obj_world.m, sizeof(float) * 16);
-		SetTransformToWorld(&im);
-		for (int i = 0; i < 3; ++i) DrawLine3D({ v[i].x, v[i].y , v[i].z }, { v[i + 1].x, v[i + 1].y , v[i + 1].z }, col);
-		for (int i = 0; i < 3; ++i) DrawLine3D({ v[4 + i].x, v[4 + i].y , v[4 + i].z }, { v[4 + i + 1].x, v[4 + i + 1].y , v[4 + i + 1].z }, col);
-		for (int i = 0; i < 4; ++i) DrawLine3D({ v[i].x, v[i].y , v[i].z }, { v[i + 4].x, v[i + 4].y , v[i + 4].z }, col);
-		DrawLine3D({ v[3].x, v[3].y , v[3].z }, { v[0].x, v[0].y , v[0].z }, col);
-		DrawLine3D({ v[7].x, v[7].y , v[7].z }, { v[4].x, v[4].y , v[4].z }, col);
-	}
-
-	void Mesh::drawBdSphere() {
-		const int ring_vtx_num = 16;
-		int s = ring_vtx_num - 1;
-		int e = 0;
-
-		tnl::Vector3 vx[ring_vtx_num];
-		tnl::Vector3 vy[ring_vtx_num];
-		tnl::Vector3 vz[ring_vtx_num];
-
-		// X軸リング
-		for (int i = 0; i < ring_vtx_num; ++i) {
-			vx[i].x = 0;
-			vx[i].y = cos(tnl::ToRadian(360.0f / ring_vtx_num) * i) * bd_sphere_radius_;
-			vx[i].z = sin(tnl::ToRadian(360.0f / ring_vtx_num) * i) * bd_sphere_radius_;
-		}
-		for (int i = 0; i < (ring_vtx_num - 1); ++i) {
-			DrawLine3D({ vx[i].x, vx[i].y, vx[i].z },
-				{ vx[i + 1].x, vx[i + 1].y, vx[i + 1].z }, 0xffff0000);
-		}
-		DrawLine3D({ vx[s].x, vx[s].y, vx[s].z },
-			{ vx[e].x, vx[e].y, vx[e].z }, 0xffff0000);
-
-
-		// Y軸リング
-		for (int i = 0; i < ring_vtx_num; ++i) {
-			vy[i].x = sin(tnl::ToRadian(360.0f / ring_vtx_num) * i) * bd_sphere_radius_;
-			vy[i].y = 0;
-			vy[i].z = cos(tnl::ToRadian(360.0f / ring_vtx_num) * i) * bd_sphere_radius_;
-		}
-		for (int i = 0; i < (ring_vtx_num - 1); ++i) {
-			DrawLine3D({ vy[i].x, vy[i].y, vy[i].z },
-				{ vy[i + 1].x, vy[i + 1].y, vy[i + 1].z }, 0xff00ff00);
-		}
-		DrawLine3D({ vy[s].x, vy[s].y, vy[s].z },
-			{ vy[e].x, vy[e].y, vy[e].z }, 0xff00ff00);
-
-		// Z軸リング
-		for (int i = 0; i < ring_vtx_num; ++i) {
-			vz[i].x = sin(tnl::ToRadian(360.0f / ring_vtx_num) * i) * bd_sphere_radius_;
-			vz[i].y = cos(tnl::ToRadian(360.0f / ring_vtx_num) * i) * bd_sphere_radius_;
-			vz[i].z = 0;
-		}
-		for (int i = 0; i < (ring_vtx_num - 1); ++i) {
-			DrawLine3D({ vz[i].x, vz[i].y, vz[i].z },
-				{ vz[i + 1].x, vz[i + 1].y, vz[i + 1].z }, 0xff0000ff);
-		}
-		DrawLine3D({ vz[s].x, vz[s].y, vz[s].z },
-			{ vz[e].x, vz[e].y, vz[e].z }, 0xff0000ff);
-	}
 
 	void Mesh::drawVtxNormal() {
 		float length = 3.0f;

@@ -29,7 +29,13 @@ void DrawBoxEx(const tnl::Vector3& p, const float width, const float height, con
 }
 
 
-void DrawGridGround(const float square_size, int row_num, int color) {
+void DrawGridGround(const dxe::Camera* camera, const float square_size, int row_num, int color) {
+
+	MATRIX view, proj;
+	memcpy(view.m, camera->view_.m, sizeof(float) * 16);
+	memcpy(proj.m, camera->proj_.m, sizeof(float) * 16);
+	SetCameraViewMatrix(view);
+	SetupCamera_ProjectionMatrix(proj);
 
 	MATRIX im;
 	CreateIdentityMatrix(&im);
@@ -55,8 +61,14 @@ void DrawGridGround(const float square_size, int row_num, int color) {
 }
 
 
-void DrawAxis(const tnl::Vector3& pos, const tnl::Quaternion& rot, const float length)
+void DrawAxis(const dxe::Camera* camera, const tnl::Vector3& pos, const tnl::Quaternion& rot, const float length)
 {
+	MATRIX view, proj;
+	memcpy(view.m, camera->view_.m, sizeof(float) * 16);
+	memcpy(proj.m, camera->proj_.m, sizeof(float) * 16);
+	SetCameraViewMatrix(view);
+	SetupCamera_ProjectionMatrix(proj);
+
 	// オブジェクトのワールド行列の作成
 	tnl::Matrix mt_trans;
 	tnl::Matrix mt_rot;
@@ -77,8 +89,15 @@ void DrawAxis(const tnl::Vector3& pos, const tnl::Quaternion& rot, const float l
 }
 
 
-void DrawOBB(const tnl::Vector3& pos, const tnl::Quaternion& rot, const tnl::Vector3& size, const int color)
+void DrawOBB(const dxe::Camera* camera, const tnl::Vector3& pos, const tnl::Quaternion& rot, const tnl::Vector3& size, const int color)
 {
+
+	MATRIX view, proj;
+	memcpy(view.m, camera->view_.m, sizeof(float) * 16);
+	memcpy(proj.m, camera->proj_.m, sizeof(float) * 16);
+	SetCameraViewMatrix(view);
+	SetupCamera_ProjectionMatrix(proj);
+
 	// オブジェクトのワールド行列の作成
 	tnl::Matrix mt_trans;
 	tnl::Matrix mt_rot;
@@ -106,15 +125,22 @@ void DrawOBB(const tnl::Vector3& pos, const tnl::Quaternion& rot, const tnl::Vec
 	DrawLine3D({ v[7].x, v[7].y , v[7].z }, { v[4].x, v[4].y , v[4].z }, col);
 }
 
-void DrawAABB(const tnl::Vector3& pos, const tnl::Vector3& size, const int color)
+void DrawAABB(const dxe::Camera* camera, const tnl::Vector3& pos, const tnl::Vector3& size, const int color)
 {
-	tnl::Matrix mt_trans;
-	tnl::Matrix mt_scale;
-	tnl::Matrix mt_obj_world;
+	MATRIX view, proj;
+	memcpy(view.m, camera->view_.m, sizeof(float) * 16);
+	memcpy(proj.m, camera->proj_.m, sizeof(float) * 16);
+	SetCameraViewMatrix(view);
+	SetupCamera_ProjectionMatrix(proj);
 
 	// オブジェクトのワールド行列の作成
+	tnl::Matrix mt_trans;
+	tnl::Matrix mt_obj_world;
 	mt_trans = tnl::Matrix::Translation(pos.x, pos.y, pos.z);
-	mt_scale = tnl::Matrix::Scaling(1, 1, 1);
+	MATRIX im;
+	mt_obj_world = mt_trans;
+	memcpy(im.m, mt_obj_world.m, sizeof(float) * 16);
+	SetTransformToWorld(&im);
 
 	float w = size.x * 0.5f;
 	float h = size.y * 0.5f;
@@ -123,22 +149,23 @@ void DrawAABB(const tnl::Vector3& pos, const tnl::Vector3& size, const int color
 		{ -w,  h,  d }, {  w,  h,  d },  {  w,  h,  -d }, { -w,  h, -d },
 		{ -w, -h,  d }, {  w, -h,  d },  {  w, -h,  -d }, { -w, -h, -d }
 	};
-	for (int i = 0; i < 8; ++i) v[i] += pos;
 	uint32_t col = color;
-
-	MATRIX im;
-	mt_obj_world = mt_scale * mt_trans;
-	memcpy(im.m, mt_obj_world.m, sizeof(float) * 16);
-	SetTransformToWorld(&im);
 	for (int i = 0; i < 3; ++i) DrawLine3D({ v[i].x, v[i].y , v[i].z }, { v[i + 1].x, v[i + 1].y , v[i + 1].z }, col);
 	for (int i = 0; i < 3; ++i) DrawLine3D({ v[4 + i].x, v[4 + i].y , v[4 + i].z }, { v[4 + i + 1].x, v[4 + i + 1].y , v[4 + i + 1].z }, col);
 	for (int i = 0; i < 4; ++i) DrawLine3D({ v[i].x, v[i].y , v[i].z }, { v[i + 4].x, v[i + 4].y , v[i + 4].z }, col);
 	DrawLine3D({ v[3].x, v[3].y , v[3].z }, { v[0].x, v[0].y , v[0].z }, col);
 	DrawLine3D({ v[7].x, v[7].y , v[7].z }, { v[4].x, v[4].y , v[4].z }, col);
+
 }
 
-void DrawBdSphere(const tnl::Vector3& pos, const float radius)
+void DrawBdSphere(const dxe::Camera* camera, const tnl::Vector3& pos, const float radius)
 {
+	MATRIX view, proj;
+	memcpy(view.m, camera->view_.m, sizeof(float) * 16);
+	memcpy(proj.m, camera->proj_.m, sizeof(float) * 16);
+	SetCameraViewMatrix(view);
+	SetupCamera_ProjectionMatrix(proj);
+
 	// オブジェクトのワールド行列の作成
 	tnl::Matrix mt_trans;
 	tnl::Matrix mt_rot;
@@ -192,9 +219,9 @@ void DrawBdSphere(const tnl::Vector3& pos, const float radius)
 	}
 	for (int i = 0; i < (ring_vtx_num - 1); ++i) {
 		DrawLine3D({ vz[i].x, vz[i].y, vz[i].z },
-			{ vz[i + 1].x, vz[i + 1].y, vz[i + 1].z }, 0xff0000ff);
+			{ vz[i + 1].x, vz[i + 1].y, vz[i + 1].z }, 0xff2255ff);
 	}
 	DrawLine3D({ vz[s].x, vz[s].y, vz[s].z },
-		{ vz[e].x, vz[e].y, vz[e].z }, 0xff0000ff);
+		{ vz[e].x, vz[e].y, vz[e].z }, 0xff2266ff);
 
 }

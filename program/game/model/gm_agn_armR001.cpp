@@ -329,15 +329,15 @@ void Agn_armR001::aimTarget_initialize(FaceVec& target, FaceVec& cnt_obj, FaceVe
 	// 位置参照 * 2
 	modules_[e_sho_x]->cnt_objects_.push_back(&cnt_obj);
 	// IKパラメータ再設定
-	modules_[e_sho_x]->kp_p_nums_.clear();			// 初期化
+	modules_[e_sho_x]->Clear_kp_IKstate();			// 初期化
 	modules_[e_sho_x]->kp_p_nums_.push_back(0.4);	// 標的位置へのkp付与
-	modules_[e_sho_x]->kp_p_nums_.push_back(0);	// 肘位置へのkp付与
+	modules_[e_sho_x]->kp_p_nums_.push_back(0.4);	// 肘位置へのkp付与
 	modules_[e_sho_x]->is_posIK = true;				// 位置参照のIK有効化
 	// --- 2. e_sho_z --- //
 	// 位置参照 * 1
 	modules_[e_sho_y]->cnt_objects_.push_back(&cnt_obj);
 	// IKパラメータ再設定
-	modules_[e_sho_x]->kp_p_nums_.clear();			// 初期化
+	modules_[e_sho_x]->Clear_kp_IKstate();			// 初期化
 	modules_[e_sho_x]->kp_p_nums_.push_back(0.4);	// 標的位置へのkp付与
 	modules_[e_sho_x]->kp_p_nums_.push_back(0.6);	// 肘位置へのkp付与
 	modules_[e_sho_x]->is_posIK = true;				// 位置参照のIK有効化
@@ -366,7 +366,7 @@ void Agn_armR001::aimTarget_update(float delta_time, const FaceVec& target) {
 	tnl::Quaternion tmp_q_back = this->rot_tmp_;
 	
 	for (auto mod : modules_) {
-		if (mod->id_ == 2) { printf(""); }
+		if (mod->id_ == 1) { printf(""); }
 		mod->DirectKinematicsWithIK_world(delta_time, tmp_p_back, tmp_q_back);
 		tmp_p_back = mod->pos_o_next_;
 		tmp_q_back = mod->rot_tmp_;
@@ -430,7 +430,7 @@ void Agn_armR001::mode01_init(const std::vector<FaceVec*> targets){
 	modules_[e_sho_x]->cnt_objects_.push_back(cnt_objects_[0]);
 	modules_[e_sho_x]->cnt_objects_.push_back(cnt_objects_[1]);	// 肘位置参考
 	// IKパラメータ更新
-	modules_[e_sho_x]->kp_p_nums_.clear();			// 初期化
+	modules_[e_sho_x]->Clear_kp_IKstate();			// 初期化
 	modules_[e_sho_x]->kp_p_nums_.push_back(0.4);	// 標的位置へのkp付与
 	modules_[e_sho_x]->kp_p_nums_.push_back(0.6);	// 肘位置へのkp付与
 	modules_[e_sho_x]->is_posIK = true;				// 位置参照のIK有効化
@@ -439,7 +439,7 @@ void Agn_armR001::mode01_init(const std::vector<FaceVec*> targets){
 	// 位置参照 * 1
 	modules_[e_sho_y]->cnt_objects_.push_back(cnt_objects_[1]);	// 肘位置参考
 	// IKパラメータ更新
-	modules_[e_sho_y]->kp_p_nums_.clear();			// 初期化
+	modules_[e_sho_y]->Clear_kp_IKstate();			// 初期化
 	modules_[e_sho_y]->kp_p_nums_.push_back(0.4);	// 肘位置へのkp付与
 	modules_[e_sho_y]->is_posIK = true;				// 位置参照のIK有効化
 
@@ -447,7 +447,7 @@ void Agn_armR001::mode01_init(const std::vector<FaceVec*> targets){
 	// 位置参照 * 1
 	modules_[e_arm_x]->cnt_objects_.push_back(cnt_objects_[0]);
 	// IKパラメータ更新	
-	modules_[e_arm_x]->kp_p_nums_.clear();			// 初期化
+	modules_[e_arm_x]->Clear_kp_IKstate();			// 初期化
 	modules_[e_arm_x]->kp_p_nums_.push_back(0.4);	// 照準位置へのkp付与
 	modules_[e_arm_x]->is_posIK = true;				// 標準位置のIK有効化
 
@@ -455,7 +455,7 @@ void Agn_armR001::mode01_init(const std::vector<FaceVec*> targets){
 	// 位置参照 * 1
 	modules_[e_arm_z]->cnt_objects_.push_back(cnt_objects_[0]);
 	// IKパラメータ更新
-	modules_[e_arm_z]->kp_p_nums_.clear();			// 初期化
+	modules_[e_arm_z]->Clear_kp_IKstate();			// 初期化
 	modules_[e_arm_z]->kp_p_nums_.push_back(0.4);	// 標準位置へのkp付与
 	modules_[e_arm_z]->is_posIK = true;
 
@@ -463,23 +463,23 @@ void Agn_armR001::mode01_init(const std::vector<FaceVec*> targets){
 	// 姿勢x参照
 	modules_[e_wrist_z]->cnt_objects_.push_back(cnt_objects_[0]);
 	// IKパラメータ更新
-	modules_[e_wrist_z]->kp_rx_nums_.clear();
+	modules_[e_wrist_z]->Clear_kp_IKstate();
 	modules_[e_wrist_z]->kp_rx_nums_.push_back(0.4);
 	modules_[e_wrist_z]->is_dir_xIK = true;
 	// --- 6. e_wrist_x --- //
 	// 姿勢z参照
 	modules_[e_wrist_x]->cnt_objects_.push_back(cnt_objects_[0]);
 	// IKパラメータ更新
-	modules_[e_wrist_x]->kp_rz_nums_.clear();
+	modules_[e_wrist_x]->Clear_kp_IKstate();
 	modules_[e_wrist_x]->kp_rz_nums_.push_back(0.4);
 	modules_[e_wrist_x]->is_dir_zIK = true;
 	// --- 7. e_wrist_y --- //
 	// 姿勢z参照
 	modules_[e_wrist_z2]->cnt_objects_.push_back(cnt_objects_[0]);
 	// IKパラメータ更新
-	modules_[e_wrist_z2]->kp_rx_nums_.clear();
+	modules_[e_wrist_z2]->Clear_kp_IKstate();
 	modules_[e_wrist_z2]->kp_rx_nums_.push_back(0.4);
-	modules_[e_wrist_z2]->is_dir_zIK = true;
+	modules_[e_wrist_z2]->is_dir_xIK = true;
 
 }
 
@@ -503,7 +503,7 @@ void Agn_armR001::mode01_update(float delta_time) {
 	cnt_objects_[1]->Rotate(modules_[e_sho_y]->rot_tmp_);		// 肘姿勢更新
 	cnt_objects_[1]->update(0);
 	// 描画系アップデート
-	update(0);
+	//update(0);
 
 }
 

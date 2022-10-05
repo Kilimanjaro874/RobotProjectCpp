@@ -11,21 +11,37 @@ ScenePlay::~ScenePlay() {
 	delete arm_r;
 	delete effector_obj_;
 	delete elbow_obj_;
+
+	delete plane;
+
+	delete box;
 }
 
 
 void ScenePlay::initialzie() {
+
+
+	plane = MdlAirPlane::Create();
+
+	box = new Parts();
+	box->mesh_ = dxe::Mesh::CreateBox(5);
+	box->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	box->mesh_->pos_ = { 0, 20, 0 };
+
+	
+	
+
 	camera_ = new GmCamera();
 	camera_->pos_ = { 100, 0, -300 };
 
 	// ---- Œ± ----- //
 	
 	// --- Æ€ˆÊ’u --- //
-	aim_tar_ = FaceVec::Create({0, 10, 60});
+	aim_tar_ = FaceVec::Create({0, 0, 70});
 	aim_tar_->Rotate(tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(45)));
 	aim_tar_->update(0);
 	// --- •IˆÊ’u --- //
-	elbow_r_tar = FaceVec::Create({ 30, -30, 10 });
+	elbow_r_tar = FaceVec::Create({ 0, -70, 0 });
 	elbow_r_tar->update(0);
 	// --- –Ú•WˆÊ’uEp¨Ši”[ ---
 	targets_.clear();
@@ -52,7 +68,6 @@ void ScenePlay::initialzie() {
 void ScenePlay::update(float delta_time)
 {
 	GameManager* mgr = GameManager::GetInstance();
-
 	//------------------------------------------------------------------
 	//
 	// ƒJƒƒ‰§Œä
@@ -227,15 +242,18 @@ void ScenePlay::update(float delta_time)
 	
 	
 	
-	DrawStringEx(10, 350, -1, "E.E. pos: x=%f, y=%f, z=%f", effector_obj_->pos_.x, effector_obj_->pos_.y, effector_obj_->pos_.z);
+	/*DrawStringEx(10, 350, -1, "E.E. pos: x=%f, y=%f, z=%f", effector_obj_->pos_.x, effector_obj_->pos_.y, effector_obj_->pos_.z);
 	DrawStringEx(10, 365, -1, "E.E. drz: x=%f, y=%f, z=%f", effector_obj_->dir_z_.x, effector_obj_->dir_z_.y, effector_obj_->dir_z_.z);
-	DrawStringEx(10, 380, -1, "E.E. drx: x=%f, y=%f, z=%f", effector_obj_->dir_x_.x, effector_obj_->dir_x_.y, effector_obj_->dir_x_.z);	
+	DrawStringEx(10, 380, -1, "E.E. drx: x=%f, y=%f, z=%f", effector_obj_->dir_x_.x, effector_obj_->dir_x_.y, effector_obj_->dir_x_.z);	*/
 	aim_tar_->update(0);
 	DrawStringEx(10, 395, -1, "T.G. pos: x=%f, y=%f, z=%f", aim_tar_->pos_.x, aim_tar_->pos_.y, aim_tar_->pos_.z);
 	DrawStringEx(10, 410, -1, "T.G. drz: x=%f, y=%f, z=%f", aim_tar_->dir_z_.x, aim_tar_->dir_z_.y, aim_tar_->dir_z_.z);
 	DrawStringEx(10, 425, -1, "T.G. drx: x=%f, y=%f, z=%f", aim_tar_->dir_x_.x, aim_tar_->dir_x_.y, aim_tar_->dir_x_.z);
 	elbow_r_tar->update(0);
-	effector_obj_->update(0);
+	//effector_obj_->update(0);
+
+
+	plane->update(delta_time);
 
 }
 
@@ -243,7 +261,7 @@ void ScenePlay::render()
 {
 	camera_->update();
 
-	DrawGridGround(50, 20);
+	DrawGridGround(camera_, 50, 20);
 
 	// ---- Œ± ---- //
 	aim_tar_->render(camera_);
@@ -253,6 +271,7 @@ void ScenePlay::render()
 
 	arm_r->render(camera_);
 
+	plane->render(camera_);
 
-
+	box->mesh_->render(camera_);
 }

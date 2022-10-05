@@ -31,9 +31,9 @@ namespace dxe {
 
 			OBJMATERIAL* mtl = &obj->GetMaterials()[obj->GetSubsets()[i].materialIndex];
 
-			mesh->mtrl_.Ambient = { mtl->ambient.x, mtl->ambient.y, mtl->ambient.z };
-			mesh->mtrl_.Diffuse = { mtl->diffuse.x, mtl->diffuse.y, mtl->diffuse.z };
-			mesh->mtrl_.Specular = { mtl->specular.x, mtl->specular.y, mtl->specular.z };
+			mesh->render_param_.dxlib_mtrl_.Ambient = { mtl->ambient.x, mtl->ambient.y, mtl->ambient.z };
+			mesh->render_param_.dxlib_mtrl_.Diffuse = { mtl->diffuse.x, mtl->diffuse.y, mtl->diffuse.z };
+			mesh->render_param_.dxlib_mtrl_.Specular = { mtl->specular.x, mtl->specular.y, mtl->specular.z };
 
 			if (!std::string(mtl->ambientMapName).empty()) {
 				mesh->tex_ambient_ = dxe::Texture::CreateFromFile((std::get<0>(det_paths) + "/" + std::string(mtl->ambientMapName)).c_str());
