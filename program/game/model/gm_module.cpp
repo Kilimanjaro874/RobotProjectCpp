@@ -85,6 +85,7 @@ tnl::Quaternion Module::InverseKinematics(float delta_time) {
 	float dth = 0;
 	float dth_sum = 0;
 	if (is_posIK) {
+		if (id_ == 1) { printf(""); }
 		for (int i = 0; i < kp_p_nums_.size(); i++) {
 			tnl::Vector3 x = tnl::Vector3::Cross((cnt_objects_[i]->pos_ - pos_o_), rot_axis_);
 			tnl::Vector3 y = tnl::Vector3::Cross((cnt_targets_[i]->pos_ - pos_o_), rot_axis_);

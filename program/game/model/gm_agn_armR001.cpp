@@ -9,6 +9,7 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 	agn->init_dir_x_ = tnl::Vector3{ 1, 0, 0 };
 	agn->link_length_ = 0;
 
+	// ----- 各モジュールの設定を実施：初期状態 mode01に設定 ----- //
 	// ---- 1. e_sho_x ---- //
 	Module* sho_x = new Module();
 	sho_x->id_ = 1;
@@ -287,6 +288,7 @@ Agn_armR001* Agn_armR001::Create(const tnl::Vector3& p_back, const tnl::Quaterni
 
 void Agn_armR001::aimTarget_initialize(FaceVec& target, FaceVec& cnt_obj, FaceVec& elbow) {
 	// ---- 肘を引いて、ターゲットを指さす動作を実行(initialize) ---- //
+	// --- 腕を90度曲げる
 	// --- FaceVec参照値初期化 --- //
 	for (auto mod : modules_) {
 		mod->cnt_targets_.clear();
@@ -326,9 +328,20 @@ void Agn_armR001::aimTarget_initialize(FaceVec& target, FaceVec& cnt_obj, FaceVe
 	// --- 1. e_sho_x --- //
 	// 位置参照 * 2
 	modules_[e_sho_x]->cnt_objects_.push_back(&cnt_obj);
+	// IKパラメータ再設定
+	modules_[e_sho_x]->kp_p_nums_.clear();			// 初期化
+	modules_[e_sho_x]->kp_p_nums_.push_back(0.4);	// 標的位置へのkp付与
+	modules_[e_sho_x]->kp_p_nums_.push_back(0);	// 肘位置へのkp付与
+	modules_[e_sho_x]->is_posIK = true;				// 位置参照のIK有効化
 	// --- 2. e_sho_z --- //
 	// 位置参照 * 1
 	modules_[e_sho_y]->cnt_objects_.push_back(&cnt_obj);
+	// IKパラメータ再設定
+	modules_[e_sho_x]->kp_p_nums_.clear();			// 初期化
+	modules_[e_sho_x]->kp_p_nums_.push_back(0.4);	// 標的位置へのkp付与
+	modules_[e_sho_x]->kp_p_nums_.push_back(0.6);	// 肘位置へのkp付与
+	modules_[e_sho_x]->is_posIK = true;				// 位置参照のIK有効化
+
 	// --- 3. e_arm_x --- //
 	// 位置参照 * 1
 	modules_[e_arm_x]->cnt_objects_.push_back(&cnt_obj);
@@ -348,6 +361,7 @@ void Agn_armR001::aimTarget_initialize(FaceVec& target, FaceVec& cnt_obj, FaceVe
 
 void Agn_armR001::aimTarget_update(float delta_time, const FaceVec& target) {
 	// ---- 肘を引いて、ターゲットを指さす動作を実行(update) ---- //
+	rot_tmp_ = tnl::Quaternion::RotationAxis(rot_axis_, 0);
 	tnl::Vector3 tmp_p_back = this->pos_o_;
 	tnl::Quaternion tmp_q_back = this->rot_tmp_;
 	
@@ -365,39 +379,131 @@ void Agn_armR001::aimTarget_update(float delta_time, const FaceVec& target) {
 
 }
 
-void Agn_armR001::mode01_init(FaceVec& target){
+void Agn_armR001::mode01_init(const std::vector<FaceVec*> targets){
 	// ----- ターゲットに向かってエイム動作：初期化 ----- //
+	// ターゲットの数：2つ (照準位置、肘引きの目標位置)
+	// targets[0] : 照準位置
+	// targets[1] ： 肘引きの目標位置
 	// ---- リストの初期化 ---- //
 	targets_.clear();
-	cnt_objects_.clear();
+	//cnt_objects_.clear();
 
 	// ---- リストに登録していく：目標位置・姿勢 ---- //
 	// --- 1. e_sho_x --- //
 	// 位置参照 * 2
-	modules_[e_sho_x]->cnt_targets_.push_back(&target);
-
-	// --- 2. e_sho_z --- //
+	modules_[e_sho_x]->cnt_targets_.push_back(targets[0]);
+	modules_[e_sho_x]->cnt_targets_.push_back(targets[1]);
+	// --- 2. e_sho_y --- //
 	// 位置参照 * 1
-	modules_[e_sho_y]->cnt_targets_.push_back(&target);
+	modules_[e_sho_y]->cnt_targets_.push_back(targets[1]);	// 肘位置参照
 	// --- 3. e_arm_x --- //
 	// 位置参照 * 1
-	modules_[e_arm_x]->cnt_targets_.push_back(&target);
+	modules_[e_arm_x]->cnt_targets_.push_back(targets[0]);
 	// --- 4. e_arm_y --- //
 	// 姿勢x参照 * 1
-	modules_[e_arm_z]->cnt_targets_.push_back(&target);
+	modules_[e_arm_z]->cnt_targets_.push_back(targets[0]);
 	// --- 5. e_wrist_z --- //
 	// 姿勢x参照
-	modules_[e_wrist_z]->cnt_targets_.push_back(&target);
+	modules_[e_wrist_z]->cnt_targets_.push_back(targets[0]);
 	// --- 6. e_wrist_x --- //
 	// 姿勢z参照
-	modules_[e_wrist_x]->cnt_targets_.push_back(&target);
+	modules_[e_wrist_x]->cnt_targets_.push_back(targets[0]);
 	// --- 7. e_wrist_y --- //
 	// 姿勢z参照
-	modules_[e_wrist_z2]->cnt_targets_.push_back(&target);
+	modules_[e_wrist_z2]->cnt_targets_.push_back(targets[0]);
+
+	// ---- リストに登録していく：現在位置・姿勢 ---- //
+	// --- 手先有顔ベクトル作成＆登録 --- //
+
+	
+	// --- リストの初期化 --- // 
+	//cnt_objects_.clear();
+	//cnt_objects_.resize(2);
+	// --- 制御対象の更新 --- //
+	cnt_objects_[0]->pos_ = modules_[e_wrist_z2]->pos_o_next_;	// 手先位置更新
+	cnt_objects_[0]->Rotate(modules_[e_wrist_z2]->rot_tmp_);	// 手先姿勢更新
+	cnt_objects_[1]->pos_ = modules_[e_sho_y]->pos_o_next_;		// 肘位置更新
+	cnt_objects_[1]->Rotate(modules_[e_sho_y]->rot_tmp_);		// 肘姿勢更新
+
+	// --- 1. e_sho_x --- //
+	// 位置参照 * 2
+	modules_[e_sho_x]->cnt_objects_.push_back(cnt_objects_[0]);
+	modules_[e_sho_x]->cnt_objects_.push_back(cnt_objects_[1]);	// 肘位置参考
+	// IKパラメータ更新
+	modules_[e_sho_x]->kp_p_nums_.clear();			// 初期化
+	modules_[e_sho_x]->kp_p_nums_.push_back(0.4);	// 標的位置へのkp付与
+	modules_[e_sho_x]->kp_p_nums_.push_back(0.6);	// 肘位置へのkp付与
+	modules_[e_sho_x]->is_posIK = true;				// 位置参照のIK有効化
+	
+	// --- 2. e_sho_z --- //
+	// 位置参照 * 1
+	modules_[e_sho_y]->cnt_objects_.push_back(cnt_objects_[1]);	// 肘位置参考
+	// IKパラメータ更新
+	modules_[e_sho_y]->kp_p_nums_.clear();			// 初期化
+	modules_[e_sho_y]->kp_p_nums_.push_back(0.4);	// 肘位置へのkp付与
+	modules_[e_sho_y]->is_posIK = true;				// 位置参照のIK有効化
+
+	// --- 3. e_arm_x --- //
+	// 位置参照 * 1
+	modules_[e_arm_x]->cnt_objects_.push_back(cnt_objects_[0]);
+	// IKパラメータ更新	
+	modules_[e_arm_x]->kp_p_nums_.clear();			// 初期化
+	modules_[e_arm_x]->kp_p_nums_.push_back(0.4);	// 照準位置へのkp付与
+	modules_[e_arm_x]->is_posIK = true;				// 標準位置のIK有効化
+
+	// --- 4. e_arm_y --- //
+	// 位置参照 * 1
+	modules_[e_arm_z]->cnt_objects_.push_back(cnt_objects_[0]);
+	// IKパラメータ更新
+	modules_[e_arm_z]->kp_p_nums_.clear();			// 初期化
+	modules_[e_arm_z]->kp_p_nums_.push_back(0.4);	// 標準位置へのkp付与
+	modules_[e_arm_z]->is_posIK = true;
+
+	// --- 5. e_wrist_z --- //
+	// 姿勢x参照
+	modules_[e_wrist_z]->cnt_objects_.push_back(cnt_objects_[0]);
+	// IKパラメータ更新
+	modules_[e_wrist_z]->kp_rx_nums_.clear();
+	modules_[e_wrist_z]->kp_rx_nums_.push_back(0.4);
+	modules_[e_wrist_z]->is_dir_xIK = true;
+	// --- 6. e_wrist_x --- //
+	// 姿勢z参照
+	modules_[e_wrist_x]->cnt_objects_.push_back(cnt_objects_[0]);
+	// IKパラメータ更新
+	modules_[e_wrist_x]->kp_rz_nums_.clear();
+	modules_[e_wrist_x]->kp_rz_nums_.push_back(0.4);
+	modules_[e_wrist_x]->is_dir_zIK = true;
+	// --- 7. e_wrist_y --- //
+	// 姿勢z参照
+	modules_[e_wrist_z2]->cnt_objects_.push_back(cnt_objects_[0]);
+	// IKパラメータ更新
+	modules_[e_wrist_z2]->kp_rx_nums_.clear();
+	modules_[e_wrist_z2]->kp_rx_nums_.push_back(0.4);
+	modules_[e_wrist_z2]->is_dir_zIK = true;
 
 }
 
-void Agn_armR001::mode01_update() {
+void Agn_armR001::mode01_update(float delta_time) {
+	// ----- ターゲットに向かってエイム動作：IK更新 ----- //
+	// ターゲットの数：2つ (照準位置、肘引きの目標位置)
+	// targets[0] : 照準位置
+	// targets[1] ： 肘引きの目標位置
+	tnl::Vector3 tmp_pos = pos_o_;
+	tnl::Quaternion tmp_q = rot_tmp_;
+	for (auto mod : modules_) {
+		mod->DirectKinematicsWithIK_world(delta_time, tmp_pos, rot_tmp_);
+		tmp_pos = mod->pos_o_next_;
+		tmp_q = mod->rot_tmp_;
+	}
+	// ---- 制御対象の更新 ---- //
+	cnt_objects_[0]->pos_ = modules_[e_wrist_z2]->pos_o_next_;	// 手先位置更新
+	cnt_objects_[0]->Rotate(modules_[e_wrist_z2]->rot_tmp_);	// 手先姿勢更新
+	cnt_objects_[0]->update(0);
+	cnt_objects_[1]->pos_ = modules_[e_sho_y]->pos_o_next_;		// 肘位置更新
+	cnt_objects_[1]->Rotate(modules_[e_sho_y]->rot_tmp_);		// 肘姿勢更新
+	cnt_objects_[1]->update(0);
+	// 描画系アップデート
+	update(0);
 
 }
 
