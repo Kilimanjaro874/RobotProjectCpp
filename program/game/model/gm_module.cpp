@@ -51,7 +51,7 @@ void Module::DirectKinematicsWithIK_world(float delta_time, const tnl::Vector3& 
 	rot_axis_ = tnl::Vector3::TransformCoord(init_rot_axis_, rot_sum_);
 	rot_axis_.normalize();
 	tnl::Quaternion iqi = InverseKinematics(delta_time);
-	rot_tmp_ = q_back * InverseKinematics(delta_time);
+	rot_tmp_ = q_back * iqi;
 	rot_sum_ *= iqi;
 	dir_z_ = tnl::Vector3::TransformCoord(init_dir_z_, rot_sum_);
 	dir_z_.normalize();			// 丸め誤差対策：正規化
@@ -85,6 +85,7 @@ tnl::Quaternion Module::InverseKinematics(float delta_time) {
 	float dth = 0;
 	float dth_sum = 0;
 	if (is_posIK) {
+		if (id_ == 1) { printf(""); }
 		for (int i = 0; i < kp_p_nums_.size(); i++) {
 			tnl::Vector3 x = tnl::Vector3::Cross((cnt_objects_[i]->pos_ - pos_o_), rot_axis_);
 			tnl::Vector3 y = tnl::Vector3::Cross((cnt_targets_[i]->pos_ - pos_o_), rot_axis_);
@@ -134,6 +135,18 @@ tnl::Quaternion Module::InverseKinematics(float delta_time) {
 	// 回転量を返す
 	return tnl::Quaternion::RotationAxis(rot_axis_, dth_sum);
 }
+
+void Module::Clear_kp_IKstate() {
+	// ----- モジュールのkpのリストとIKを解く種類の条件リセット ----- //
+	kp_p_nums_.clear();
+	kp_rz_nums_.clear();
+	kp_rx_nums_.clear();
+	is_posIK = false;
+	is_dir_zIK = false;
+	is_dir_xIK = false;
+
+}
+
 
 void Module::UpdateCnt_obj(FaceVec& cnt_object) {
 	cnt_object.pos_ = pos_o_;

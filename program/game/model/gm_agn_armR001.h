@@ -18,4 +18,8 @@ public:
 	
 	void aimTarget_initialize(FaceVec& target, FaceVec& cnt_obj, FaceVec& elbow);
 	void aimTarget_update(float delta_time, const FaceVec& target);
+	void mode01_init(const std::vector<FaceVec*> targets) override;	// mode01 : ターゲットに向かってエイム動作
+	void mode01_update(float delta_time) override;	
+	void mode02_init(FaceVec& target) override;
+	void mode02_update()override;
 };
