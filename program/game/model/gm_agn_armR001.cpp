@@ -322,12 +322,21 @@ void Agn_armR001::mode01_init(const std::vector<FaceVec*> targets){
 }
 	
 
-void Agn_armR001::mode01_update(float delta_time) {
+void Agn_armR001::mode01_update(float delta_time, const tnl::Vector3& p_back, 
+	const tnl::Quaternion& q_back, std::vector<FaceVec*> targets) {
 	// ----- ターゲットに向かってエイム動作：IK更新 ----- //
 	// ターゲットの数：2つ (照準位置、肘引きの目標位置)
 	// targets[0] : 照準位置
 	// targets[1] ： 肘引きの目標位置
+	// ---- 制御目標の更新 ---- //
+	targets_.resize(2);
 
+	if (targets[0]->pos_.z < 50) {
+		printf("deb");
+	}
+	targets_[0] = targets[0];
+	targets_[1] = targets[1];
+	
 	// ---- 制御対象の更新 ---- //
 	cnt_objects_[0]->pos_ = modules_[e_wrist_z2]->pos_o_next_;	// 手先位置更新
 	cnt_objects_[0]->Rotate(modules_[e_wrist_z2]->rot_tmp_);	// 手先姿勢更新
@@ -337,15 +346,14 @@ void Agn_armR001::mode01_update(float delta_time) {
 	cnt_objects_[1]->Rotate(modules_[e_arm_z]->rot_tmp_);		// 肘姿勢更新
 	cnt_objects_[1]->update(0);
 
-	tnl::Vector3 tmp_pos = pos_o_;
-	tnl::Quaternion tmp_q = rot_tmp_;
+	tnl::Vector3 tmp_pos = p_back;
+	tnl::Quaternion tmp_q = q_back;
 	for (auto mod : modules_) {
 		mod->DirectKinematicsWithIK_world(delta_time, tmp_pos, tmp_q);
 		tmp_pos = mod->pos_o_next_;
 		tmp_q = mod->rot_tmp_;
 	}
 	
-
 	// 描画系アップデート
 	update(delta_time);
 }

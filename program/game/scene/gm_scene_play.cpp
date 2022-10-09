@@ -6,8 +6,8 @@
 
 ScenePlay::~ScenePlay() {
 	delete camera_;
+	delete robo_;
 	
-	delete armR_;
 	for (auto tar : targets_) { delete tar; }
 	for (auto obj : objects_) {	delete obj;	}
 }
@@ -16,17 +16,19 @@ ScenePlay::~ScenePlay() {
 void ScenePlay::initialzie() {
 
 	camera_ = new GmCamera();
-	armR_ = Agn_armR001::Create(tnl::Vector3{ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 1, 0, 0 }, 0));
+	
+	robo_ = Robot::Create({ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
 
 	targets_.resize(2);
 	targets_[0] = FaceVec::Create({ 0, 0, 70 });
-	targets_[1] = FaceVec::Create({ 30, -30, 0 });
+	targets_[1] = FaceVec::Create({ 50, -30, 0 });
+
+	robo_->mode01_init(targets_);
 	
 	objects_.resize(2);
 	objects_[0] = FaceVec::Create({ 0, 0, 0 });
 	objects_[1] = FaceVec::Create({ 0, 0, 0 });
 
-	armR_->mode01_init(targets_);
 
 }
 
@@ -57,27 +59,44 @@ void ScenePlay::update(float delta_time)
 		mgr->chengeScene(new SceneResult());
 	}
 
-	for (auto tar : targets_) {
+	/*for (auto tar : targets_) {
 		tar->update(delta_time);
-	}
+	}*/
 
 
 	// Œ±“®ì
-	armR_->mode01_update(delta_time);
+	robo_->update(delta_time);
 
-	// target ‘€ì 
-	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_UP)) {
-		targets_[0]->pos_ += tnl::Vector3{ 0, 10, 0 };
-	}
-	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_DOWN)) {
-		targets_[0]->pos_ += tnl::Vector3{ 0, -10, 0 };
-	}
-	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RIGHT)) {
-		targets_[0]->pos_ += tnl::Vector3{ 0, 0, 10 };
-	}
-	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_LEFT)) {
-		targets_[0]->pos_ += tnl::Vector3{ 0, 0, -10 };
-	}
+	tnl::Vector3 tar1 = robo_->targets_[0]->pos_;
+	tnl::Vector3 tar2 = robo_->targets_[1]->pos_;
+	DrawStringEx(50, 10, -1, "TG1:x= %f, y= %f, z= %f", tar1.x, tar1.y, tar1.z);
+	DrawStringEx(50, 25, -1, "TG2:x= %f, y= %f, z= %f", tar2.x, tar2.y, tar2.z);
+	tnl::Vector3 obj1 = robo_->agents_[0]->cnt_objects_[0]->pos_;
+	tnl::Vector3 obj2 = robo_->agents_[0]->cnt_objects_[1]->pos_;
+	DrawStringEx(50, 40, -1, "EE1:x= %f, y= %f, z= %f", obj1.x, obj1.y, obj1.z);
+	DrawStringEx(50, 55, -1, "EE2:x= %f, y= %f, z= %f", obj2.x, obj2.y, obj2.z);
+
+	tnl::Vector3 pos_origin = { 0, 15, 0 };
+	tnl::Vector3* pos;
+	pos = &pos_origin;
+	pos_origin += { 0, 1, 0 };
+	DrawStringEx(50, 70, -1, "pos = %f, %f, %f", pos->x, pos->y, pos->z);
+	
+
+
+	//// target ‘€ì 
+	//if (tnl::Input::IsKeyDownTrigger(eKeys::KB_UP)) {
+	//	targets_[0]->pos_ += tnl::Vector3{ 0, 10, 0 };
+	//}
+	//else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_DOWN)) {
+	//	targets_[0]->pos_ += tnl::Vector3{ 0, -10, 0 };
+	//}
+	//else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RIGHT)) {
+	//	targets_[0]->pos_ += tnl::Vector3{ 0, 0, 10 };
+	//}
+	//else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_LEFT)) {
+	//	targets_[0]->pos_ += tnl::Vector3{ 0, 0, -10 };
+	//}
 	
 }
 
@@ -86,12 +105,14 @@ void ScenePlay::render()
 	camera_->update();
 
 	DrawGridGround(camera_, 50, 20);
+	
 
-	armR_->render(camera_);
+	robo_->render(camera_);
 
 	for (int i = 0; i < 2; i++) {
-		targets_[i]->render(camera_);
-		armR_->cnt_objects_[i]->render(camera_);
+		robo_->targets_[i]->render(camera_);
+		robo_->agents_[0]->cnt_objects_[i]->render(camera_);
+		
 	}
 	
 }

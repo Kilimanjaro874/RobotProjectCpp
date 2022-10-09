@@ -29,7 +29,7 @@ FaceVec* FaceVec::Create(tnl::Vector3 pos_) {
 	sp_p->ofs_pos_ = { 0, 0, 0 };
 	// -- •ûŒü‚Ì•\Ž¦ (z) -- 
 	Parts* cy_pz = new Parts();
-	cy_pz->mesh_ = dxe::Mesh::CreateCylinder(1.0, 200);
+	cy_pz->mesh_ = dxe::Mesh::CreateCylinder(1.0, 20);
 	cy_pz->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/red1.bmp"));
 	// ˆÊ’uEŽp¨Ý’è
 	cy_pz->ofs_pos_ += tnl::Vector3{ 0, 0, 10 };

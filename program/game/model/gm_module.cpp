@@ -112,4 +112,3 @@ tnl::Quaternion Module::InverseKinematics(float delta_time) {
 	// 回転量をクォータニオンで返す
 	return tnl::Quaternion::RotationAxis(rot_axis_, dth_sum);
 }
-

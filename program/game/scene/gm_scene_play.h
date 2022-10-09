@@ -4,8 +4,10 @@
 #include"../model/gm_airplane.h"
 #include "../model/gm_parts.h"
 
+#include "../model/gm_Robot.h"
+
 class GmCamera;
-class Agn_armR001;
+class Robot;
 
 class ScenePlay : public SceneBase {
 public :
@@ -13,7 +15,8 @@ public :
 	~ScenePlay();
 
 	GmCamera* camera_ = nullptr;
-	Agn_armR001* armR_ = nullptr;
+	
+	Robot* robo_ = nullptr;
 
 	std::vector<FaceVec*> targets_;
 	std::vector<FaceVec*> objects_;

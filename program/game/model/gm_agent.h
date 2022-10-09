@@ -15,7 +15,8 @@ public:
 	virtual void update(float delta_time);
 	virtual void render(dxe::Camera* camera);
 	virtual void mode01_init(const std::vector<FaceVec*> targets) = 0;		// エージェントに与えるモーション１：初期化
-	virtual void mode01_update(float delta_time);	// 〃 update
+	virtual void mode01_update(float delta_time, const tnl::Vector3& p_back, 
+		const tnl::Quaternion& q_back, std::vector<FaceVec*> targets);	// 〃 update
 	virtual void mode02_init(FaceVec& target);
 	virtual void mode02_update();
 
