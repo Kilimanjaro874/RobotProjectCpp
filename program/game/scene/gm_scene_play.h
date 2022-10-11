@@ -6,6 +6,8 @@
 
 #include "../model/gm_Robot.h"
 
+
+
 class GmCamera;
 class Robot;
 
@@ -17,6 +19,10 @@ public :
 	GmCamera* camera_ = nullptr;
 	
 	Robot* robo_ = nullptr;
+
+	//// test 
+	//Parts* parts_ = nullptr;
+	//std::vector<dxe::Mesh*> obj_parts_;
 
 	std::vector<FaceVec*> targets_;
 	std::vector<FaceVec*> objects_;

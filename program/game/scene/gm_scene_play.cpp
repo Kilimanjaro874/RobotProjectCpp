@@ -10,6 +10,8 @@ ScenePlay::~ScenePlay() {
 	
 	for (auto tar : targets_) { delete tar; }
 	for (auto obj : objects_) {	delete obj;	}
+	/*for (auto obj : obj_parts_) { delete obj; }
+	delete parts_;*/
 }
 
 
@@ -20,15 +22,20 @@ void ScenePlay::initialzie() {
 	robo_ = Robot::Create({ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
 
 	targets_.resize(2);
-	targets_[0] = FaceVec::Create({ 0, 0, 70 });
+	targets_[0] = FaceVec::Create({ 0, 0, 100 });
 	targets_[1] = FaceVec::Create({ 50, -30, 0 });
+	for (auto tar : targets_) { tar->InitDK(robo_->pos_o_); }	// roboÀ•WŒn‚ÉFix
 
 	robo_->mode01_init(targets_);
 	
-	objects_.resize(2);
-	objects_[0] = FaceVec::Create({ 0, 0, 0 });
-	objects_[1] = FaceVec::Create({ 0, 0, 0 });
 
+
+
+	// test
+	/*parts_ = new Parts();
+	obj_parts_ = dxe::Mesh::CreateFromFileObj("graphics/OBJ/Sword.obj");*/
+	//parts_->mesh_->CreateFromFileObj("graphics/OBJ/RedBoss.obj");
+	//parts_->mesh_->setDefaultLightEnable(true);
 
 }
 
@@ -115,4 +122,8 @@ void ScenePlay::render()
 		
 	}
 	
+	////parts_->mesh_->render(camera_);
+	//for (auto obj : obj_parts_) {
+	//	obj->render(camera_);
+	//}
 }

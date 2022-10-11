@@ -39,6 +39,7 @@
     <ClCompile Include="program\game\gm_manager.cpp" />
     <ClCompile Include="program\game\model\gm_agent.cpp" />
     <ClCompile Include="program\game\model\gm_agn_armR001.cpp" />
+    <ClCompile Include="program\game\model\gm_agn_lowerBack001.cpp" />
     <ClCompile Include="program\game\model\gm_airplane.cpp" />
     <ClCompile Include="program\game\model\gm_anim_sprite3d.cpp" />
     <ClCompile Include="program\game\model\gm_faceVec.cpp" />
@@ -73,6 +74,7 @@
     <ClInclude Include="program\game\gm_manager.h" />
     <ClInclude Include="program\game\model\gm_agent.h" />
     <ClInclude Include="program\game\model\gm_agn_armR001.h" />
+    <ClInclude Include="program\game\model\gm_agn_lowerBack001.h" />
     <ClInclude Include="program\game\model\gm_airplane.h" />
     <ClInclude Include="program\game\model\gm_anim_sprite3d.h" />
     <ClInclude Include="program\game\model\gm_faceVec.h" />

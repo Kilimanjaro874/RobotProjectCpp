@@ -11,21 +11,26 @@ public:
 	}
 	enum {
 		e_arm_r,
+		e_lower_back,
 		e_agents_max		// おわり
 	};
 	std::vector<Agent*> agents_;	// エージェントを登録
 	// ---- Direct Kinematics : DKに必要な変数 ---- //
 	tnl::Vector3 dir_r_;		// ルート座標へ向くベクトル定義
 	tnl::Vector3 init_dir_r_;	// ルート座標へ向くベクトル定義（初期値)　：大きさはlink_lengthで定義
+	float length_to_root;		// ルート座標へのベクトル長さ格納
+	tnl::Quaternion q_dir_r_;	// ルート座標へのクォータニオン
 	// DK test
 	tnl::Vector3 dir_arm_r_;		// テスト：右腕までのベクトル
 	tnl::Vector3 init_dir_arm_r_;	// テスト：右腕までのベクトル方向
 	tnl::Quaternion q_arm_r_;	// 
 	float length_to_arm_r_;		// arm_rへの距離
 
+
 	// ---- 移動系変数 ---- //
-	float move_speed_ = 10.0f;		// 移動速度(m/s) (*= delta_time)
-	float rotate_speed_ = 10.0f;	// 旋回速度(rad/s) (*= delta_time)
+	float move_speed_ = 50.0f;		// 移動速度(m/s) (*= delta_time)
+	float rotate_speed_ = 1.5f;	// 旋回速度(rad/s) (*= delta_time)
+	tnl::Vector3 d_move_;			// 1フレーム間のx,z移動量を格納
 
 
 	static Robot* Create(const tnl::Vector3& p_back, const tnl::Quaternion& q_back);

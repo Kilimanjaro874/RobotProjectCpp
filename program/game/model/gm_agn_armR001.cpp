@@ -303,7 +303,7 @@ void Agn_armR001::mode01_init(const std::vector<FaceVec*> targets){
 	modules_[e_arm_z]->ik_settings_.clear();
 	modules_[e_arm_z]->ik_settings_.resize(2);
 	modules_[e_arm_z]->ik_settings_[0] = { pos_to_pos, 0.4, targets[0], cnt_objects_[0] };		// •W“IˆÊ’u‚Ö‚ÌˆÊ’uIK
-	modules_[e_arm_z]->ik_settings_[1] = { dirx_to_dirx, 0.01, targets[1], cnt_objects_[1] };	// •IŽp¨‚Ö‚ÌŽp¨IK
+	modules_[e_arm_z]->ik_settings_[1] = { dirx_to_dirx, 0.2, targets[1], cnt_objects_[1] };	// •IŽp¨‚Ö‚ÌŽp¨IK
 	// --- 5. e_wrist_z --- //
 	modules_[e_wrist_z]->ik_settings_.clear();
 	modules_[e_wrist_z]->ik_settings_.resize(2);
@@ -331,9 +331,6 @@ void Agn_armR001::mode01_update(float delta_time, const tnl::Vector3& p_back,
 	// ---- §Œä–Ú•W‚ÌXV ---- //
 	targets_.resize(2);
 
-	if (targets[0]->pos_.z < 50) {
-		printf("deb");
-	}
 	targets_[0] = targets[0];
 	targets_[1] = targets[1];
 	

@@ -166,9 +166,6 @@
     <ClCompile Include="program\game\gm_camera.cpp">
       <Filter>program\game</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_faceVec.cpp">
-      <Filter>program\game\model</Filter>
-    </ClCompile>
     <ClCompile Include="program\game\model\gm_agent.cpp">
       <Filter>program\game\model\robot</Filter>
     </ClCompile>
@@ -179,6 +176,12 @@
       <Filter>program\game\model\robot</Filter>
     </ClCompile>
     <ClCompile Include="program\game\model\gm_Robot.cpp">
+      <Filter>program\game\model\robot</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\model\gm_faceVec.cpp">
+      <Filter>program\game\model\robot</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\model\gm_agn_lowerBack001.cpp">
       <Filter>program\game\model\robot</Filter>
     </ClCompile>
   </ItemGroup>
@@ -294,9 +297,6 @@
     <ClInclude Include="program\game\gm_camera.h">
       <Filter>program\game</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_faceVec.h">
-      <Filter>program\game\model</Filter>
-    </ClInclude>
     <ClInclude Include="program\game\model\gm_agent.h">
       <Filter>program\game\model\robot</Filter>
     </ClInclude>
@@ -307,6 +307,12 @@
       <Filter>program\game\model\robot</Filter>
     </ClInclude>
     <ClInclude Include="program\game\model\gm_Robot.h">
+      <Filter>program\game\model\robot</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\model\gm_faceVec.h">
+      <Filter>program\game\model\robot</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\model\gm_agn_lowerBack001.h">
       <Filter>program\game\model\robot</Filter>
     </ClInclude>
   </ItemGroup>

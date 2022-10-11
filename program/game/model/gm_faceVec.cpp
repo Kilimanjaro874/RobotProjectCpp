@@ -20,7 +20,9 @@ FaceVec* FaceVec::Create(tnl::Vector3 pos_) {
 	fv->parts_.resize(e_parts_max);
 	fv->pos_ = pos_;
 	fv->dir_z_ = tnl::Vector3{ 0, 0, 1 };
+	fv->init_dir_z_ = fv->dir_z_;
 	fv->dir_x_ = tnl::Vector3{ 1, 0, 0 };
+	fv->init_dir_x_ = fv->dir_x_;
 	// -- 球の表示 -- /
 	Parts* sp_p = new Parts();
 	sp_p->mesh_ = dxe::Mesh::CreateSphere(2);
@@ -53,11 +55,23 @@ FaceVec* FaceVec::Create(tnl::Vector3 pos_) {
 
 void FaceVec::Rotate(tnl::Quaternion rot_temp) {
 	// --- 1フレーム間の回転量変化：rot_tempの影響を本クラスへ反映 --- //
-	
-	dir_z_ = tnl::Vector3::TransformCoord(dir_z_, rot_temp);
-	dir_z_.normalize();
-	dir_x_ = tnl::Vector3::TransformCoord(dir_x_, rot_temp);
-	dir_x_.normalize();
 	rot_sum_ *= rot_temp;
+	dir_z_ = tnl::Vector3::TransformCoord(init_dir_z_, rot_sum_);
+	dir_x_ = tnl::Vector3::TransformCoord(init_dir_x_, rot_sum_);
+	dir_r_ = tnl::Vector3::TransformCoord(init_dir_r_, rot_sum_);
 }
 
+void FaceVec::InitDK(tnl::Vector3 refPos) {
+	// --- DKで参照する座標を指定 --- //
+	dir_r_ = pos_ - refPos;
+	r_length_ = dir_r_.length();
+	dir_r_.normalize();
+	init_dir_r_ = dir_r_;
+}
+
+void FaceVec::DirectKinematics(const tnl::Vector3& p_back, const tnl::Quaternion& q_back) {
+	// --- 参照する座標系からの位置・1フレーム間の回転を受け取り、位置更新する関数 ---
+	// -- 回転系の更新 -- //
+	Rotate(q_back);
+	pos_ = p_back + dir_r_ * r_length_;
+}

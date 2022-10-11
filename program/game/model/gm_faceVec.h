@@ -16,8 +16,13 @@ public:
 	// --- for DK, IK --- 
 	tnl::Vector3 pos_;		// 位置（どの座標系Σに属するかはユーザーの設定次第：位置参照用)
 	tnl::Vector3 dir_z_;	// 方向単位ベクトルz(人間でいう、人差し指を目標へ向けた時のその方向を単位ベクトルとして表現:姿勢参照用)
+	tnl::Vector3 init_dir_z_;	// 初期姿勢の単位ベクトル
 	tnl::Vector3 dir_x_;	// 方向単位ベクトルx(人差し指に対し、直行した親指の方向を単位ベクトルとして表現：姿勢参照用)
+	tnl::Vector3 init_dir_x_;	// 初期姿勢の単位ベクトル
 	tnl::Quaternion rot_sum_;	// 本クラス初期姿勢からどれだけ回転したかを格納しておく。
+	tnl::Vector3 dir_r_;	// ある座標系からの距離ベクトルを定義
+	tnl::Vector3 init_dir_r_;	// 初期姿勢の単位ベクトル
+	float r_length_;		// 
 	// --- for render --- 
 	std::vector<Parts*> parts_;		// パーツクラス
 	enum {
@@ -32,4 +37,6 @@ public:
 	virtual void render(dxe::Camera* camera);
 	static FaceVec* Create(tnl::Vector3 pos_);
 	void Rotate(tnl::Quaternion rot_temp);
+	void InitDK(tnl::Vector3 refPos);
+	void DirectKinematics(const tnl::Vector3& p_back, const tnl::Quaternion& q_back);
 };
