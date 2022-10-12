@@ -27,11 +27,11 @@ Robot* Robot::Create(const tnl::Vector3& p_back, const tnl::Quaternion& q_back) 
 	
 
 	rob->dir_r_ = tnl::Vector3{ 0, 25, 0 };
-	rob->length_to_arm_r_ = rob->dir_r_.length();
+	rob->length_to_root_ = rob->dir_r_.length();
 	rob->dir_r_.normalize();
 	rob->init_dir_r_ = rob->dir_r_;
 	rob->q_dir_r_ = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
-	Agn_lowerBack001* lb = Agn_lowerBack001::Create(rob->init_dir_r_ * rob->length_to_root, rob->q_dir_r_);
+	Agn_lowerBack001* lb = Agn_lowerBack001::Create(rob->init_dir_r_ * rob->length_to_root_, rob->q_dir_r_);
 	rob->agents_[e_lower_back] = lb;
 	
 
@@ -58,7 +58,7 @@ void Robot::update(float delta_time) {
 	//mode01_update(delta_time, dir_arm_r_, rot_tmp_, targets_);
 	agents_[e_arm_r]->mode01_update(delta_time, dir_arm_r_, rot_tmp_, targets_);
 
-	agents_[e_lower_back]->mode01_update(delta_time, init_dir_arm_r_ * length_to_root, q_dir_r_, targets_);
+	agents_[e_lower_back]->mode01_update(delta_time, init_dir_r_ * length_to_root_, q_dir_r_, targets_);
 
 }
 

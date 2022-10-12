@@ -18,7 +18,7 @@ public:
 	// ---- Direct Kinematics : DKに必要な変数 ---- //
 	tnl::Vector3 dir_r_;		// ルート座標へ向くベクトル定義
 	tnl::Vector3 init_dir_r_;	// ルート座標へ向くベクトル定義（初期値)　：大きさはlink_lengthで定義
-	float length_to_root;		// ルート座標へのベクトル長さ格納
+	float length_to_root_;		// ルート座標へのベクトル長さ格納
 	tnl::Quaternion q_dir_r_;	// ルート座標へのクォータニオン
 	// DK test
 	tnl::Vector3 dir_arm_r_;		// テスト：右腕までのベクトル

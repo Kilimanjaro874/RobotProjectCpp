@@ -49,7 +49,7 @@ Agn_lowerBack001* Agn_lowerBack001::Create(const tnl::Vector3& p_back, const tnl
 	bbz_hp->ofs_pos_ += bb_z->init_dir_z_ * -1 * agn->backBone_length_ / 2;
 	bb_z->parts_.push_back(bb_z_bone);
 	bb_z->parts_.push_back(bbz_hp);
-	agn->modules_[e_bb_z] = bb_x;
+	agn->modules_[e_bb_z] = bb_z;
 	
 	// ---- ã‹L‰ŠúˆÊ’uBŽp¨‚ð”½‰f ---- //
 	agn->DirectKinematics_world(p_back, q_back);
