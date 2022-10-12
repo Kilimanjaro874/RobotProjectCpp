@@ -1,14 +1,15 @@
 #include "gm_scene_base.h"
-#include "../model/gm_model.h"
+#include "../model/gm_faceVec.h"
+#include "../model/gm_agn_armR001.h"
+#include"../model/gm_airplane.h"
+#include "../model/gm_parts.h"
+
+#include "../model/gm_Robot.h"
+
+
 
 class GmCamera;
-//class MdlAirPlane;
-class MdlRobotModule;
-class MdlRobotAgent_Rarms;
-
-class MdlArm_r;
-
-class Player;
+class Robot;
 
 class ScenePlay : public SceneBase {
 public :
@@ -16,26 +17,18 @@ public :
 	~ScenePlay();
 
 	GmCamera* camera_ = nullptr;
-	//MdlAirPlane* plane_ = nullptr;
-	// -- ここにロボットクラスを宣言して使用したい -- //
-	MdlRobotModule* arm01_ = nullptr;
-	MdlRobotAgent_Rarms* armAgnt01_ = nullptr;
 	
-	MdlArm_r* arm_r_ = nullptr;
+	Robot* robo_ = nullptr;
 
-	Parts* ball_ = nullptr;
+	//// test 
+	//Parts* parts_ = nullptr;
+	//std::vector<dxe::Mesh*> obj_parts_;
 
-
-	tnl::Vector3 pos_ = { 0, 0, 0 };
-	tnl::Vector3 forward_ = { 1, 0, 0 };
-	tnl::Vector3 rotAi_ = { 0, 1, 0 };
-	tnl::Quaternion tempQ_;
-
-	tnl::Vector3 targetPos_ = { 100, 0, 0 };	// 手先目標位置初期値
+	std::vector<FaceVec*> targets_;
+	std::vector<FaceVec*> objects_;
 
 	void initialzie() override;
 	void update(float delta_time) override;
 	void render() override;
-
 };
 

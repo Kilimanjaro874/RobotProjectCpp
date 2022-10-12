@@ -84,8 +84,8 @@ namespace dxe {
 		div = (deg < 180) ? 4 : div;
 		div = (deg < 90) ? 8 : div;
 
-		uint32_t vtx_size = (vtxs.size() / div) + (tessellation + 1);
-		uint32_t idx_size = idxs.size() - (((tessellation + 1) * 6) * ((tessellation - (tessellation / div) + 1)));
+		uint32_t vtx_size = ((uint32_t)vtxs.size() / div) + (tessellation + 1);
+		uint32_t idx_size = (uint32_t)idxs.size() - (((tessellation + 1) * 6) * ((tessellation - (tessellation / div) + 1)));
 
 		mesh->vtxs_.resize(vtx_size);
 		mesh->idxs_.resize(idx_size);

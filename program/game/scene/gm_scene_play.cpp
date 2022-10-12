@@ -2,55 +2,46 @@
 #include "../gm_camera.h"
 #include "gm_scene_play.h"
 #include "gm_scene_result.h"
-#include "../model/gm_airplane.h"
-#include "../model/gm_robot_module.h"
-#include "../model/gm_robot_agent.h"
 
-#include "../model/gm_ag_arm_r.h";
-
-#include "../model/gm_parts.h"
-
-tnl::Quaternion	fix_rot;
 
 ScenePlay::~ScenePlay() {
 	delete camera_;
-	//delete plane_;
-	delete arm01_;
-	delete armAgnt01_;
-
-	delete arm_r_;
+	delete robo_;
+	
+	for (auto tar : targets_) { delete tar; }
+	for (auto obj : objects_) {	delete obj;	}
+	/*for (auto obj : obj_parts_) { delete obj; }
+	delete parts_;*/
 }
 
 
 void ScenePlay::initialzie() {
-	camera_ = new GmCamera();
-	camera_->pos_ = { 50, 0, -100 };
 
-	arm_r_ = MdlArm_r::Create(targetPos_);
+	camera_ = new GmCamera();
+	
+	robo_ = Robot::Create({ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
+
+	targets_.resize(2);
+	targets_[0] = FaceVec::Create({ 0, 0, 100 });
+	targets_[1] = FaceVec::Create({ 50, -30, 0 });
+	for (auto tar : targets_) { tar->InitDK(robo_->pos_o_); }	// robo座標系にFix
+
+	robo_->mode01_init(targets_);
 	
 
-	//tnl::Vector3 tmp_pos = tnl::Vector3{ 0, 0, 0 };
-	//tnl::Quaternion tmp_q_back = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
-	//tnl::Vector3 tmp_l_back = { 0, 0, 0 };
-	//arm_r_->calcLDK(tmp_pos, tmp_q_back, tmp_l_back);
-	arm_r_->update(0);
-	arm_r_->render(camera_);
 
-	//targetBall = new Parts();
-	//targetBall->mesh_ = dxe::Mesh::CreateSphere(1);
-	//targetBall->mesh->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	//targetBall->mesh->pos_ = targetPos_;
-	ball_ = new Parts();
-	ball_->mesh_ = dxe::Mesh::CreateSphere(5);
-	ball_->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	ball_->mesh_->pos_ = targetPos_;
+
+	// test
+	/*parts_ = new Parts();
+	obj_parts_ = dxe::Mesh::CreateFromFileObj("graphics/OBJ/Sword.obj");*/
+	//parts_->mesh_->CreateFromFileObj("graphics/OBJ/RedBoss.obj");
+	//parts_->mesh_->setDefaultLightEnable(true);
 
 }
 
 void ScenePlay::update(float delta_time)
 {
 	GameManager* mgr = GameManager::GetInstance();
-	
 	//------------------------------------------------------------------
 	//
 	// カメラ制御
@@ -69,62 +60,50 @@ void ScenePlay::update(float delta_time)
 	}
 	if (tnl::Input::IsKeyDown(eKeys::KB_X)) {
 		camera_->target_distance_ -= 1.0f;
-
-	}	
-	
+	}
+	// --- シーン切り替え --- //
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
 		mgr->chengeScene(new SceneResult());
 	}
+
+	/*for (auto tar : targets_) {
+		tar->update(delta_time);
+	}*/
+
+
+	// 試験動作
+	robo_->update(delta_time);
+
+	tnl::Vector3 tar1 = robo_->targets_[0]->pos_;
+	tnl::Vector3 tar2 = robo_->targets_[1]->pos_;
+	DrawStringEx(50, 10, -1, "TG1:x= %f, y= %f, z= %f", tar1.x, tar1.y, tar1.z);
+	DrawStringEx(50, 25, -1, "TG2:x= %f, y= %f, z= %f", tar2.x, tar2.y, tar2.z);
+	tnl::Vector3 obj1 = robo_->agents_[0]->cnt_objects_[0]->pos_;
+	tnl::Vector3 obj2 = robo_->agents_[0]->cnt_objects_[1]->pos_;
+	DrawStringEx(50, 40, -1, "EE1:x= %f, y= %f, z= %f", obj1.x, obj1.y, obj1.z);
+	DrawStringEx(50, 55, -1, "EE2:x= %f, y= %f, z= %f", obj2.x, obj2.y, obj2.z);
+
+	tnl::Vector3 pos_origin = { 0, 15, 0 };
+	tnl::Vector3* pos;
+	pos = &pos_origin;
+	pos_origin += { 0, 1, 0 };
+	DrawStringEx(50, 70, -1, "pos = %f, %f, %f", pos->x, pos->y, pos->z);
 	
 
-	if (tnl::Input::IsKeyDown(eKeys::KB_UP)) {
-		pos_ += forward_ * 10;
-	}
-	else if (tnl::Input::IsKeyDown(eKeys::KB_DOWN)) {
-		pos_ -= forward_ * 10;
-	}
 
-	if (tnl::Input::IsKeyDown(eKeys::KB_RIGHT)) {
-		tempQ_ = tnl::Quaternion::RotationAxis(rotAi_, tnl::ToRadian(3));
-		forward_ = tnl::Vector3::TransformCoord(forward_, tempQ_);
-
-	}
-	else if (tnl::Input::IsKeyDown(eKeys::KB_LEFT)) {
-		tempQ_ = tnl::Quaternion::RotationAxis(rotAi_, tnl::ToRadian(-3));
-		forward_ = tnl::Vector3::TransformCoord(forward_, tempQ_);
-	}
-	else {
-		tempQ_ = tnl::Quaternion::RotationAxis(rotAi_, tnl::ToRadian(0));
-	}
-
-
-
-	//arm_r_->testmove();
-	tnl::Vector3 tmp_pos = pos_;
-	tnl::Quaternion tmp_q_back = tempQ_;
-
-	arm_r_->calcLDKwithLIK(delta_time, tmp_pos, tmp_q_back, arm_r_->target_es, arm_r_->target_pos_);
-	arm_r_->update(delta_time);
-
-	for (int i = 0; i < arm_r_->modules_.size(); i++) {
-		arm_r_->pos_es_[i] = arm_r_->target_es;
-	}
-
-	float p1length = (arm_r_->modules_[1]->pos_ - arm_r_->modules_[0]->pos_).length();
-	DrawStringEx(50, 30, -1, "length1 = %f", p1length);
-	float p2length = (arm_r_->modules_[2]->pos_ - arm_r_->modules_[1]->pos_).length();
-	DrawStringEx(50, 50, -1, "length2 = %f", p2length);
-
-
-
-	
-
-	/*player_->move(delta_time);
-	tnl::Quaternion tmp_q_back = player_->rot_;
-	tnl::Vector3 tmp_l_back = player_->pos_;
-	player_->calcLDK();
-	player_->update(delta_time);*/
-	
+	//// target 操作 
+	//if (tnl::Input::IsKeyDownTrigger(eKeys::KB_UP)) {
+	//	targets_[0]->pos_ += tnl::Vector3{ 0, 10, 0 };
+	//}
+	//else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_DOWN)) {
+	//	targets_[0]->pos_ += tnl::Vector3{ 0, -10, 0 };
+	//}
+	//else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RIGHT)) {
+	//	targets_[0]->pos_ += tnl::Vector3{ 0, 0, 10 };
+	//}
+	//else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_LEFT)) {
+	//	targets_[0]->pos_ += tnl::Vector3{ 0, 0, -10 };
+	//}
 	
 }
 
@@ -132,16 +111,19 @@ void ScenePlay::render()
 {
 	camera_->update();
 
-	DrawGridGround(50, 20);
+	DrawGridGround(camera_, 50, 20);
+	
 
-	//DrawOBB(plane_->pos_, plane_->rot_, { 32, 48, 32 });
+	robo_->render(camera_);
 
-	// -- 試験：飛行機の描画 -- //
-	//plane_->render(camera_);
-	//arm01_->render(camera_);
-	/*armAgnt01_->render(camera_);*/
-
-	arm_r_->render(camera_);
-	ball_->mesh_->render(camera_);
-	//player_->render(camera_);
+	for (int i = 0; i < 2; i++) {
+		robo_->targets_[i]->render(camera_);
+		robo_->agents_[0]->cnt_objects_[i]->render(camera_);
+		
+	}
+	
+	////parts_->mesh_->render(camera_);
+	//for (auto obj : obj_parts_) {
+	//	obj->render(camera_);
+	//}
 }
