@@ -3,45 +3,44 @@
 #include "gm_scene_play.h"
 #include "gm_scene_result.h"
 
+#include "../model/gm_rb_arm_r.h"
+
+
+tnl::Quaternion	fix_rot;
 
 ScenePlay::~ScenePlay() {
-	delete camera_;
-	delete robo_;
-	
-	for (auto tar : targets_) { delete tar; }
-	for (auto obj : objects_) {	delete obj;	}
-	/*for (auto obj : obj_parts_) { delete obj; }
-	delete parts_;*/
+
 }
 
 
 void ScenePlay::initialzie() {
-
 	camera_ = new GmCamera();
+
+	arm_r_ = MdlRbArmR::Create(pos_, rot_);
+	arm_r_->update(0);
+	arm_r_->render(camera_);
+	// ターゲットの設定
+	arm_r_->pos_rs_.push_back(targetPos_);
+	arm_r_->pos_rs_.push_back(elbowRefPos_);
+
+	// ターゲットの可視化
+	target_View_ = new Parts();
+	target_View_->mesh_ = dxe::Mesh::CreateSphere(8);
+	target_View_->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/red1.bmp"));
+	target_View_->mesh_->pos_ = targetPos_;
+
+	elbowTar_View_ = new Parts();
+	elbowTar_View_->mesh_ = dxe::Mesh::CreateSphere(5);
+	elbowTar_View_->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/red1.bmp"));
+	elbowTar_View_->mesh_->pos_ = elbowRefPos_;
 	
-	robo_ = Robot::Create({ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
-
-	targets_.resize(2);
-	targets_[0] = FaceVec::Create({ 0, 0, 100 });
-	targets_[1] = FaceVec::Create({ 50, -30, 0 });
-	for (auto tar : targets_) { tar->InitDK(robo_->pos_o_); }	// robo座標系にFix
-
-	robo_->mode01_init(targets_);
-	
-
-
-
-	// test
-	/*parts_ = new Parts();
-	obj_parts_ = dxe::Mesh::CreateFromFileObj("graphics/OBJ/Sword.obj");*/
-	//parts_->mesh_->CreateFromFileObj("graphics/OBJ/RedBoss.obj");
-	//parts_->mesh_->setDefaultLightEnable(true);
 
 }
 
 void ScenePlay::update(float delta_time)
 {
 	GameManager* mgr = GameManager::GetInstance();
+	
 	//------------------------------------------------------------------
 	//
 	// カメラ制御
@@ -60,70 +59,83 @@ void ScenePlay::update(float delta_time)
 	}
 	if (tnl::Input::IsKeyDown(eKeys::KB_X)) {
 		camera_->target_distance_ -= 1.0f;
-	}
-	// --- シーン切り替え --- //
+
+	}	
+	
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
 		mgr->chengeScene(new SceneResult());
 	}
-
-	/*for (auto tar : targets_) {
-		tar->update(delta_time);
-	}*/
-
-
-	// 試験動作
-	robo_->update(delta_time);
-
-	tnl::Vector3 tar1 = robo_->targets_[0]->pos_;
-	tnl::Vector3 tar2 = robo_->targets_[1]->pos_;
-	DrawStringEx(50, 10, -1, "TG1:x= %f, y= %f, z= %f", tar1.x, tar1.y, tar1.z);
-	DrawStringEx(50, 25, -1, "TG2:x= %f, y= %f, z= %f", tar2.x, tar2.y, tar2.z);
-	tnl::Vector3 obj1 = robo_->agents_[0]->cnt_objects_[0]->pos_;
-	tnl::Vector3 obj2 = robo_->agents_[0]->cnt_objects_[1]->pos_;
-	DrawStringEx(50, 40, -1, "EE1:x= %f, y= %f, z= %f", obj1.x, obj1.y, obj1.z);
-	DrawStringEx(50, 55, -1, "EE2:x= %f, y= %f, z= %f", obj2.x, obj2.y, obj2.z);
-
-	tnl::Vector3 pos_origin = { 0, 15, 0 };
-	tnl::Vector3* pos;
-	pos = &pos_origin;
-	pos_origin += { 0, 1, 0 };
-	DrawStringEx(50, 70, -1, "pos = %f, %f, %f", pos->x, pos->y, pos->z);
 	
 
+	if (tnl::Input::IsKeyDown(eKeys::KB_UP)) {
+		origin_ += forward_ * 10;
+		
 
-	//// target 操作 
-	//if (tnl::Input::IsKeyDownTrigger(eKeys::KB_UP)) {
-	//	targets_[0]->pos_ += tnl::Vector3{ 0, 10, 0 };
-	//}
-	//else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_DOWN)) {
-	//	targets_[0]->pos_ += tnl::Vector3{ 0, -10, 0 };
-	//}
-	//else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RIGHT)) {
-	//	targets_[0]->pos_ += tnl::Vector3{ 0, 0, 10 };
-	//}
-	//else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_LEFT)) {
-	//	targets_[0]->pos_ += tnl::Vector3{ 0, 0, -10 };
-	//}
+	}
+	else if (tnl::Input::IsKeyDown(eKeys::KB_DOWN)) {
+		origin_ -= forward_ * 10;
+		
+	}
+
+	if (tnl::Input::IsKeyDown(eKeys::KB_RIGHT)) {
+		rot_ = tnl::Quaternion::RotationAxis(rotAi_, tnl::ToRadian(3));
+		rot_sum_ *= rot_;
+		
+		forward_ = tnl::Vector3::TransformCoord(forward_, rot_);
+
+	}
+	else if (tnl::Input::IsKeyDown(eKeys::KB_LEFT)) {
+		rot_ = tnl::Quaternion::RotationAxis(rotAi_, tnl::ToRadian(-3));
+		rot_sum_ *= rot_;
+		forward_ = tnl::Vector3::TransformCoord(forward_, rot_);
+	}
+	else {
+		rot_ = tnl::Quaternion::RotationAxis(rotAi_, tnl::ToRadian(0));
+	}
+
+	// プレイヤーの座標系更新
+	pos_dir_ = tnl::Vector3::TransformCoord(pos_dir_, rot_);
+	pos_dir_.normalize();
+	pos_ = origin_ + pos_dir_ * pos_length;
+	el_dir_ = tnl::Vector3::TransformCoord(el_dir_, rot_);
+	el_dir_.normalize();
+	elbowRefPos_ = origin_ + el_dir_ * el_length;
+	
+	// 目標位置更新
+	arm_r_->pos_rs_.clear();
+	arm_r_->pos_rs_.push_back(targetPos_);
+	arm_r_->pos_rs_.push_back(elbowRefPos_);
+	
+	
+	/*arm_r_->calcLDKwithLIK(delta_time, tmp_pos, tmp_q_back, arm_r_->target_es, arm_r_->target_pos_);
+	arm_r_->update(delta_time);*/
+
+	/*for (int i = 0; i < arm_r_->modules_.size(); i++) {
+		arm_r_->pos_es_[i] = arm_r_->target_es;
+	}*/
+
+	// ターゲットの設定
+	tnl::Vector3 tmp_pos = pos_;
+	tnl::Quaternion tmp_q_back = rot_;
+
+	arm_r_->aimTarget(delta_time, pos_, rot_, targetPos_, elbowRefPos_);
+	arm_r_->update(delta_time);
 	
 }
 
 void ScenePlay::render()
 {
 	camera_->update();
+	DrawGridGround(50, 20);
 
-	DrawGridGround(camera_, 50, 20);
-	
+	DrawOBB(origin_, rot_sum_, { 60, 100, 30 });
+	DrawOBB(origin_ + forward_ * 60, rot_sum_, { 10, 10, 10 });
 
-	robo_->render(camera_);
+	arm_r_->render(camera_);
 
-	for (int i = 0; i < 2; i++) {
-		robo_->targets_[i]->render(camera_);
-		robo_->agents_[0]->cnt_objects_[i]->render(camera_);
-		
-	}
-	
-	////parts_->mesh_->render(camera_);
-	//for (auto obj : obj_parts_) {
-	//	obj->render(camera_);
-	//}
+	// ターゲットの表示
+	target_View_->mesh_->render(camera_);
+	elbowTar_View_->mesh_->pos_ = elbowRefPos_;
+	elbowTar_View_->mesh_->render(camera_);
+
 }

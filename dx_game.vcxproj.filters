@@ -29,9 +29,6 @@
     <Filter Include="program\game\scene">
       <UniqueIdentifier>{36a023e8-05af-4131-819f-285ef87e3f60}</UniqueIdentifier>
     </Filter>
-    <Filter Include="program\game\model\robot">
-      <UniqueIdentifier>{23c6c197-fac2-4482-bf30-fc158e277d8c}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="program\system\sys_main.cpp">
@@ -166,23 +163,21 @@
     <ClCompile Include="program\game\gm_camera.cpp">
       <Filter>program\game</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_agent.cpp">
-      <Filter>program\game\model\robot</Filter>
+    <ClCompile Include="program\game\model\gm_robot_module.cpp">
+      <Filter>program\game\model</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_agn_armR001.cpp">
-      <Filter>program\game\model\robot</Filter>
+    <ClCompile Include="program\game\model\gm_robot_agent.cpp">
+      <Filter>program\game\model</Filter>
     </ClCompile>
+    <ClCompile Include="program\game\model\Module.cpp" />
     <ClCompile Include="program\game\model\gm_module.cpp">
-      <Filter>program\game\model\robot</Filter>
+      <Filter>program\game\model</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_Robot.cpp">
-      <Filter>program\game\model\robot</Filter>
+    <ClCompile Include="program\game\model\gm_agent.cpp">
+      <Filter>program\game\model</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_faceVec.cpp">
-      <Filter>program\game\model\robot</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\model\gm_agn_lowerBack001.cpp">
-      <Filter>program\game\model\robot</Filter>
+    <ClCompile Include="program\game\model\gm_rb_arm_r.cpp">
+      <Filter>program\game\model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -297,23 +292,20 @@
     <ClInclude Include="program\game\gm_camera.h">
       <Filter>program\game</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_agent.h">
-      <Filter>program\game\model\robot</Filter>
+    <ClInclude Include="program\game\model\gm_robot_module.h">
+      <Filter>program\game\model</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_agn_armR001.h">
-      <Filter>program\game\model\robot</Filter>
+    <ClInclude Include="program\game\model\gm_robot_agent.h">
+      <Filter>program\game\model</Filter>
     </ClInclude>
     <ClInclude Include="program\game\model\gm_module.h">
-      <Filter>program\game\model\robot</Filter>
+      <Filter>program\game\model</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_Robot.h">
-      <Filter>program\game\model\robot</Filter>
+    <ClInclude Include="program\game\model\gm_agent.h">
+      <Filter>program\game\model</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_faceVec.h">
-      <Filter>program\game\model\robot</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\model\gm_agn_lowerBack001.h">
-      <Filter>program\game\model\robot</Filter>
+    <ClInclude Include="program\game\model\gm_rb_arm_r.h">
+      <Filter>program\game\model</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

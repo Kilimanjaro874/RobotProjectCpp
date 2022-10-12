@@ -1,15 +1,12 @@
 #include "gm_scene_base.h"
-#include "../model/gm_faceVec.h"
-#include "../model/gm_agn_armR001.h"
-#include"../model/gm_airplane.h"
-#include "../model/gm_parts.h"
-
-#include "../model/gm_Robot.h"
-
-
+#include "../model/gm_model.h"
+#include "../model/gm_agent.h"
+#include "../model/gm_robot.h"
 
 class GmCamera;
-class Robot;
+//class MdlAirPlane;
+
+class MdlRbArmR;
 
 class ScenePlay : public SceneBase {
 public :
@@ -17,18 +14,35 @@ public :
 	~ScenePlay();
 
 	GmCamera* camera_ = nullptr;
+	//MdlAirPlane* plane_ = nullptr;
+	// -- ここにロボットクラスを宣言して使用したい -- //
+
 	
-	Robot* robo_ = nullptr;
+	MdlRbArmR* arm_r_ = nullptr;
 
-	//// test 
-	//Parts* parts_ = nullptr;
-	//std::vector<dxe::Mesh*> obj_parts_;
+	Parts* target_View_ = nullptr;
+	Parts* elbowTar_View_ = nullptr;
+	//Robot* robot_ = nullptr;
 
-	std::vector<FaceVec*> targets_;
-	std::vector<FaceVec*> objects_;
+	tnl::Vector3 origin_ = { 0, 0, 0 };
+
+	tnl::Vector3 pos_ = { 30, 50, 0 };
+	tnl::Vector3 pos_dir_ = tnl::Vector3::Normalize(pos_);
+	float pos_length = pos_.length();
+
+	tnl::Vector3 forward_ = { 0, 0, 1 };
+	tnl::Vector3 rotAi_ = { 0, 1, 0 };
+	tnl::Quaternion rot_ = tnl::Quaternion::RotationAxis(rotAi_, 0);
+	tnl::Quaternion rot_sum_ = tnl::Quaternion::RotationAxis(rotAi_, 0);
+	tnl::Vector3 targetPos_ = { 0, 0, 200 };	// 手先目標位置初期値
+
+	tnl::Vector3 elbowRefPos_ = { 50, 0, 0 };	// 肘目標位置初期値
+	tnl::Vector3 el_dir_ = tnl::Vector3::Normalize(elbowRefPos_);
+	float el_length = elbowRefPos_.length();
 
 	void initialzie() override;
 	void update(float delta_time) override;
 	void render() override;
+
 };
 
