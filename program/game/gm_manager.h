@@ -51,7 +51,7 @@ public :
 public :
 
 	// ゲーム全体で参照したい変数はここで用意
-	float num = 0;
+
 
 };
 

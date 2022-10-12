@@ -7,7 +7,7 @@ MdlAirPlane* MdlAirPlane::Create() {
 	mdl->parts_.resize(e_parts_max);
 
 	Parts* body = new Parts();
-	body->mesh_ = dxe::Mesh::CreateBox(5);
+	body->mesh_ = dxe::Mesh::CreateCylinder(5, 70);
 	body->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
 	body->ofs_rot_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(90));
 	mdl->parts_[e_body] = body;
