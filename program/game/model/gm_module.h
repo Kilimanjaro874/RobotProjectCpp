@@ -11,6 +11,8 @@ public:
 	std::vector<Parts*> parts_;
 	// ----- Parameters ----- //
 	int id_;		// 参照用
+	Module* back;				// 親モジュール
+	std::vector<Module*> next;	// 子モジュール
 	// ----- Direct Kinematics : DKに必要な変数 ----- //
 	struct dk_setting {
 		int id_;				// 本dk_settingを受け取るモジュールid_を指定
