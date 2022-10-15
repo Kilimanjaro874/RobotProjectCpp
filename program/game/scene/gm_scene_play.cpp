@@ -7,6 +7,7 @@
 ScenePlay::~ScenePlay() {
 	delete camera_;
 	delete target_;
+	delete robo_;
 }
 
 
@@ -19,6 +20,7 @@ void ScenePlay::initialzie() {
 	// Test
 	//
 	target_ = FaceVector::Create(0, tnl::Vector3{ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
+	robo_ = Robot::Create({ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
 
 }
 
@@ -54,6 +56,7 @@ void ScenePlay::update(float delta_time)
 	// Test
 	//
 	target_->update(delta_time);
+	//robo_->update(delta_time);
 
 }
 
@@ -67,5 +70,6 @@ void ScenePlay::render()
 	// Test
 	//
 	target_->render(camera_);
+	//robo_->render(camera_);
 
 }

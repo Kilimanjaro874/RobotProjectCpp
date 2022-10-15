@@ -13,21 +13,20 @@ public:
 	enum {
 		e_lower_back_,
 		e_body_,
-		e_r_leg_,
-		e_l_leg_,
-		e_head,
 		e_r_arm,
-		e_l_arm
+		e_modules_max
 	};
 
 	// ----- Render & DK & IK ------ //
 	std::vector<std::vector<Module*>> modules_;
 
 	// ----- メンバ関数 ------ //
+	static Robot* Create(const tnl::Vector3& pos, const tnl::Quaternion& rot);
 	void update(float delta_time) override;
 	void render(dxe::Camera* camera) override;
-	void move(float delta_time);
+	// ---- mode01 : TPS射撃モード ---- //
 	void mode01_init(float delta_time);
 	void mode01_update(float delta_time);
-
+	// --- キャラコン --- //
+	void move(float delta_time);
 };

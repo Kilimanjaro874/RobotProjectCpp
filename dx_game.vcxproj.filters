@@ -172,6 +172,9 @@
     <ClCompile Include="program\game\model\gm_face_vector.cpp">
       <Filter>program\game\model\robot</Filter>
     </ClCompile>
+    <ClCompile Include="program\game\model\gm_robot.cpp">
+      <Filter>program\game\model\robot</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="program\library\picojson.h">
@@ -289,6 +292,9 @@
       <Filter>program\game\model\robot</Filter>
     </ClInclude>
     <ClInclude Include="program\game\model\gm_face_vector.h">
+      <Filter>program\game\model\robot</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\model\gm_robot.h">
       <Filter>program\game\model\robot</Filter>
     </ClInclude>
   </ItemGroup>
