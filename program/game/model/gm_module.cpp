@@ -16,6 +16,15 @@ void Module::render(dxe::Camera* camera) {
 	}
 }
 
+void Module::InitParams(int id, tnl::Vector3 rot_axis, tnl::Quaternion rot_sum, 
+	tnl::Vector3 dir_z, tnl::Vector3 dir_x){
+	// ---- モジュールパラメータ初期化のために使用 ---- //
+	id_ = id;
+	in_rot_axis_ = rot_axis;
+	rot_sum = rot_sum;
+	in_dir_z_ = dir_z;
+	in_dir_x_ = dir_x;
+}
 
 void Module::InitDK(const std::vector<dk_setting>& dks) {
 	// ---- 順運動学のための初期化処理 ---- //
@@ -23,8 +32,9 @@ void Module::InitDK(const std::vector<dk_setting>& dks) {
 	bool do_DK = false;
 	for (auto d : dks) {
 		if (d.id_ == id_) {
-			pos_o_ = d.dir_r_n_ * d.dir_r_length_;				// 位置
+			pos_o_ = d.pos_o_back_ + d.dir_r_n_ * d.dir_r_length_;				// 位置
 			rot_sum_ *= d.q_r_n_;								// 姿勢
+			rot_tmp_ = d.q_r_n_;
 			do_DK = true;
 			break;
 		}
@@ -39,11 +49,13 @@ void Module::InitDK(const std::vector<dk_setting>& dks) {
 	in_dir_x_.normalize();			// モジュールx軸方向単位ベクトル(座標系として使用)
 	dir_x_ = in_dir_x_;
 	// --- DKセッティング初期化 --- //
-	for (auto dks : dk_s_v_) {
-		dks.dir_r_length_ = dks.dir_r_n_.length();	// 次モジュールまでの距離格納
-		dks.dir_r_n_.normalize();
-		dks.dir_r_n_ = tnl::Vector3::TransformCoord(dks.dir_r_n_, rot_sum_);
-		dks.dir_r_n_.normalize();					// 次モジュールまでの方向単位ベクトル格納
+	for (auto d : dk_s_v_) {
+		d.dir_r_length_ = d.dir_r_n_.length();	// 次モジュールまでの距離格納
+		d.dir_r_n_.normalize();					
+		d.pos_o_back_ = pos_o_;					// 次モジュールまでの位置格納
+		d.dir_r_n_ = tnl::Vector3::TransformCoord(d.dir_r_n_, rot_sum_);
+		d.dir_r_n_.normalize();					// 次モジュールまでの方向単位ベクトル格納
+		d.q_r_n_ = rot_tmp_ * d.q_r_n_;
 	}
 }
 
@@ -145,5 +157,35 @@ void Module::DKwithIK(float delta_time, const std::vector<dk_setting>& dks) {
 		dks.q_r_n_ = rot_tmp_;
 		dks.dir_r_n_ = tnl::Vector3::TransformCoord(dks.dir_r_n_, rot_tmp_);
 		dks.dir_r_n_.normalize();
+	}
+}
+
+void Module::AllInitDK(const Module* mod, const std::vector<dk_setting>& dks) {
+	// --- 再帰的にModuleの運動学実行。ロボット初期位置・姿勢を完成させる --- //
+	// preorderで実行する事
+	InitDK(dks);
+	if (next.size() == 0) return;
+	for (int i = 0; i < next.size(); i++) {
+		//AllInitDK(next[i], dk_s_v_);
+		next[i]->AllInitDK(next[i], dk_s_v_);
+	}
+}
+
+void Module::updateTree(const Module* mod, float delta_time) {
+	// --- 登録したモジュール群を preorderで更新していく --- //
+	update(delta_time);
+	if (next.size() == 0) return;
+	for (int i = 0; i < next.size(); i++) {
+		next[i]->updateTree(next[i], delta_time);
+	}
+
+}
+
+void Module::renderTree(const Module* mod, dxe::Camera* camera) {
+	// --- 登録したモジュール群を preorderで描画していく --- //
+	if (is_render_) { render(camera); }
+	if (next.size() == 0) return;
+	for (int i = 0; i < next.size(); i++) {
+		next[i]->renderTree(next[i], camera);
 	}
 }

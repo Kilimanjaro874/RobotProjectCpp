@@ -56,7 +56,7 @@ void ScenePlay::update(float delta_time)
 	// Test
 	//
 	target_->update(delta_time);
-	//robo_->update(delta_time);
+	robo_->updateTree(robo_, delta_time);
 
 }
 
@@ -70,6 +70,6 @@ void ScenePlay::render()
 	// Test
 	//
 	target_->render(camera_);
-	//robo_->render(camera_);
+	robo_->renderTree(robo_, camera_);
 
 }

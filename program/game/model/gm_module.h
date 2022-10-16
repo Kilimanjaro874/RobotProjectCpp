@@ -9,6 +9,7 @@ public:
 	}
 	// ----- Render ----- //
 	std::vector<Parts*> parts_;
+	bool is_render_ = true;		// 描画するか否か
 	// ----- Parameters ----- //
 	int id_;		// 参照用
 	Module* back;				// 親モジュール
@@ -21,6 +22,7 @@ public:
 		tnl::Quaternion q_r_n_;	// 次モジュールへの回転量
 	};
 	std::vector<dk_setting> dk_s_v_;	// DKセッティングのベクトル型
+	std::vector<dk_setting> in_dk_s_v_;	// DKセッティングの基準を作る
 	tnl::Vector3 pos_o_;			// ワールド座標系の本モジュールiの原点位置
 	tnl::Vector3 in_rot_axis_;		// 本モジュールiの回転軸単位ベクトル：本モジュール原点に立てる（初期値)
 	tnl::Vector3 rot_axis_;			// 回転軸単位ベクトル
@@ -53,7 +55,13 @@ public:
 	// ---- メンバ関数 ---- //
 	virtual void update(float delta_time);
 	virtual void render(dxe::Camera* camera);
+	void InitParams(int id, tnl::Vector3 rot_axis, tnl::Quaternion rot_sum, 
+		tnl::Vector3 dir_z = {0, 0, 1}, tnl::Vector3 dir_x = {1, 0, 0});
 	void InitDK(const std::vector<dk_setting>& dks);
 	void SelfDK(const tnl::Vector3& pos, const tnl::Quaternion& rot);
 	void DKwithIK(float delta_time, const std::vector<dk_setting>& dks);
+	// test
+	void AllInitDK(const Module* mod, const std::vector<dk_setting>& dks);
+	void updateTree(const Module* mod, float delta_time);
+	void renderTree(const Module* mod, dxe::Camera* camera);
 };
