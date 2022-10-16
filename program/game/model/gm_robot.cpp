@@ -25,7 +25,7 @@ Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 	bb_y->InitParams(100, { 0, 1, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
 	// DK パラメータ初期化
 	bb_y->dk_s_v_.resize(1);
-	bb_y->dk_s_v_[0] = { 101, {0, 0, 0}, 0, tnl::Quaternion::RotationAxis(bb_y->in_rot_axis_, 0) };
+	bb_y->dk_s_v_[0] = { 101, {0, 0, 0}, 1, tnl::Quaternion::RotationAxis(bb_y->in_rot_axis_, 0) };
 
 	// --- 1.2. e_bb_x --- //
 	Module* bb_x = new Module();
@@ -38,7 +38,7 @@ Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 	bb_x->InitParams(101, { 1, 0, 0 }, tnl::Quaternion::RotationAxis({ 1, 0, 0 }, 0));
 	// DK パラメータ初期化
 	bb_x->dk_s_v_.resize(1);
-	bb_x->dk_s_v_[0] = { 102, {0, 0, 0}, 0, tnl::Quaternion::RotationAxis(bb_x->in_rot_axis_, 0) };
+	bb_x->dk_s_v_[0] = { 102, {0, 0, 0}, 1, tnl::Quaternion::RotationAxis(bb_x->in_rot_axis_, 0) };
 
 	// --- 1.3. e_bb_z --- //
 	Module* bb_z = new Module();
@@ -51,15 +51,18 @@ Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 	bb_z->InitParams(102, { 0, 0, 1 }, tnl::Quaternion::RotationAxis({ 0, 0, 1 }, 0));
 	// DK パラメータ初期化
 	bb_z->dk_s_v_.resize(4);	// body, r_leg, l_leg, object用
-	bb_z->dk_s_v_[0] = { 200, {0, 25, 0}, 0, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };
-	bb_z->dk_s_v_[1] = { 300, {25, -25, 0}, 0, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };
-	bb_z->dk_s_v_[2] = { 400, {-25, -25, 0}, 0, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };
-	bb_z->dk_s_v_[3] = { 800, {25, 0, 0}, 0, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };
+	bb_z->dk_s_v_[0] = { 200, {0, 25, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };
+	bb_z->dk_s_v_[1] = { 300, {25, -25, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };
+	bb_z->dk_s_v_[2] = { 400, {-25, -25, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };
+	bb_z->dk_s_v_[3] = { 800, {25, 0, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };
 	// Parts
 	Parts* bb_z_bone = new Parts();
 	bb_z_bone->mesh_ = dxe::Mesh::CreateCylinder(5, 50);
 	bb_z_bone->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
 	bb_z->parts_.push_back(bb_z_bone);
+
+
+	// ---- 2. 
 	
 
 	// パーツの初期位置・姿勢を反映
@@ -69,6 +72,7 @@ Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 	float pos_length = pos.length();
 	rob->rob_dk_s_v_[0] = {0, tmp_pos_dir, pos_length, rot};
 	rob->AllInitDK(rob, rob->rob_dk_s_v_);
+	rob->updateTree(rob, 0);
 
 	return rob;
 }

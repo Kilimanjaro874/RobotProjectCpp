@@ -28,34 +28,29 @@ void Module::InitParams(int id, tnl::Vector3 rot_axis, tnl::Quaternion rot_sum,
 
 void Module::InitDK(const std::vector<dk_setting>& dks) {
 	// ---- 順運動学のための初期化処理 ---- //
-	// --- 座標系初期化 --- //
 	bool do_DK = false;
 	for (auto d : dks) {
 		if (d.id_ == id_) {
-			pos_o_ = d.pos_o_back_ + d.dir_r_n_ * d.dir_r_length_;				// 位置
-			rot_sum_ *= d.q_r_n_;								// 姿勢
-			rot_tmp_ = d.q_r_n_;
+			// 本モジュール位置・姿勢・座標系更新
+			SelfDK(d.dir_r_n_ * d.dir_r_length_, d.q_r_n_);
 			do_DK = true;
-			break;
 		}
 	}
 	if (!do_DK) { return; }		// DKの対象外であれば関数を抜ける.
-	in_rot_axis_ = tnl::Vector3::TransformCoord(in_rot_axis_, rot_sum_);
-	in_rot_axis_.normalize();		// 回転軸
-	in_dir_z_ = tnl::Vector3::TransformCoord(in_dir_z_, rot_sum_);
-	in_dir_z_.normalize();			// モジュールz軸方向単位ベクトル(座標系として使用)
-	dir_z_ = in_dir_z_;
-	in_dir_x_ = tnl::Vector3::TransformCoord(in_dir_x_, rot_sum_);
-	in_dir_x_.normalize();			// モジュールx軸方向単位ベクトル(座標系として使用)
-	dir_x_ = in_dir_x_;
-	// --- DKセッティング初期化 --- //
-	for (auto d : dk_s_v_) {
-		d.dir_r_length_ = d.dir_r_n_.length();	// 次モジュールまでの距離格納
-		d.dir_r_n_.normalize();					
-		d.pos_o_back_ = pos_o_;					// 次モジュールまでの位置格納
-		d.dir_r_n_ = tnl::Vector3::TransformCoord(d.dir_r_n_, rot_sum_);
-		d.dir_r_n_.normalize();					// 次モジュールまでの方向単位ベクトル格納
-		d.q_r_n_ = rot_tmp_ * d.q_r_n_;
+	//　次のモジュール位置・姿勢を更新するためのDKパラメータ初期化
+	for (auto d_ : dk_s_v_) {
+		// ベクトルを単位ベクトル（方向)、長さに分解。数値計算累計誤差を避ける為
+		d_.dir_r_length_ = d_.dir_r_n_.length();	// 次モジュールまでの距離格納
+		d_.dir_r_n_.normalize();
+		d_.q_r_n_ *= rot_tmp_;					// 次モジュールに本モジュールまでの回転量累計伝達
+	}
+	// DKパラメータ初期値作成
+	in_dk_s_v_.resize(dk_s_v_.size());
+	in_dk_s_v_ = dk_s_v_;			// 初期値としてコピー。Update()では、次モジュールの位置・姿勢を本構造体で表現＆更新していく
+	// DKパラメータ更新値作成
+	for (int i = 0; i < in_dk_s_v_.size(); i++) {
+		dk_s_v_[i].dir_r_n_ = pos_o_ + 
+			tnl::Vector3::TransformCoord(in_dk_s_v_[i].dir_r_n_, in_dk_s_v_[i].q_r_n_) * in_dk_s_v_[i].dir_r_length_;
 	}
 }
 
@@ -63,6 +58,7 @@ void Module::SelfDK(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 	// ---- 順運動学のための処理：自身の位置・姿勢を引数情報を元に更新 ---- //
 	pos_o_ = pos;
 	rot_sum_ *= rot;
+	rot_tmp_ = rot;
 	in_rot_axis_ = tnl::Vector3::TransformCoord(in_rot_axis_, rot_sum_);
 	in_rot_axis_.normalize();		// 回転軸
 	in_dir_z_ = tnl::Vector3::TransformCoord(in_dir_z_, rot_sum_);
