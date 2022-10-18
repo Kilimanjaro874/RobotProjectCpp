@@ -2,7 +2,9 @@
 
 Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 	// ----- 位置 pos, 姿勢 rot へロボットを生成 ----- //
-	// ---- Robot[id = 0] : パラメータ初期化 ---- //
+	
+
+	// ---- 0. Robot[id = 0] : パラメータ初期化 ---- //
 	Robot* rob = new Robot();
 	rob->InitParams(0, { 0, 1, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
 	// rob->SelfDK(pos, rot);				// 座標系の更新: 最後にまとめて実行すればよいのでは? 
@@ -12,7 +14,8 @@ Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 	// モジュールサイズ設定
 	rob->modules_.resize(e_modules_max);
 
-	// ---- 1. lower back : パラメータ初期化
+
+	// ---- 1. lower back : パラメータ初期化---- //
 	rob->modules_[e_lower_back_].resize(3);		// 3DOF
 	// --- 1.1. e_bb_y --- //
 	Module* bb_y = new Module();
@@ -50,11 +53,9 @@ Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 	// パラメータ設定
 	bb_z->InitParams(102, { 0, 0, 1 }, tnl::Quaternion::RotationAxis({ 0, 0, 1 }, 0));
 	// DK パラメータ初期化
-	bb_z->dk_s_v_.resize(4);	// body, r_leg, l_leg, object用
-	bb_z->dk_s_v_[0] = { 200, {0, 25, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };
-	bb_z->dk_s_v_[1] = { 300, {25, -25, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };
-	bb_z->dk_s_v_[2] = { 400, {-25, -25, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };
-	bb_z->dk_s_v_[3] = { 800, {25, 0, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };
+	bb_z->dk_s_v_.resize(2);	// body, r_leg, l_leg, object用
+	bb_z->dk_s_v_[0] = { 200, {0, 25, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };	// for e_body
+	bb_z->dk_s_v_[1] = { 800, {0, 25, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };	// for e_body
 	// Parts
 	Parts* bb_z_bone = new Parts();
 	bb_z_bone->mesh_ = dxe::Mesh::CreateCylinder(5, 50);
@@ -62,10 +63,56 @@ Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 	bb_z->parts_.push_back(bb_z_bone);
 
 
-	// ---- 2. 
+	// ---- 2. body : パラメータ初期化 ---- //
+	rob->modules_[e_body_].resize(3);
 	
+	// --- 2.1. e_bo_y --- //
+	Module* bo_y = new Module();
+	// 子設定
+	bb_z->next.resize(1);
+	bb_z->next[0] = bo_y;
+	// 親設定
+	bo_y->back = bb_z;
+	// パラメータ設定
+	bo_y->InitParams(200, { 0, 1, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
+	// DK パラメータ初期化
+	bo_y->dk_s_v_.resize(1);
+	bo_y->dk_s_v_[0] = { 201, {0, 0, 0}, 1, tnl::Quaternion::RotationAxis(bo_y->in_rot_axis_, 0) };	
 
-	// パーツの初期位置・姿勢を反映
+	// --- 2.2. e_bo_x --- //
+	Module* bo_x = new Module();
+	// 子設定
+	bo_y->next.resize(1);
+	bo_y->next[0] = bo_x;
+	// 親設定
+	bo_x->back = bo_y;
+	// パラメータ設定
+	bo_x->InitParams(201, { 1, 0, 0 }, tnl::Quaternion::RotationAxis({ 1, 0, 0 }, 0));
+	// DK パラメータ初期化
+	bo_x->dk_s_v_.resize(1);
+	bo_x->dk_s_v_[0] = { 202, {0, 0, 0}, 1, tnl::Quaternion::RotationAxis(bo_x->in_rot_axis_, 0) };
+
+	// --- 2. 3. e_bo_z --- //
+	Module* bo_z = new Module();
+	// 子設定
+	bo_x->next.resize(1);
+	bo_x->next[0] = bo_z;
+	// 親設定
+	bo_z->back = bo_x;
+	// パラメータ初期化
+	bo_z->InitParams(202, { 0, 0, 1 }, tnl::Quaternion::RotationAxis({ 0, 0, 1 }, 0));
+	bo_z->dk_s_v_.resize(4);
+	bb_z->dk_s_v_[0] = { 500, {0, 25, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };	// for e_head
+	bo_z->dk_s_v_[1] = { 600, {25, -25, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };	// for e_r_arm
+	bo_z->dk_s_v_[2] = { 700, {-25, -25, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) }; // for e_l_arm
+	bo_z->dk_s_v_[3] = { 820, {25, 0, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };	// for object
+	// Parts
+	Parts* bo_z_bone = new Parts();
+	bo_z_bone->mesh_ = dxe::Mesh::CreateCylinder(5, 50);
+	bo_z_bone->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	bo_z->parts_.push_back(bo_z_bone);
+
+	// ----- ロボ全てのパーツの初期位置・姿勢を反映 ----- //
 	rob->rob_dk_s_v_.resize(1);
 	tnl::Vector3 tmp_pos_dir = pos;
 	tmp_pos_dir.normalize();
@@ -76,24 +123,6 @@ Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 
 	return rob;
 }
-
-//void Robot::update(float delta_time) {
-//	// ----- 各モジュールのupdate実行 ----- //
-//	for (int n = 0; n < modules_.size(); n++) {
-//		for (auto mod : modules_[n]) {
-//			mod->update(delta_time);
-//		}
-//	}
-//}
-//
-//void Robot::render(dxe::Camera* camera) {
-//	// ----- 各モジュールのrender実行 ----- //
-//	for (int n = 0; n < modules_.size(); n++) {
-//		for (auto mod : modules_[n]) {
-//			mod->render(camera);
-//		}
-//	}
-//}
 
 void Robot::mode01_init(float delta_time) {
 

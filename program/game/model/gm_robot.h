@@ -12,7 +12,7 @@ public:
 	// ----- ロボットの構成 ----- //
 	enum {
 		e_lower_back_,
-		//e_body_,
+		e_body_,
 		//e_r_arm,
 		e_modules_max
 	};
@@ -23,8 +23,7 @@ public:
 
 	// ----- メンバ関数 ------ //
 	static Robot* Create(const tnl::Vector3& pos, const tnl::Quaternion& rot);
-	/*void update(float delta_time) override;
-	void render(dxe::Camera* camera) override;*/
+
 	// ---- mode01 : TPS射撃モード ---- //
 	void mode01_init(float delta_time);
 	void mode01_update(float delta_time);

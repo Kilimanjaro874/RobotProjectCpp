@@ -30,7 +30,7 @@ void Module::InitDK(const std::vector<dk_setting>& dks) {
 	// ---- 順運動学のための初期化処理 ---- //
 	bool do_DK = false;
 	for (auto d : dks) {
-		if (d.id_ == id_) {
+		if (d.id_ != NULL && d.id_ == id_) {
 			// 本モジュール位置・姿勢・座標系更新
 			SelfDK(d.dir_r_n_ * d.dir_r_length_, d.q_r_n_);
 			do_DK = true;
@@ -185,3 +185,4 @@ void Module::renderTree(const Module* mod, dxe::Camera* camera) {
 		next[i]->renderTree(next[i], camera);
 	}
 }
+
