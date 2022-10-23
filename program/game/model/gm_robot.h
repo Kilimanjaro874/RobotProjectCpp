@@ -13,7 +13,7 @@ public:
 	enum {
 		e_lower_back_,
 		e_body_,
-		//e_r_arm,
+		e_r_arm,
 		e_modules_max
 	};
 	// ----- ワールド座標から見た本ロボットのDKパラメータ ----- //

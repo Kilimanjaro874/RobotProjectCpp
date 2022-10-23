@@ -112,6 +112,51 @@ Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 	bo_z_bone->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
 	bo_z->parts_.push_back(bo_z_bone);
 
+	// ---- 3. right Arm ---- //
+	rob->modules_[e_r_arm].resize(3);
+
+	// --- 3.1. e_sho_x --- //
+	Module* sho_x = new Module();
+	// 子設定
+	bo_z->next.resize(4);
+	bo_z->next[0] = sho_x;
+	// 親設定
+	sho_x->back = bo_z;
+	// パラメータ初期化
+	sho_x->InitParams(600, { 1, 0, 0 }, tnl::Quaternion::RotationAxis({ 1, 0, 0 }, 0));
+	sho_x->dk_s_v_.resize(1);
+	sho_x->dk_s_v_[0] = { 601, {0, 0, 0}, 1, tnl::Quaternion::RotationAxis(sho_x->in_rot_axis_, 0) };
+
+	// --- 3.2. e_sho_y --- //
+	Module* sho_y = new Module();
+	// 子設定
+	sho_x->next.resize(1);
+	sho_x->next[0] = sho_y;
+	// 親設定
+	sho_y->back = sho_x;
+	// パラメータ初期化
+	sho_y->InitParams(601, { 0, 1, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
+	sho_y->dk_s_v_.resize(1);
+	sho_y->dk_s_v_[0] = { 601, {0, 0, 1}, 30, tnl::Quaternion::RotationAxis(sho_y->in_rot_axis_, 0) };
+	// Parts
+	//Parts* 
+
+	// --- 3.3. e_arm_x --- //
+	Module* arm_x = new Module();
+	// 子設定
+	sho_y->next.resize(1);
+	sho_y->next[0] = arm_x;
+	// 親設定
+	arm_x->back = sho_y;
+	// パラメータ初期化
+	arm_x->InitParams(602, { 0, 0, 1 }, tnl::Quaternion::RotationAxis({ 0, 0, 1 }, 0));
+	arm_x->dk_s_v_.resize(1);
+	arm_x->in_dk_s_v_[0] = { 603, {0, 0, 0}, 1, tnl::Quaternion::RotationAxis(arm_x->in_rot_axis_, 0) };
+}
+
+
+
+
 	// ----- ロボ全てのパーツの初期位置・姿勢を反映 ----- //
 	rob->rob_dk_s_v_.resize(1);
 	tnl::Vector3 tmp_pos_dir = pos;
