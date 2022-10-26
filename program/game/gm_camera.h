@@ -6,7 +6,7 @@ public :
 	GmCamera() : dxe::Camera(DXE_WINDOW_WIDTH, DXE_WINDOW_HEIGHT) {}
 	~GmCamera(){}
 	tnl::Vector3 free_look_angle_xy_ = { tnl::ToRadian(30), 0, 0 };
-	float target_distance_ = 300;
+	float target_distance_ = 40;
 
 	void update();
 };

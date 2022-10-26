@@ -21,6 +21,7 @@ void ScenePlay::initialzie() {
 	//
 	target_ = FaceVector::Create(0, tnl::Vector3{ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
 	robo_ = Robot::Create({ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
+	robo_->mode01_init(0);
 
 }
 
@@ -56,14 +57,17 @@ void ScenePlay::update(float delta_time)
 	// Test
 	//
 	target_->update(delta_time);
-	robo_->updateTree(robo_, delta_time);
+
+	//robo_->updateTree(robo_, delta_time);
+	//robo_->mode01_update
+	robo_->mode01_update(delta_time);
 
 }
 
 void ScenePlay::render()
 {
 	camera_->update();
-	DrawGridGround(camera_, 50, 20);
+	DrawGridGround(camera_, 1, 200);
 
 	//------------------------------------------------------------------
 	//
@@ -71,5 +75,6 @@ void ScenePlay::render()
 	//
 	target_->render(camera_);
 	robo_->renderTree(robo_, camera_);
+	robo_->targets_[robo_->e_r_arm][0]->render(camera_);
 
 }

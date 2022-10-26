@@ -19,6 +19,9 @@ void Module::render(dxe::Camera* camera) {
 void Module::InitParams(int id, tnl::Vector3 rot_axis, tnl::Quaternion rot_sum, 
 	tnl::Vector3 dir_z, tnl::Vector3 dir_x){
 	// ---- モジュールパラメータ初期化のために使用 ---- //
+	if (id == 600) {
+		printf("deb");
+	}
 	id_ = id;
 	in_rot_axis_ = rot_axis;
 	rot_sum = rot_sum;
@@ -28,6 +31,9 @@ void Module::InitParams(int id, tnl::Vector3 rot_axis, tnl::Quaternion rot_sum,
 
 void Module::InitDK(const std::vector<dk_setting>& dks) {
 	// ---- 順運動学のための初期化処理 ---- //
+	if (id_ == 600) {
+		printf("deb");
+	}
 	bool do_DK = false;
 	for (auto d : dks) {
 		if (d.id_ != NULL && d.id_ == id_) {
@@ -38,12 +44,28 @@ void Module::InitDK(const std::vector<dk_setting>& dks) {
 	}
 	if (!do_DK) { return; }		// DKの対象外であれば関数を抜ける.
 	//　次のモジュール位置・姿勢を更新するためのDKパラメータ初期化
-	for (auto d_ : dk_s_v_) {
-		// ベクトルを単位ベクトル（方向)、長さに分解。数値計算累計誤差を避ける為
-		d_.dir_r_length_ = d_.dir_r_n_.length();	// 次モジュールまでの距離格納
-		d_.dir_r_n_.normalize();
-		d_.q_r_n_ *= rot_tmp_;					// 次モジュールに本モジュールまでの回転量累計伝達
+	//for (auto d_ : dk_s_v_) {
+	//	if (id_ == 601) {
+	//		printf("def");
+	//	}
+	//	// ベクトルを単位ベクトル（方向)、長さに分解。数値計算累計誤差を避ける為
+	//	d_.dir_r_length_ = d_.dir_r_n_.length();	// 次モジュールまでの距離格納
+	//	d_.dir_r_n_.normalize();
+	//	d_.q_r_n_ *= rot_tmp_;					// 次モジュールに本モジュールまでの回転量累計伝達
+	//	// 更新した情報を格納する必要があった
+	//}
+	for (int i = 0; i < dk_s_v_.size(); i++) {
+		if (id_ == 601) {
+			printf("deb");
+		}
+		// ベクトルを単位ベクトル(方向), 長さに分解。数値計算累計誤差を避ける為
+		dk_s_v_[i].dir_r_length_ = dk_s_v_[i].dir_r_n_.length();	// 距離
+		if (dk_s_v_[i].dir_r_length_ == 0) {dk_s_v_[i].dir_r_length_ = 1.0; }
+		dk_s_v_[i].dir_r_n_.normalize();
+		dk_s_v_[i].q_r_n_ *= rot_tmp_;
 	}
+
+
 	// DKパラメータ初期値作成
 	in_dk_s_v_.resize(dk_s_v_.size());
 	in_dk_s_v_ = dk_s_v_;			// 初期値としてコピー。Update()では、次モジュールの位置・姿勢を本構造体で表現＆更新していく
@@ -51,6 +73,7 @@ void Module::InitDK(const std::vector<dk_setting>& dks) {
 	for (int i = 0; i < in_dk_s_v_.size(); i++) {
 		dk_s_v_[i].dir_r_n_ = pos_o_ + 
 			tnl::Vector3::TransformCoord(in_dk_s_v_[i].dir_r_n_, in_dk_s_v_[i].q_r_n_) * in_dk_s_v_[i].dir_r_length_;
+		dk_s_v_[i].dir_r_length_ = 1.0;
 	}
 }
 
@@ -143,22 +166,28 @@ void Module::DKwithIK(float delta_time, const std::vector<dk_setting>& dks) {
 		dth_sum += dth;
 	}
 	tnl::Quaternion tmp_rot = tnl::Quaternion::RotationAxis(rot_axis_, dth_sum);
+
 	// --- DK実施 --- //
 	rot_tmp_ *= tmp_rot;
 	rot_sum_ *= tmp_rot;
 	dir_z_ = tnl::Vector3::TransformCoord(in_dir_z_, rot_sum_);	// z軸
 	dir_x_ = tnl::Vector3::TransformCoord(in_dir_x_, rot_sum_);	// x軸
 	// --- DK_setting更新 --- //
-	for (auto dks : dk_s_v_) {
-		dks.q_r_n_ = rot_tmp_;
-		dks.dir_r_n_ = tnl::Vector3::TransformCoord(dks.dir_r_n_, rot_tmp_);
-		dks.dir_r_n_.normalize();
+	for (int i = 0; i < dk_s_v_.size(); i++) {
+		dk_s_v_[i].dir_r_n_ = pos_o_ + 
+			tnl::Vector3::TransformCoord(in_dk_s_v_[i].dir_r_n_, rot_sum_) * in_dk_s_v_[i].dir_r_length_;
+		dk_s_v_[i].q_r_n_ = rot_tmp_;
 	}
+
 }
 
 void Module::AllInitDK(const Module* mod, const std::vector<dk_setting>& dks) {
 	// --- 再帰的にModuleの運動学実行。ロボット初期位置・姿勢を完成させる --- //
 	// preorderで実行する事
+	if (this->id_ == 200) {
+		printf("deb");
+	}
+
 	InitDK(dks);
 	if (next.size() == 0) return;
 	for (int i = 0; i < next.size(); i++) {
@@ -184,5 +213,45 @@ void Module::renderTree(const Module* mod, dxe::Camera* camera) {
 	for (int i = 0; i < next.size(); i++) {
 		next[i]->renderTree(next[i], camera);
 	}
+
 }
 
+void Module::AttachModule(Module* mod, Module* attach_mod, int id) {
+	// --- 既に登録したモジュール群の特定のidに、あるモジュールを登録する --- //
+	if (id == id_) {
+		// 親子設定
+		next.push_back(attach_mod);
+		attach_mod->back = mod;
+		attach_mod->InitDK(mod->dk_s_v_);	//DK処理
+		return;
+	}
+	if (next.size() == 0) return;
+	for (int i = 0; i < next.size(); i++) {
+		next[i]->AttachModule(next[i], attach_mod, id);
+	}
+}
+
+void Module::SetIKParams(Module* mod, int id, Module* target, Module* object, 
+	int ikType, float kp) {
+	// --- あるidのモジュールに、IK目標モジュール、IK制御対象をセットする --- 
+	if (id == id_) {
+		ik_s_v_.push_back({ ikType, kp, target, object });
+		return;
+	}
+	if (next.size() == 0) return;
+	for (int i = 0; i < next.size(); i++) {
+		next[i]->SetIKParams(next[i], id, target, object, ikType, kp);
+	}
+}
+
+void Module::AllupdateIK(const Module* mod, float delta_time) {
+	// --- モジュールのIKを実施する --- //
+	if (id_ == 600) {
+		printf("deb");
+	}
+	DKwithIK(delta_time, mod->dk_s_v_);
+	if (next.size() == 0) return;
+	for (int i = 0; i < next.size(); i++) {
+		next[i]->AllupdateIK(this, delta_time);
+	}
+}

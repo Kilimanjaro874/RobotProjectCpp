@@ -1,4 +1,5 @@
 #include "gm_robot.h"
+#include "gm_face_vector.h"
 
 Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 	// ----- 位置 pos, 姿勢 rot へロボットを生成 ----- //
@@ -10,9 +11,10 @@ Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 	// rob->SelfDK(pos, rot);				// 座標系の更新: 最後にまとめて実行すればよいのでは? 
 	// DK パラメータ初期化
 	rob->dk_s_v_.resize(1);
-	rob->dk_s_v_[0] = { 100, {0, 50, 0}, 1, tnl::Quaternion::RotationAxis(rob->in_rot_axis_, 0) };
+	rob->dk_s_v_[0] = { 100, {0, 7, 0}, 1, tnl::Quaternion::RotationAxis(rob->in_rot_axis_, 0) };
 	// モジュールサイズ設定
 	rob->modules_.resize(e_modules_max);
+	
 
 
 	// ---- 1. lower back : パラメータ初期化---- //
@@ -53,14 +55,22 @@ Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 	// パラメータ設定
 	bb_z->InitParams(102, { 0, 0, 1 }, tnl::Quaternion::RotationAxis({ 0, 0, 1 }, 0));
 	// DK パラメータ初期化
-	bb_z->dk_s_v_.resize(2);	// body, r_leg, l_leg, object用
-	bb_z->dk_s_v_[0] = { 200, {0, 25, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };	// for e_body
-	bb_z->dk_s_v_[1] = { 800, {0, 25, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };	// for e_body
+	bb_z->dk_s_v_.resize(4);	// body, r_leg, l_leg, object用
+	bb_z->dk_s_v_[0] = { 200, {0, 1, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };		// for e_body
+	bb_z->dk_s_v_[1] = { 300, {-1.5, -1, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };	// for e_ r_leg
+	bb_z->dk_s_v_[2] = { 400, {1.5, -1, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };	// for e_l_leg
+	bb_z->dk_s_v_[3] = { 800, {0, 1, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };	// for e_bb_ object
 	// Parts
 	Parts* bb_z_bone = new Parts();
-	bb_z_bone->mesh_ = dxe::Mesh::CreateCylinder(5, 50);
+	bb_z_bone->mesh_ = dxe::Mesh::CreateCylinder(0.3, 2);
 	bb_z_bone->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
 	bb_z->parts_.push_back(bb_z_bone);
+	Parts* bb_z_pelvis = new Parts();
+	bb_z_pelvis->mesh_ = dxe::Mesh::CreateCylinder(0.3, 3);
+	bb_z_pelvis->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	bb_z_pelvis->ofs_pos_ += {0, -1, 0};
+	bb_z_pelvis->ofs_rot_ = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(90));
+	bb_z->parts_.push_back(bb_z_pelvis);
 
 
 	// ---- 2. body : パラメータ初期化 ---- //
@@ -102,59 +112,170 @@ Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 	// パラメータ初期化
 	bo_z->InitParams(202, { 0, 0, 1 }, tnl::Quaternion::RotationAxis({ 0, 0, 1 }, 0));
 	bo_z->dk_s_v_.resize(4);
-	bb_z->dk_s_v_[0] = { 500, {0, 25, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };	// for e_head
-	bo_z->dk_s_v_[1] = { 600, {25, -25, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };	// for e_r_arm
-	bo_z->dk_s_v_[2] = { 700, {-25, -25, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) }; // for e_l_arm
-	bo_z->dk_s_v_[3] = { 820, {25, 0, 0}, 1, tnl::Quaternion::RotationAxis(bb_z->in_rot_axis_, 0) };	// for object
+	bo_z->dk_s_v_[0] = { 500, {0, 2, 0}, 1, tnl::Quaternion::RotationAxis(bo_z->in_rot_axis_, 0) };	// for e_head
+	bo_z->dk_s_v_[1] = { 600, {-2, 2, 0}, 1, tnl::Quaternion::RotationAxis(bo_z->in_rot_axis_, 0) };	// for e_r_arm
+	bo_z->dk_s_v_[2] = { 700, {2, 2, 0}, 1, tnl::Quaternion::RotationAxis(bo_z->in_rot_axis_, 0) }; // for e_l_arm
+	bo_z->dk_s_v_[3] = { 820, {0, 0, 0}, 1, tnl::Quaternion::RotationAxis(bo_z->in_rot_axis_, 0) };	// for object
 	// Parts
 	Parts* bo_z_bone = new Parts();
-	bo_z_bone->mesh_ = dxe::Mesh::CreateCylinder(5, 50);
+	bo_z_bone->mesh_ = dxe::Mesh::CreateCylinder(0.4, 0.5);
 	bo_z_bone->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	bo_z_bone->ofs_pos_ += {0, 0.25, 0};
 	bo_z->parts_.push_back(bo_z_bone);
+	Parts* bo_z_sterR = new Parts();
+	bo_z_sterR->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2.1213);
+	bo_z_sterR->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	bo_z_sterR->ofs_rot_ = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(45));
+	bo_z_sterR->ofs_pos_ += {-0.75, 1.25, 0};
+	bo_z->parts_.push_back(bo_z_sterR);
+	Parts* bo_z_sterL = new Parts();
+	bo_z_sterL->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2.1213);
+	bo_z_sterL->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	bo_z_sterL->ofs_rot_ = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(-45));
+	bo_z_sterL->ofs_pos_ += {0.75, 1.25, 0};
+	bo_z->parts_.push_back(bo_z_sterL);
+	Parts* bo_z_shoulder = new Parts();
+	bo_z_shoulder->mesh_ = dxe::Mesh::CreateCylinder(0.2, 4.0);
+	bo_z_shoulder->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	bo_z_shoulder->ofs_rot_ = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(90));
+	bo_z_shoulder->ofs_pos_ += {0, 2, 0};
+	bo_z->parts_.push_back(bo_z_shoulder);
+	Parts* bo_z_core = new Parts();
+	bo_z_core->mesh_ = dxe::Mesh::CreateSphere(0.75);
+	bo_z_core->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	bo_z_core->ofs_pos_ += {0, 1.2, 0};
+	bo_z->parts_.push_back(bo_z_core);
 
-	// ---- 3. right Arm ---- //
-	rob->modules_[e_r_arm].resize(3);
 
-	// --- 3.1. e_sho_x --- //
-	Module* sho_x = new Module();
+	// ---- 3. r_Leg ： パラメータ初期化 ---- //
+
+
+
+
+	// ---- 4. l_Leg ---- //
+
+	// ---- 5. head ---- //
+
+
+
+
+	// ---- 6. right Arm ---- //
+	rob->modules_[e_r_arm].resize(7);
+
+	// --- 6.1. e_sho_x_r --- //
+	Module* sho_x_r = new Module();
 	// 子設定
-	bo_z->next.resize(4);
-	bo_z->next[0] = sho_x;
+	bo_z->next.resize(1);
+	bo_z->next[0] = sho_x_r;
 	// 親設定
-	sho_x->back = bo_z;
+	sho_x_r->back = bo_z;
 	// パラメータ初期化
-	sho_x->InitParams(600, { 1, 0, 0 }, tnl::Quaternion::RotationAxis({ 1, 0, 0 }, 0));
-	sho_x->dk_s_v_.resize(1);
-	sho_x->dk_s_v_[0] = { 601, {0, 0, 0}, 1, tnl::Quaternion::RotationAxis(sho_x->in_rot_axis_, 0) };
+	sho_x_r->InitParams(600, { -1, 0, 0 }, tnl::Quaternion::RotationAxis({ -1, 0, 0 },0));
+	sho_x_r->dk_s_v_.resize(1);
+	sho_x_r->dk_s_v_[0] = { 601, {0, 0, 0}, 1, tnl::Quaternion::RotationAxis(sho_x_r->in_rot_axis_, 0) };
 
-	// --- 3.2. e_sho_y --- //
-	Module* sho_y = new Module();
+	// --- 6.2. e_sho_z_r --- //
+	Module* sho_z_r = new Module();
 	// 子設定
-	sho_x->next.resize(1);
-	sho_x->next[0] = sho_y;
+	sho_x_r->next.resize(1);
+	sho_x_r->next[0] = sho_z_r;
 	// 親設定
-	sho_y->back = sho_x;
+	sho_z_r->back = sho_x_r;
 	// パラメータ初期化
-	sho_y->InitParams(601, { 0, 1, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
-	sho_y->dk_s_v_.resize(1);
-	sho_y->dk_s_v_[0] = { 601, {0, 0, 1}, 30, tnl::Quaternion::RotationAxis(sho_y->in_rot_axis_, 0) };
+	sho_z_r->InitParams(601, { 0, 0, -1 }, tnl::Quaternion::RotationAxis({ 0, 0, -1 }, 0));
+	sho_z_r->dk_s_v_.resize(1);
+	sho_z_r->dk_s_v_[0] = { 602, {0, -2, 0}, 1, tnl::Quaternion::RotationAxis(sho_z_r->in_rot_axis_, 0) };
 	// Parts
-	//Parts* 
+	Parts* sho_z_r_jnt1 = new Parts();
+	sho_z_r_jnt1->mesh_ = dxe::Mesh::CreateSphere(0.3);
+	sho_z_r_jnt1->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	sho_z_r->parts_.push_back(sho_z_r_jnt1);
+	Parts* sho_z_r_arm1 = new Parts();
+	sho_z_r_arm1->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2.0);
+	sho_z_r_arm1->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	sho_z_r_arm1->ofs_pos_ += {0, -1, 0};
+	sho_z_r->parts_.push_back(sho_z_r_arm1);
 
-	// --- 3.3. e_arm_x --- //
-	Module* arm_x = new Module();
+	// --- 6.3. e_arm_x --- //
+	Module* arm_x_r = new Module();
 	// 子設定
-	sho_y->next.resize(1);
-	sho_y->next[0] = arm_x;
+	sho_z_r->next.resize(1);
+	sho_z_r->next[0] = arm_x_r;
 	// 親設定
-	arm_x->back = sho_y;
+	arm_x_r->back = sho_z_r;
 	// パラメータ初期化
-	arm_x->InitParams(602, { 0, 0, 1 }, tnl::Quaternion::RotationAxis({ 0, 0, 1 }, 0));
-	arm_x->dk_s_v_.resize(1);
-	arm_x->in_dk_s_v_[0] = { 603, {0, 0, 0}, 1, tnl::Quaternion::RotationAxis(arm_x->in_rot_axis_, 0) };
-}
+	arm_x_r->InitParams(602, { -1, 0, 0 }, tnl::Quaternion::RotationAxis({ -1, 0, 0 }, 0));
+	arm_x_r->dk_s_v_.resize(1);
+	arm_x_r->dk_s_v_[0] = { 603, {0, 0, 0}, 1, tnl::Quaternion::RotationAxis(arm_x_r->in_rot_axis_, 0) };
 
+	// --- 6.4. e_arm_y --- //
+	Module* arm_y_r = new Module();
+	// 子設定
+	arm_x_r->next.resize(1);
+	arm_x_r->next[0] = arm_y_r;
+	// 親設定
+	arm_y_r->back = arm_x_r;
+	// パラメータ初期化
+	arm_y_r->InitParams(603, { 0, -1, 0 }, tnl::Quaternion::RotationAxis({ 0, -1, 0 }, 0));
+	arm_y_r->dk_s_v_.resize(1);
+	arm_y_r->dk_s_v_[0] = { 604, {0, -2, 0}, 1, tnl::Quaternion::RotationAxis(arm_y_r->in_rot_axis_, 0) };
+	// Parts
+	Parts* arm_y_r_jnt2 = new Parts();
+	arm_y_r_jnt2->mesh_ = dxe::Mesh::CreateSphere(0.3);
+	arm_y_r_jnt2->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	arm_y_r->parts_.push_back(arm_y_r_jnt2);
+	Parts* arm_y_r_arm2 = new Parts();
+	arm_y_r_arm2->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2.0);
+	arm_y_r_arm2->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	arm_y_r_arm2->ofs_pos_ += {0, -1, 0};
+	arm_y_r->parts_.push_back(arm_y_r_arm2);
 
+	// --- 6.5. e_wrist_y --- //
+	Module* wri_y_r = new Module();
+	// 子設定
+	arm_y_r->next.resize(1);
+	arm_y_r->next[0] = wri_y_r;
+	// 親設定
+	wri_y_r->back = arm_y_r;
+	// パラメータ初期化
+	wri_y_r->InitParams(604, { 0, -1, 0 }, tnl::Quaternion::RotationAxis({ 0, -1, 0 }, 0));
+	wri_y_r->dk_s_v_.resize(1);
+	wri_y_r->dk_s_v_[0] = { 605, {0, 0, 0}, 1, tnl::Quaternion::RotationAxis(wri_y_r->in_rot_axis_, 0) };
+
+	// --- 6.6. e_wrist_x
+	Module* wri_x_r = new Module();
+	// 子設定
+	wri_y_r->next.resize(1);
+	wri_y_r->next[0] = wri_x_r;
+	// 親設定
+	wri_x_r->back = wri_y_r;
+	// パラメータ初期化
+	wri_x_r->InitParams(605, { -1, 0, 0 }, tnl::Quaternion::RotationAxis({ -1, 0, 0 }, 0));
+	wri_x_r->dk_s_v_.resize(1);
+	wri_x_r->dk_s_v_[0] = { 606, {0, 0, 0}, 1, tnl::Quaternion::RotationAxis(wri_x_r->in_rot_axis_, 0) };
+
+	// --- 6.7. e_wrist_y --- //
+	Module* wri_y2_r = new Module();
+	// 子設定
+	wri_x_r->next.resize(1);
+	wri_x_r->next[0] = wri_y2_r;
+	// 親設定
+	wri_y2_r->back = wri_x_r;
+	// パラメータ初期化	
+	wri_y2_r->InitParams(606, { 0, -1, 0 }, tnl::Quaternion::RotationAxis({ 0, -1, 0 }, 0));
+	wri_y2_r->dk_s_v_.resize(2);
+	wri_y2_r->dk_s_v_[0] = { 860, {0, -0.75, 0}, 1, tnl::Quaternion::RotationAxis(wri_y2_r->in_rot_axis_, 0) };
+	wri_y2_r->dk_s_v_[1] = { 960, {0, -0.75, 0}, 1, tnl::Quaternion::RotationAxis(wri_y2_r->in_rot_axis_, 0) };
+	// Parts
+	Parts* wri_y2_r_jnt3 = new Parts();
+	wri_y2_r_jnt3->mesh_ = dxe::Mesh::CreateSphere(0.3);
+	wri_y2_r_jnt3->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	wri_y2_r->parts_.push_back(wri_y2_r_jnt3);
+	Parts* wri_y2_r_wrist = new Parts();
+	wri_y2_r_wrist->mesh_ = dxe::Mesh::CreateCylinder(0.2, 0.75);
+	wri_y2_r_wrist->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	wri_y2_r_wrist->ofs_pos_ += {0, -0.75/2, 0};
+	wri_y2_r->parts_.push_back(wri_y2_r_wrist);
 
 
 	// ----- ロボ全てのパーツの初期位置・姿勢を反映 ----- //
@@ -170,15 +291,49 @@ Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 }
 
 void Robot::mode01_init(float delta_time) {
+	// ----- 射撃モード初期化 ----- //
+
+	// ---- Test ---- //
+	// 右腕のIKを実施する
+	objects_.clear();
+	objects_.resize(e_modules_max);
+	objects_[e_r_arm].push_back(FaceVector::Create(0, { 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0)));
+	objects_[e_r_arm][0]->InitParams(860, { 0, 1, 0 }, tnl::Quaternion::RotationAxis({ 0, -1, 0 }, 0));
+	// 右腕手先にオブジェクト取付
+	AttachModule(this, objects_[e_r_arm][0], 606);
+
+	// 右腕手先の目標位置・姿勢を登録
+	targets_.clear();
+	targets_.resize(e_modules_max);
+	targets_[e_r_arm].push_back(FaceVector::Create(0, { -2, 8, -2 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0)));
+
+	// 右腕のIK動作試験のための仕込み
+	Module* t = targets_[e_r_arm][0];
+	Module* o = objects_[e_r_arm][0];
+	SetIKParams(this, 600, t, o);
+	SetIKParams(this, 601, t, o);
+	SetIKParams(this, 602, t, o);
+	SetIKParams(this, 603, t, o);
+	SetIKParams(this, 604, t, o);
+	SetIKParams(this, 605, t, o);
+	SetIKParams(this, 606, t, o);
 
 }
 
 void Robot::mode01_update(float delta_time) {
 
+	// ---- Test ---- //
+	AllupdateIK(this, delta_time);
+	updateTree(this, delta_time);
+
+
+	targets_[e_r_arm][0]->update(delta_time);
 }
 
 void Robot::move(float delta_time) {
-
+	// ----- ユーザー入力で移動[座標平行移動＆姿勢変更]を行う ----- //
+	// ---- 初期化 ---- //
+	rot_tmp_ = tnl::Quaternion::RotationAxis(in_rot_axis_, 0);
 }
 
 

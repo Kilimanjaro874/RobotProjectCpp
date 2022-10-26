@@ -15,8 +15,8 @@ public:
 		e_dir_x,
 		e_parts_max
 	};
-	float sphere_size_ = 2.0;
-	float bar_length_ = 20.0;
+	float sphere_size_ = 0.1;
+	float bar_length_ = 1.0;
 	// ----- ƒƒ“ƒoŠÖ” ----- //
 	static FaceVector* Create(int id, tnl::Vector3 pos, tnl::Quaternion rot);
 };

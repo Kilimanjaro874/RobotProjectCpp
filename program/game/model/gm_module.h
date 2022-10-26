@@ -64,4 +64,8 @@ public:
 	void AllInitDK(const Module* mod, const std::vector<dk_setting>& dks);
 	void updateTree(const Module* mod, float delta_time);
 	void renderTree(const Module* mod, dxe::Camera* camera);
+	void AttachModule(Module* mod, Module* attach_mod, int id);
+	void SetIKParams(Module* mod, int id, Module* target, Module* object,
+		int ikType = pos_to_pos, float kp = 0.4);
+	void AllupdateIK(const Module* mod, float delta_time);
 };

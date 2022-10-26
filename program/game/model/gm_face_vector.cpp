@@ -21,14 +21,14 @@ FaceVector* FaceVector::Create(int id, tnl::Vector3 pos, tnl::Quaternion rot) {
 	sp_p->ofs_pos_ = { 0, 0, 0 };
 	// -- 方向の表示 (z) -- 
 	Parts* cy_pz = new Parts();
-	cy_pz->mesh_ = dxe::Mesh::CreateCylinder(1.0, fv->bar_length_);
+	cy_pz->mesh_ = dxe::Mesh::CreateCylinder(0.1, fv->bar_length_);
 	cy_pz->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/red1.bmp"));
 	// 位置・姿勢設定
 	cy_pz->ofs_pos_ += tnl::Vector3{ 0, 0, fv->bar_length_/2 };
 	cy_pz->ofs_rot_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(-90));
 	// -- 方向の表示(x) --
 	Parts* cy_px = new Parts();
-	cy_px->mesh_ = dxe::Mesh::CreateCylinder(1.0, fv->bar_length_);
+	cy_px->mesh_ = dxe::Mesh::CreateCylinder(0.1, fv->bar_length_);
 	cy_px->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue.bmp"));
 	// 位置・姿勢設定
 	cy_px->ofs_pos_ += tnl::Vector3{ fv->bar_length_/2, 0, 0 };
