@@ -33,9 +33,10 @@ public:
 	std::vector<std::vector<Module*>> targets_;		// IKのターゲットを登録
 	std::vector<std::vector<Module*>> objects_;		// IKの操作対象を登録
 	// ----- ロボット移動パラメータ ----- //
-	float move_speed = 50.0;		// 移動速度 : *= delta_time
-	float rotate_speed = 1.5f;		// 旋回速度 : *= delta_time
+	float move_speed_ = 50.0;		// 移動速度 : *= delta_time
+	float rotate_speed_ = 1.5f;		// 旋回速度 : *= delta_time
 	tnl::Vector3 d_move_;			// 1フレーム間のx, z移動量を格納
+	tnl::Quaternion rot_move_;		// 1フレーム間の回転量を格納
 
 	// ----- メンバ関数 ------ //
 	static Robot* Create(const tnl::Vector3& pos, const tnl::Quaternion& rot);
@@ -45,4 +46,5 @@ public:
 	void mode01_update(float delta_time);
 	// --- キャラコン --- //
 	void move(float delta_time);
+	void moveDK();
 };

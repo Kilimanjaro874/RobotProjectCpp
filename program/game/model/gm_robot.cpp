@@ -7,16 +7,13 @@ Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 
 	// ---- 0. Robot[id = 0] : パラメータ初期化 ---- //
 	Robot* rob = new Robot();
-	rob->InitParams(0, { 0, 1, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
-	// rob->SelfDK(pos, rot);				// 座標系の更新: 最後にまとめて実行すればよいのでは? 
+	rob->InitParams(1, { 0, 1, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
 	// DK パラメータ初期化
 	rob->dk_s_v_.resize(1);
 	rob->dk_s_v_[0] = { 100, {0, 7, 0}, 1, tnl::Quaternion::RotationAxis(rob->in_rot_axis_, 0) };
 	// モジュールサイズ設定
 	rob->modules_.resize(e_modules_max);
 	
-
-
 	// ---- 1. lower back : パラメータ初期化---- //
 	rob->modules_[e_lower_back_].resize(3);		// 3DOF
 	// --- 1.1. e_bb_y --- //
@@ -283,8 +280,9 @@ Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 	tnl::Vector3 tmp_pos_dir = pos;
 	tmp_pos_dir.normalize();
 	float pos_length = pos.length();
-	rob->rob_dk_s_v_[0] = {0, tmp_pos_dir, pos_length, rot};
-	rob->AllInitDK(rob, rob->rob_dk_s_v_);
+	rob->rob_dk_s_v_[0] = {1, tmp_pos_dir, pos_length, rot};
+	rob->InitDK(rob->rob_dk_s_v_);
+	rob->AllInitDK(rob, rob->dk_s_v_);
 	rob->updateTree(rob, 0);
 
 	return rob;
@@ -323,17 +321,51 @@ void Robot::mode01_init(float delta_time) {
 void Robot::mode01_update(float delta_time) {
 
 	// ---- Test ---- //
-	AllupdateIK(this, delta_time);
-	updateTree(this, delta_time);
-
+	move(delta_time);				// ユーザー入力受付
+	moveDK();						// 入力内容に応じてDK実施
+	AllupdateIK(this, delta_time);	// 全てのモジュールのDK&IK実施
+	updateTree(this, delta_time);	// 全てののモジュールの部品位置・姿勢アップデート
 
 	targets_[e_r_arm][0]->update(delta_time);
+	
 }
 
 void Robot::move(float delta_time) {
 	// ----- ユーザー入力で移動[座標平行移動＆姿勢変更]を行う ----- //
 	// ---- 初期化 ---- //
-	rot_tmp_ = tnl::Quaternion::RotationAxis(in_rot_axis_, 0);
+	rot_move_ = tnl::Quaternion::RotationAxis(in_rot_axis_, 0);
+	d_move_ = tnl::Vector3{ 0, 0, 0 };
+	// ---- 入力受付 ---- //
+	if (tnl::Input::IsKeyDown(eKeys::KB_UP)) {
+		d_move_ += dir_z_ * delta_time * move_speed_;
+	}
+	else if (tnl::Input::IsKeyDown(eKeys::KB_DOWN)) {
+		d_move_ += dir_z_ * delta_time * move_speed_ * -1;
+	}
+
+	if (tnl::Input::IsKeyDown(eKeys::KB_RIGHT)) {
+		rot_move_ = tnl::Quaternion::RotationAxis(in_rot_axis_, rotate_speed_ * delta_time);
+	}
+	else if (tnl::Input::IsKeyDown(eKeys::KB_LEFT)) {
+		rot_move_ = tnl::Quaternion::RotationAxis(in_rot_axis_, -rotate_speed_ * delta_time);
+	}
+
+}
+
+void Robot::moveDK() {
+	// ---- ユーザー入力による位置・姿勢変化を本ロボットクラスに反映 ---- //
+	rot_sum_ *= rot_move_;
+	pos_o_ += d_move_;
+	dir_z_ = tnl::Vector3::TransformCoord(in_dir_z_, rot_sum_);
+	dir_x_ = tnl::Vector3::TransformCoord(in_dir_x_, rot_sum_);
+	rot_axis_ = tnl::Vector3::TransformCoord(in_rot_axis_, rot_sum_);
+
+	// ---- ユーザー入力の位置・姿勢変化情報をdk_settingに格納
+	for (int i = 0; i < dk_s_v_.size(); i++) {
+		dk_s_v_[i].dir_r_n_ = pos_o_ +
+			tnl::Vector3::TransformCoord(in_dk_s_v_[i].dir_r_n_, rot_sum_) * in_dk_s_v_[i].dir_r_length_;
+		dk_s_v_[i].q_r_n_ = rot_move_;
+	}
 }
 
 

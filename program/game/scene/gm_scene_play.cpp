@@ -20,7 +20,7 @@ void ScenePlay::initialzie() {
 	// Test
 	//
 	target_ = FaceVector::Create(0, tnl::Vector3{ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
-	robo_ = Robot::Create({ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
+	robo_ = Robot::Create({ 0, 0, 1 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
 	robo_->mode01_init(0);
 
 }
