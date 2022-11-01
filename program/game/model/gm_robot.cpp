@@ -368,6 +368,21 @@ void Robot::moveDK() {
 	}
 }
 
+void Robot::targetInit() {
+	// ---- ロボットが所持しているtargetクラスの初期化を実施 ---- //
+
+
+}
+
+void Robot::targetDK() {
+	// ---- ロボットが所持しているtargetクラスを本座標系周りにDK計算する ---- //
+	for (int n = 0; n < targets_.size(); n++) {
+		for (int m = 0; m < targets_[n].size(); m++) {
+			targets_[n][m]->rot_sum_ *= rot_move_;
+		}
+	}
+
+}
 
 
 

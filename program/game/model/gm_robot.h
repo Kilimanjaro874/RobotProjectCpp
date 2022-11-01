@@ -37,6 +37,7 @@ public:
 	float rotate_speed_ = 1.5f;		// 旋回速度 : *= delta_time
 	tnl::Vector3 d_move_;			// 1フレーム間のx, z移動量を格納
 	tnl::Quaternion rot_move_;		// 1フレーム間の回転量を格納
+	// ----- ロボット座標原点からルート座標への位置ベクトル ----- //
 
 	// ----- メンバ関数 ------ //
 	static Robot* Create(const tnl::Vector3& pos, const tnl::Quaternion& rot);
@@ -47,4 +48,7 @@ public:
 	// --- キャラコン --- //
 	void move(float delta_time);
 	void moveDK();
+	// --- ターゲットDK --- //
+	void targetInit();
+	void targetDK();
 };
