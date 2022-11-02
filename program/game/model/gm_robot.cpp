@@ -151,8 +151,8 @@ Robot* Robot::Create(const tnl::Vector3& pos, const tnl::Quaternion& rot) {
 	// ƒpƒ‰ƒ[ƒ^‰Šú‰»
 	arm_x->InitParams(602, { 0, 0, 1 }, tnl::Quaternion::RotationAxis({ 0, 0, 1 }, 0));
 	arm_x->dk_s_v_.resize(1);
-	arm_x->in_dk_s_v_[0] = { 603, {0, 0, 0}, 1, tnl::Quaternion::RotationAxis(arm_x->in_rot_axis_, 0) };
-}
+	arm_x->dk_s_v_[0] = { 603, {0, 0, 0}, 1, tnl::Quaternion::RotationAxis(arm_x->in_rot_axis_, 0) };
+
 
 
 
