@@ -9,9 +9,10 @@ namespace tnl {
 	// arg2...点のｙ座標
 	// arg3...矩形の中心ｘ座標
 	// arg4...矩形の中心ｙ座標
-	// arg5...矩形のサイズ
+	// arg5...矩形のサイズ X
+	// arg5...矩形のサイズ Y
 	// ret....[ 衝突している : true ]   [ 衝突していない : false ]
-	bool IsIntersectPointRect(const int point_x, const int point_y, const int rect_x, const int rect_y, const int rect_size);
+	bool IsIntersectPointRect(const int point_x, const int point_y, const int rect_x, const int rect_y, const int rect_size_x, const int rect_size_y);
 
 	//-----------------------------------------------------------------------------------------------------
 	// 矩形と矩形の衝突検知 ※矩形の左上・右下の頂点座標指定
@@ -74,6 +75,16 @@ namespace tnl {
 	//        矩形Bは壁等の移動しないオブジェクトを想定しています
 	int IsIntersectRectToCorrectPosition( tnl::Vector3& a_now, const tnl::Vector3 &a_prev, const int a_rect_size_w, const int a_rect_size_h,
 		const tnl::Vector3& b, const int b_rect_size_w, const int b_rect_size_h, const float correct_space = 1.0f);
+
+
+	//----------------------------------------------------------------------------------------------
+	// work... AABB 同士の衝突判定
+	// arg1... A 座標
+	// arg2... A のサイズ
+	// arg3... B の座標
+	// arg4... B のサイズ
+	// ret.... [衝突している : true] [衝突していない : false]
+	bool IsIntersectAABB( const tnl::Vector3& a, const tnl::Vector3& a_size, const tnl::Vector3& b, const tnl::Vector3& b_size );
 
 
 	//----------------------------------------------------------------------------------------------

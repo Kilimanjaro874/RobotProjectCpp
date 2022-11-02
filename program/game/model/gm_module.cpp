@@ -19,22 +19,19 @@ void Module::render(dxe::Camera* camera) {
 void Module::InitParams(int id, tnl::Vector3 rot_axis, tnl::Quaternion rot_sum, 
 	tnl::Vector3 dir_z, tnl::Vector3 dir_x){
 	// ---- モジュールパラメータ初期化のために使用 ---- //
-	if (id == 0) {
-		printf("deb");
-	}
 	id_ = id;
 	in_rot_axis_ = rot_axis;
-	rot_sum = rot_sum;
+	rot_sum_ = rot_sum;
 	in_dir_z_ = dir_z;
 	in_dir_x_ = dir_x;
 }
 
 void Module::InitDK(const std::vector<dk_setting>& dks) {
 	// ---- 順運動学のための初期化処理 ---- //
-	if (id_ == 0) {
+	bool do_DK = false;
+	if (id_ == 502) {
 		printf("deb");
 	}
-	bool do_DK = false;
 	for (auto d : dks) {
 		if (d.id_ != NULL && d.id_ == id_) {
 			// 本モジュール位置・姿勢・座標系更新

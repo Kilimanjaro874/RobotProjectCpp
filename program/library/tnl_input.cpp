@@ -525,4 +525,8 @@ namespace tnl {
 	int32_t Input::GetMouseWheel() {
 		return ms_.lZ;
 	}
+
+	tnl::Vector3 Input::GetMouseVelocity() {
+		return { (float)ms_.lX, (float)ms_.lY, 0 };
+	}
 }

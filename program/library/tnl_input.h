@@ -273,7 +273,7 @@ namespace tnl {
 		// tips2.. 複数個の引数に対応
 		//------------------------------------------------------------------------------------------------------------------------------
 		template<typename... tKeys>
-		static void RunIndexKeyyReleaseTrigger(const std::function<void(uint32_t index)>& func, tKeys... iParams)
+		static void RunIndexKeyReleaseTrigger(const std::function<void(uint32_t index)>& func, tKeys... iParams)
 		{
 			const eKeys array[] = { static_cast<eKeys>(iParams)... };
 			uint32_t i = 0;
@@ -414,7 +414,7 @@ namespace tnl {
 
 		//------------------------------------------------------------------------------------------------------------------------------
 		// ゲームパッドの 左右スティック入力値取得
-		// ret... 各軸に対して 0.0f ～ 1.0f
+		// ret... 各軸に対して -1.0f ～ 1.0f
 		//------------------------------------------------------------------------------------------------------------------------------
 		static tnl::Vector3 GetLeftStick();
 		static tnl::Vector3 GetRightStick();
@@ -433,6 +433,8 @@ namespace tnl {
 		static tnl::Vector3 GetMousePosition();
 		// マウスホイールの変化量を取得
 		static int32_t GetMouseWheel();
+		// マウスを動かした時の変化量
+		static tnl::Vector3 GetMouseVelocity();
 
 	private:
 		Input() {}

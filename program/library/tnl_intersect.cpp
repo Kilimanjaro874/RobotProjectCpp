@@ -7,11 +7,11 @@
 namespace tnl {
 
 	// 点と矩形の衝突判定
-	bool IsIntersectPointRect(const int point_x, const int point_y, const int rect_x, const int rect_y, const int rect_size) {
-		int sx = rect_x - (rect_size >> 1);
-		int sy = rect_y - (rect_size >> 1);
-		int ex = sx + rect_size;
-		int ey = sy + rect_size;
+	bool IsIntersectPointRect(const int point_x, const int point_y, const int rect_x, const int rect_y, const int rect_size_x, const int rect_size_y) {
+		int sx = rect_x - (rect_size_x >> 1);
+		int sy = rect_y - (rect_size_y >> 1);
+		int ex = sx + rect_size_x;
+		int ey = sy + rect_size_y;
 		if (point_x < sx) return false;
 		if (point_x > ex) return false;
 		if (point_y < sy) return false;
@@ -45,6 +45,20 @@ namespace tnl {
 
 		return IsIntersectRectPrimitive(a_left, a_right, a_top, a_bottom, b_left, b_right, b_top, b_bottom);
 	}
+
+	// work... AABB と AABBの判定
+	bool IsIntersectAABB(const tnl::Vector3& a, const tnl::Vector3& a_size, const tnl::Vector3& b, const tnl::Vector3& b_size)
+	{
+		tnl::Vector3 a_max = tnl::ToMaxAABB(a, a_size);
+		tnl::Vector3 a_min = tnl::ToMinAABB(a, a_size);
+		tnl::Vector3 b_max = tnl::ToMaxAABB(b, b_size);
+		tnl::Vector3 b_min = tnl::ToMinAABB(b, b_size);
+		if (a_max.x < b_min.x || a_min.x > b_max.x) return false;
+		if (a_max.y < b_min.y || a_min.y > b_max.y) return false;
+		if (a_max.z < b_min.z || a_min.z > b_max.z) return false;
+		return true;
+	}
+
 
 	// 矩形と矩形の衝突検知 & 座標補正
 	int IsIntersectRectToCorrectPosition(tnl::Vector3& a_now, const tnl::Vector3 &a_prev, const int a_rect_size_w, const int a_rect_size_h,
