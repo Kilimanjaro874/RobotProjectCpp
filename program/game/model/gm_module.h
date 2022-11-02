@@ -5,67 +5,65 @@ class Module {
 public:
 	Module() {};
 	virtual ~Module() {
-		for (auto pts : parts_) delete pts;
+		for (auto pts : _parts) delete pts;
+		delete _parent;
+		for (auto ch : _children) delete ch;
 	}
+	//// ------ メンバ変数 ------ ////
 	// ----- Render ----- //
-	std::vector<Parts*> parts_;
-	bool is_render_ = true;		// 描画するか否か
-	// ----- Parameters ----- //
-	int id_;		// 参照用
-	Module* back;				// 親モジュール
-	std::vector<Module*> next;	// 子モジュール
-	// ----- Direct Kinematics : DKに必要な変数 ----- //
-	struct dk_setting {
-		int id_;				// 本dk_settingを受け取るモジュールid_を指定
-		tnl::Vector3 dir_r_n_;	// 次モジュールへの方向単位ベクトル
-		float dir_r_length_;	// 次モジュールへの距離の大きさ格納
-		tnl::Quaternion q_r_n_;	// 次モジュールへの回転量
-	};
-	std::vector<dk_setting> dk_s_v_;	// DKセッティングのベクトル型
-	std::vector<dk_setting> in_dk_s_v_;	// DKセッティングの基準を作る
-	tnl::Vector3 pos_o_;			// ワールド座標系の本モジュールiの原点位置
-	tnl::Vector3 in_rot_axis_;		// 本モジュールiの回転軸単位ベクトル：本モジュール原点に立てる（初期値)
-	tnl::Vector3 rot_axis_;			// 回転軸単位ベクトル
-	tnl::Vector3 in_dir_z_;			// 本モジュールiのz軸方向単位ベクトル(初期値)
-	tnl::Vector3 dir_z_;			// z軸方向単位ベクトル
-	tnl::Vector3 in_dir_x_;			// 本モジュールiのx軸方向単位ベクトル(初期値)
-	tnl::Vector3 dir_x_;			// x軸方向単位ベクトル
-	tnl::Quaternion rot_tmp_;		// IK計算時、1フレーム間のみ有効なクォータニオン
-	tnl::Quaternion rot_sum_;		// 初期状態から本モジュールiの回転量を表すクォータニオン
+	std::vector<Parts*> _parts;			// パーツクラス
+	bool _is_render = true;				// 描画判定
 
-	// ---- Inverse Kinematics : IKに必要な変数 ----- //
-	struct ik_setting {
-		int ik_type_;			// IKで解くアルゴリズムの種類を格納
-		float kp_;				// dthが過剰な回転とならないよう抑制する比例定数(0~1.0);
-		Module* target_;	// 目標位置クラス
-		Module* object_;	// 制御対象クラス
+	// ----- Parameter ----- //
+	int _id;							// ID: ツリー構造の検索等に用いる
+	std::string _name;					// 名前：ツリー構造の検索当に用いる
+	Module* _parent;					// 親モジュール: ツリー構造走査用
+	std::vector<Module*> _children;		// 子モジュール：ツリー構造走査用
+											
+	// ----- 運動学計算用(DK) ----- //
+	struct dk_st {
+		// ---- 親から子モジュールへ運動学計算を実施するためのパラメータを構造体で定義しておく ---- //
+		int _id;
+		std::string _name;
+		tnl::Vector3 _dir;
+		float _length;
 	};
-	std::vector<ik_setting> ik_s_v_;
+	std::vector<dk_st> _dk_st;
+	// ----- 座標系定義用 ----- //
+	tnl::Vector3 _pos;					// モジュールiの位置(ワールド座標：Σo)
+	tnl::Vector3 _rot_axis;				// モジュールi回転軸(Σo)
+	tnl::Vector3 _dir_z;				// z軸単位ベクトル定義(Σo)
+	tnl::Vector3 _dir_x;				// x軸単位ベクトル定義(Σo)
+	tnl::Quaternion _rot;				// クォータニオン(Σo)
 
-	enum ik_type {
-		pos_to_pos,
-		dirz_to_pos,
-		dirx_to_pos,
-		dirz_to_dirz,
-		dirx_to_dirx,
-		dirz_to_dirx,
-		dirx_to_dirz
+	// ----- 逆運動学計算用 ----- //
+
+
+	enum _ik_type {
+		// ---- 制御モジュール - 制御目標モジュール同士をどの種類のIKで実施するか指定用 ---- //
+		pos_to_pos,						// 位置同士を近づける
+		dirz_look_pos,					// z軸を目標位置に向ける
+		dirx_look_pos,					
+		dirz_as_dirz,					// z軸を目標姿勢z軸と同じ向きに近づける
+		dirx_as_dirx,
+		dirz_as_dirx,
+		dirx_as_dirx,
 	};
 
-	// ---- メンバ関数 ---- //
-	virtual void update(float delta_time);
-	virtual void render(dxe::Camera* camera);
-	void InitParams(int id, tnl::Vector3 rot_axis, tnl::Quaternion rot_sum, 
-		tnl::Vector3 dir_z = {0, 0, 1}, tnl::Vector3 dir_x = {1, 0, 0});
-	void InitDK(const std::vector<dk_setting>& dks);
-	void SelfDK(const tnl::Vector3& pos, const tnl::Quaternion& rot);
-	void DKwithIK(float delta_time, const std::vector<dk_setting>& dks);
-	// test
-	void AllInitDK(const Module* mod, const std::vector<dk_setting>& dks);
-	void updateTree(const Module* mod, float delta_time);
-	void renderTree(const Module* mod, dxe::Camera* camera);
-	void AttachModule(Module* mod, Module* attach_mod, int id);
-	void SetIKParams(Module* mod, int id, Module* target, Module* object,
-		int ikType = pos_to_pos, float kp = 0.4);
-	void AllupdateIK(const Module* mod, float delta_time);
+	enum _attach_type {
+		// ---- モジュールを親にアタッチする時、位置：絶対座標系参照 or 相対座標参照か
+		absolute,
+		relative,
+	};
+
+	//// ----- メンバ関数 ------ ////
+	virtual void partsUpdate(float delta_time);
+	virtual void partsRender(dxe::Camera* camera);
+	void partsUpdateTree(const Module* mod, float delta_time);
+	void partsRenderTree(const Module* mod, dxe::Camera* camera);
+	static Module* createModule(int id, std::string name, tnl::Vector3 pos, tnl::Vector3 rot_axis,
+		tnl::Quaternion rot = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0), 
+		tnl::Vector3 dir_z = { 0, 0, 1 }, tnl::Vector3 dir_x = { 1, 0, 0 });
+	void attachModule(Module* parent, Module* child, _attach_type type);
+
 };
