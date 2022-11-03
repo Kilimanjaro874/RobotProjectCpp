@@ -1,7 +1,7 @@
 #include "gm_scene_base.h"
 #include "../model/gm_module.h"
-#include "../model/gm_face_vector.h"
 #include "../model/gm_robot.h"
+#include "../gm_robot_controller.h"
 
 class GmCamera;
 
@@ -10,9 +10,9 @@ public :
 	ScenePlay(){}
 	~ScenePlay();
 
-	GmCamera* camera_ = nullptr;
-	FaceVector* target_ = nullptr;
-	Robot* robo_ = nullptr;
+	GmCamera* _camera = nullptr;
+	Robot* _robo = nullptr;
+	RobotCont* _controller = nullptr;
 
 	void initialzie() override;
 	void update(float delta_time) override;

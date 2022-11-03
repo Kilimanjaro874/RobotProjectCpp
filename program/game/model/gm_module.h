@@ -23,19 +23,29 @@ public:
 	// ----- 運動学計算用(DK) ----- //
 	struct dk_st {
 		// ---- 親から子モジュールへ運動学計算を実施するためのパラメータを構造体で定義しておく ---- //
-		int _id;
-		std::string _name;
-		tnl::Vector3 _dir;
-		float _length;
+		int _id;						// 子モジュールid
+		std::string _name;				// 子モジュールname
+		tnl::Vector3 _dir;				// 子モジュールの方向を単位ベクトルで格納(Σo)
+		float _length;					// 子モジュールの距離をfloatで格納(Σo)
+		tnl::Quaternion _rot_sum;		// 親モジュールからの回転量総量を格納する(Σo)
 	};
-	std::vector<dk_st> _dk_st;
+	std::vector<dk_st> _dk_st;			// 子モジュールまでの相対座標を格納
+	std::vector<dk_st> _dk_st_tmp;		// Update実行中の子モジュールまでの相対座標を格納：初期値(_dk_st)からの回転量で(_rot)で計算
+	std::vector<dk_st> _dk_st_next;		//　子モジュールのΣoに対する座標を格納
+
 	// ----- 座標系定義用 ----- //
 	tnl::Vector3 _pos;					// モジュールiの位置(ワールド座標：Σo)
 	tnl::Vector3 _rot_axis;				// モジュールi回転軸(Σo)
+	tnl::Vector3 _rot_axis_tmp;			// Update実行中の回転軸ベクトル：初期値(_rot_axis)からの回転量(_rot)で計算：
+										//  => 数値計算累計誤差の影響を避けるため
 	tnl::Vector3 _dir_z;				// z軸単位ベクトル定義(Σo)
+	tnl::Vector3 _dir_z_tmp;			// Update実行中のz軸単位ベクトル：初期値(_dir_z)からの回転量(_rot)で計算：
+										//  => 数値計算累計誤差の影響を避けるため
 	tnl::Vector3 _dir_x;				// x軸単位ベクトル定義(Σo)
-	tnl::Quaternion _rot;				// クォータニオン(Σo)
-
+	tnl::Vector3 _dir_x_tmp;			// Update実行中のz軸単位ベクトル：初期値(_dir_z)からの回転量(_rot)で計算：
+										//  => 数値計算累計誤差の影響を避けるため
+	tnl::Quaternion _rot;				// モジュールの回転量(Σo)：
+	tnl::Quaternion _rot_tmp;			// モジュールiまでの回転量総量を一時格納(Σo ~ Σi-1)
 	// ----- 逆運動学計算用 ----- //
 
 
@@ -47,7 +57,7 @@ public:
 		dirz_as_dirz,					// z軸を目標姿勢z軸と同じ向きに近づける
 		dirx_as_dirx,
 		dirz_as_dirx,
-		dirx_as_dirx,
+		dirx_as_dirz,
 	};
 
 	enum _attach_type {
@@ -64,6 +74,8 @@ public:
 	static Module* createModule(int id, std::string name, tnl::Vector3 pos, tnl::Vector3 rot_axis,
 		tnl::Quaternion rot = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0), 
 		tnl::Vector3 dir_z = { 0, 0, 1 }, tnl::Vector3 dir_x = { 1, 0, 0 });
-	void attachModule(Module* parent, Module* child, _attach_type type);
+	void attachModule(Module* parent, Module* child, _attach_type type = absolute);
+	void directKinematics(const std::vector<dk_st>& dk);
+	void directKinematicsTree(const Module* mod, std::vector<dk_st>& dk);
 
 };
