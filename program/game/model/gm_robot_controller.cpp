@@ -28,6 +28,5 @@ void RobotCont::update(float delta_time) {
 	_robot->_dk_input[0]._length = 1;
 	_robot->_dk_input[0]._rot_sum = rot_move;
 	
-
 }
 

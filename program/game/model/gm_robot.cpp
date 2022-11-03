@@ -15,6 +15,16 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 
 	rob->attachModule(rob, box);
 
+	// test : 更に四角形をアタッチする
+	Module* box2 = Module::createModule(3, "box2", { 0, 20, 0 }, { 0, 1, 0 },
+		tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(45)));
+	Parts* box_2s = new Parts();
+	box_2s->mesh_ = dxe::Mesh::CreateBox(10);
+	box_2s->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	box2->_parts.push_back(box_2s);
+
+	box->attachModule(box, box2);
+
 	return rob;
 
 }

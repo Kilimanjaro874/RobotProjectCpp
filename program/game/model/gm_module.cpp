@@ -66,32 +66,62 @@ void Module::attachModule(Module* parent, Module* child, _attach_type type) {
 		delta_pos, delta_length, tnl::Quaternion::RotationAxis({0, 1, 0}, 0) });
 }
 
-void Module::directKinematics(const std::vector<dk_st>& dk) {
-	// ----- 主に親モジュールのdk_stを参照し、自身の座標系・姿勢更新 ----- //
-	for (auto d : dk) {
-		if (_id != d._id) { continue; }
-		// ---- idが一致した時の処理：座標系更新 ---- //
-		_pos = d._dir * d._length;
-		_rot *= d._rot_sum;
-		_rot_tmp = d._rot_sum;
-		_rot_axis_tmp = tnl::Vector3::TransformCoord(_rot_axis, _rot);
-		_dir_z_tmp = tnl::Vector3::TransformCoord(_dir_z, _rot);
-		_dir_x_tmp = tnl::Vector3::TransformCoord(_dir_x, _rot);
+
+
+void Module::removeModuleTree(Module* mod, int id, std::string name, bool is_erase) {
+	// ----- mod より子にある特定のid及び、名前のモジュールを運動学計算のメンバから外す ----- //
+	// また、is_erase == true であれば、モジュール自体を消去する
+		// ---- モジュールiの子を、モジュールiの親に橋渡し ---- //
+		for (int i = 0; i < _children.size(); i++) {
+			if (_children[i]->_id == id || _children[i]->_name == name) {
+
+
+
+
+				//_children[i]->_parent = this->_parent;
+				//// 親にdk_st_を渡す
+				//for (int i = 0; i < _dk_st.size(); i++) {
+				//	_parent->_dk_st.push_back(_dk_st[i]);
+				//}
+				//this->_parent = nullptr;
+			}
+		}
+
+		if (_children.size() == 0) return;
+		for (int i = 0; i < _children.size(); i++) {
+			_children[i]->removeModuleTree(_children[i], id, name, is_erase);	// 子の関数実施
+		}
 	}
-	// ---- 子モジュールまでの相対座標を更新 ---- //
-	_dk_st_tmp = _dk_st;
-	for (int i = 0; i < _dk_st.size(); i++) {
-		_dk_st_tmp[i]._dir = tnl::Vector3::TransformCoord(_dk_st[i]._dir, _rot);
-		_dk_st_tmp[i]._rot_sum = _rot_tmp;
+
+
+
+	void Module::directKinematics(const std::vector<dk_st>&dk) {
+		// ----- 主に親モジュールのdk_stを参照し、自身の座標系・姿勢更新 ----- //
+		for (auto d : dk) {
+			if (_id != d._id) { continue; }
+			// ---- idが一致した時の処理：座標系更新 ---- //
+			_pos = d._dir * d._length;
+			_rot *= d._rot_sum;
+			_rot_tmp = d._rot_sum;
+			_rot_axis_tmp = tnl::Vector3::TransformCoord(_rot_axis, _rot);
+			_dir_z_tmp = tnl::Vector3::TransformCoord(_dir_z, _rot);
+			_dir_x_tmp = tnl::Vector3::TransformCoord(_dir_x, _rot);
+		}
+		// ---- 子モジュールまでの相対座標を更新 ---- //
+		_dk_st_tmp = _dk_st;
+		for (int i = 0; i < _dk_st.size(); i++) {
+			_dk_st_tmp[i]._dir = tnl::Vector3::TransformCoord(_dk_st[i]._dir, _rot);
+			_dk_st_tmp[i]._rot_sum = _rot_tmp;
+		}
+		// ---- 子モジュールまでの絶対座標を更新：子モジュールに渡すのはこちら ---- //
+		_dk_st_next = _dk_st_tmp;
+		for (int i = 0; i < _dk_st_next.size(); i++) {
+			_dk_st_next[i]._dir = _pos + _dk_st[i]._dir * _dk_st[i]._length;
+			_dk_st_next[i]._length = _dk_st_next[i]._dir.length();
+			_dk_st_next[i]._dir.normalize();
+		}
 	}
-	// ---- 子モジュールまでの絶対座標を更新：子モジュールに渡すのはこちら ---- //
-	_dk_st_next = _dk_st_tmp;
-	for (int i = 0; i < _dk_st_next.size(); i++) {
-		_dk_st_next[i]._dir = _pos + _dk_st[i]._dir * _dk_st[i]._length;
-		_dk_st_next[i]._length = _dk_st_next[i]._dir.length();
-		_dk_st_next[i]._dir.normalize();
-	}
-}
+
 
 void Module::directKinematicsTree(const Module* mod, std::vector<dk_st>& dk) {
 	// ----- directKinematicsを子モジュールに再帰的に実施：preorder ----- //

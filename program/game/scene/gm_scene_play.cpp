@@ -59,6 +59,10 @@ void ScenePlay::update(float delta_time)
 	_robo->directKinematicsTree(_robo, _robo->_dk_input);
 	_robo->partsUpdateTree(_robo, delta_time);
 
+	if (tnl::Input::IsKeyDown(eKeys::KB_SPACE)) {
+		_robo->removeModuleTree(_robo, 0, "box1");
+	}
+
 }
 
 void ScenePlay::render()
