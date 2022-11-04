@@ -3,6 +3,7 @@
 
 class Robot : public Module{
 public:
+	//// ------ メンバ変数 ------ ////
 	// ----- ロボットの構成 ----- //
 	enum {
 		e_lower_back_,
@@ -22,12 +23,19 @@ public:
 	tnl::Vector3 d_move_;			// 1フレーム間のx, z移動量を格納
 	tnl::Quaternion rot_move_;		// 1フレーム間の回転量を格納
 	std::vector<dk_st> _dk_input;	// コントローラーからのDK情報を格納
-	// ----- ロボット座標原点からルート座標への位置ベクトル ----- //
+	// ----- csvからモジュールを構築するためのパラメータ ----- //
+	
+	
 
-	// ----- メンバ関数 ------ //
+
+	//// ------ メンバ関数 ------- ////
 	static Robot* Create(const tnl::Vector3 pos, const tnl::Quaternion rot);
 	void init(Robot* rob, int id, std::string name, 
 		tnl::Vector3 pos, tnl::Vector3 rot_axis, tnl::Quaternion rot);
 	// ---- mode01 : TPS射撃モード ---- //
+
+
+	// ---- CSVデータ読み込み関数 ---- //
+	void getModuleDataCSV(std::string csv_path);
 	
 };

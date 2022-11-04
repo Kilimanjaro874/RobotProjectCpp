@@ -1,4 +1,7 @@
 #include "gm_robot.h"
+#include <string>
+#include <fstream>
+#include <sstream>
 
 Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 	// ----- 位置 pos, 姿勢 rot へロボットを生成 ----- //
@@ -27,6 +30,8 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 
 	box->attachModule(box, box2);
 
+	rob->getModuleDataCSV("RP_ModuleSet001.csv");
+
 	return rob;
 
 }
@@ -49,3 +54,31 @@ void Robot::init(Robot* rob, int id, std::string name,
 	rob->_dk_st = rob->_dk_input;
 }
 
+void Robot::getModuleDataCSV(std::string csv_path) {
+	// ---- モジュールの構築情報をCSVから取得 ---- //
+	std::string str_buf;
+	std::string str_conma_buf;
+	
+	std::string str[102][18];
+	int i = 0;
+	int j = 0;
+
+	// --- csvを開く ---
+	std::ifstream ifs(csv_path);
+	if (!ifs) {
+		printf("error! File can't opened"); 
+	}
+	while (std::getline(ifs,  str_buf)) {
+		std::string tmp = "";
+		std::istringstream stream(str_buf);
+		
+		while (std::getline(stream, tmp, ','))
+		{
+			str[i][j] = tmp;
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+	printf("deb");
+}
