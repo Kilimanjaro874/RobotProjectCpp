@@ -46,7 +46,6 @@ public:
 	tnl::Quaternion _rot_tmp;			// モジュールiまでの回転量総量を一時格納(Σo ~ Σi-1)
 	// ----- 逆運動学計算用 ----- //
 
-
 	enum _ik_type {
 		// ---- 制御モジュール - 制御目標モジュール同士をどの種類のIKで実施するか指定用 ---- //
 		pos_to_pos,						// 位置同士を近づける
@@ -76,5 +75,6 @@ public:
 	void removeModuleTree(Module* mod, int id, std::string name, bool is_erase = false, _attach_type type = absolute);
 	void directKinematics(const std::vector<dk_st>& dk);
 	void directKinematicsTree(const Module* mod, std::vector<dk_st>& dk);
+	void setAxisView(float size = 0.1, float length = 1.0);
 	
 };

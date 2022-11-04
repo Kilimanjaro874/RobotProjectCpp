@@ -69,10 +69,8 @@ void Module::attachModule(Module* parent, Module* child, _attach_type type) {
 	_dk_st_next = _dk_st;
 }
 
-
-
 void Module::removeModuleTree(Module* mod, int id, std::string name, bool is_erase, _attach_type at) {
-	// ----- mod より子にある特定のid及び、名前のモジュールを運動学計算のメンバから外す ----- //
+	// ----- mod より子にある特定のid、「又は」名前のモジュールを運動学計算のメンバから外す ----- //
 	// また、is_erase == true であれば、モジュール自体を消去する
 		// ---- モジュールiの子を、モジュールiの親に橋渡し ---- //
 		for (int i = 0; i < _children.size(); i++) {
@@ -82,7 +80,6 @@ void Module::removeModuleTree(Module* mod, int id, std::string name, bool is_era
 					// ---- モジュールiの子を本モジュールに移管 ---- //
 					this->attachModule(this, _children[i]->_children[j], at);
 				}
-				
 				// ---- 不要となるモジュール[i]のdk_stを削除する ---- //
 				for (int n = 0; n < _dk_st.size(); n++) {
 					if (_dk_st[n]._id == id || _dk_st[n]._name == name) {
@@ -99,17 +96,18 @@ void Module::removeModuleTree(Module* mod, int id, std::string name, bool is_era
 				return;
 			}
 		}
-
 		if (_children.size() == 0) return;
 		for (int i = 0; i < _children.size(); i++) {
 			_children[i]->removeModuleTree(_children[i], id, name, is_erase);	// 子の関数実施
 		}
 	}
 
-
-
 	void Module::directKinematics(const std::vector<dk_st>&dk) {
-		// ----- 主に親モジュールのdk_stを参照し、自身の座標系・姿勢更新 ----- //
+		// ----- 主に親モジュールのdk_stを参照し、自身の座標系・姿勢更新する関数 ----- //
+		// ---- 相対的な回転量初期化 ---- //
+		for (auto d : _dk_st) {
+			d._rot_sum = tnl::Quaternion::RotationAxis(_rot_axis, 0);
+		}
 		for (auto d : dk) {
 			if (_id != d._id) { continue; }
 			// ---- idが一致した時の処理：座標系更新 ---- //
@@ -135,7 +133,6 @@ void Module::removeModuleTree(Module* mod, int id, std::string name, bool is_era
 		}
 	}
 
-
 void Module::directKinematicsTree(const Module* mod, std::vector<dk_st>& dk) {
 	// ----- directKinematicsを子モジュールに再帰的に実施：preorder ----- //
 	directKinematics(dk);
@@ -143,4 +140,28 @@ void Module::directKinematicsTree(const Module* mod, std::vector<dk_st>& dk) {
 	for (int i = 0; i < _children.size(); i++) {
 		_children[i]->directKinematicsTree(_children[i], this->_dk_st_next);		// 子の関数実施
 	}
+}
+
+void Module::setAxisView(float size, float length) {
+	// ----- モジュール座標系を可視化するための関数 ----- //
+	// モジュール生成後、すぐに時に呼び出す事。
+	// 球、ｘ、ｚ軸を表示する
+	Parts* sp = new Parts();
+	sp->mesh_ = dxe::Mesh::CreateSphere(size);
+	sp->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/gray.bmp"));
+	this->_parts.push_back(sp);
+	Parts* x = new Parts();
+	x->mesh_ = dxe::Mesh::CreateCylinder(size, length);
+	x->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue.bmp"));
+	x->ofs_pos_ = this->_dir_x * length / 2;
+	x->ofs_rot_ = this->_rot;
+	x->ofs_rot_ *= tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(90));
+	this->_parts.push_back(x);
+	Parts* z = new Parts();
+	z->mesh_ = dxe::Mesh::CreateCylinder(size, length);
+	z->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/red.bmp"));
+	z->ofs_pos_ = this->_dir_z * length / 2;
+	z->ofs_rot_ = this->_rot;
+	z->ofs_rot_ *= tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(-90));
+	this->_parts.push_back(z);
 }
