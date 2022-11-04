@@ -61,29 +61,42 @@ void Module::attachModule(Module* parent, Module* child, _attach_type type) {
 	else if (_attach_type::relative == type)	{ delta_pos = child->_pos; }
 	float delta_length = delta_pos.length();
 	delta_pos.normalize();
-	// ---- 構造体に格納 ---- //
+	// ---- _dk_st構造体に格納 ---- //
 	parent->_dk_st.push_back({ child->_id, child->_name, 
 		delta_pos, delta_length, tnl::Quaternion::RotationAxis({0, 1, 0}, 0) });
+	// ---- 他の_dk_st構造体にコピー ---- //
+	_dk_st_tmp = _dk_st;
+	_dk_st_next = _dk_st;
 }
 
 
 
-void Module::removeModuleTree(Module* mod, int id, std::string name, bool is_erase) {
+void Module::removeModuleTree(Module* mod, int id, std::string name, bool is_erase, _attach_type at) {
 	// ----- mod より子にある特定のid及び、名前のモジュールを運動学計算のメンバから外す ----- //
 	// また、is_erase == true であれば、モジュール自体を消去する
 		// ---- モジュールiの子を、モジュールiの親に橋渡し ---- //
 		for (int i = 0; i < _children.size(); i++) {
 			if (_children[i]->_id == id || _children[i]->_name == name) {
-
-
-
-
-				//_children[i]->_parent = this->_parent;
-				//// 親にdk_st_を渡す
-				//for (int i = 0; i < _dk_st.size(); i++) {
-				//	_parent->_dk_st.push_back(_dk_st[i]);
-				//}
-				//this->_parent = nullptr;
+				
+				for (int j = 0; j < _children[i]->_children.size(); j++) {
+					// ---- モジュールiの子を本モジュールに移管 ---- //
+					this->attachModule(this, _children[i]->_children[j], at);
+				}
+				
+				// ---- 不要となるモジュール[i]のdk_stを削除する ---- //
+				for (int n = 0; n < _dk_st.size(); n++) {
+					if (_dk_st[n]._id == id || _dk_st[n]._name == name) {
+						_dk_st.erase(std::cbegin(_dk_st) + n);
+						_dk_st_tmp.erase(std::cbegin(_dk_st_tmp) + n);
+						_dk_st_next.erase(std::cbegin(_dk_st_next) + n);
+					}
+				}
+				// ---- _children[i]をis_eraseに応じて削除 ---- //
+				if (is_erase) {
+					_children[i]->~Module();
+					_children.erase(std::cbegin(_children) + i);
+				}
+				return;
 			}
 		}
 

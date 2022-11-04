@@ -60,7 +60,7 @@ void ScenePlay::update(float delta_time)
 	_robo->partsUpdateTree(_robo, delta_time);
 
 	if (tnl::Input::IsKeyDown(eKeys::KB_SPACE)) {
-		_robo->removeModuleTree(_robo, 0, "box1");
+		_robo->removeModuleTree(_robo, 2, "box1", true);
 	}
 
 }

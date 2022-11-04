@@ -6,8 +6,6 @@ public:
 	Module() {};
 	virtual ~Module() {
 		for (auto pts : _parts) delete pts;
-		delete _parent;
-		for (auto ch : _children) delete ch;
 	}
 	//// ------ ÉÅÉìÉoïœêî ------ ////
 	// ----- Render ----- //
@@ -75,7 +73,7 @@ public:
 		tnl::Quaternion rot = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0), 
 		tnl::Vector3 dir_z = { 0, 0, 1 }, tnl::Vector3 dir_x = { 1, 0, 0 });
 	void attachModule(Module* parent, Module* child, _attach_type type = absolute);
-	void removeModuleTree(Module* mod, int id, std::string name, bool is_erase = false);
+	void removeModuleTree(Module* mod, int id, std::string name, bool is_erase = false, _attach_type type = absolute);
 	void directKinematics(const std::vector<dk_st>& dk);
 	void directKinematicsTree(const Module* mod, std::vector<dk_st>& dk);
 	
