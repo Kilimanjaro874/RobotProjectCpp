@@ -8,6 +8,9 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 	Robot* rob = new Robot();
 	// ---- rob : プレイヤーの操作を受け付ける。そのための初期化実施 ---- //
 	rob->init(rob, 1, "rob_ref_coord", pos, { 0, 1, 0 }, rot);
+	rob->getModuleDataCSV(rob, "RP_ModuleSet001.csv");
+
+
 	// test : 四角形をアタッチする 
 	Module* box = Module::createModule(2, "box1", { 0, 5, 0 }, { 0, 1, 0 }, 
 		tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(0)));
@@ -30,7 +33,7 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 
 	box->attachModule(box, box2);
 
-	rob->getModuleDataCSV("RP_ModuleSet001.csv");
+	
 
 	return rob;
 
@@ -54,15 +57,15 @@ void Robot::init(Robot* rob, int id, std::string name,
 	rob->_dk_st = rob->_dk_input;
 }
 
-void Robot::getModuleDataCSV(std::string csv_path) {
+void Robot::getModuleDataCSV(Robot* rob, std::string csv_path) {
 	// ---- モジュールの構築情報をCSVから取得 ---- //
 	std::string str_buf;
 	std::string str_conma_buf;
 	
-	std::string str[102][18];
+	std::string str[102][19];
 	int i = 0;
 	int j = 0;
-
+	
 	// --- csvを開く ---
 	std::ifstream ifs(csv_path);
 	if (!ifs) {
@@ -80,5 +83,21 @@ void Robot::getModuleDataCSV(std::string csv_path) {
 		j = 0;
 		i++;
 	}
+
+	for (int i = 2; i < 102; i++) {
+		if (str[i][0] == "") { continue; }
+		int attachi_id = stoi(str[i][0]);
+		int id = stoi(str[i][1]);
+		std::string name = str[i][2];
+		tnl::Vector3 pos = { stof(str[i][3]), stof(str[i][4]), stof(str[i][5]) };
+		tnl::Vector3 rot_axis = { stof(str[i][6]), stof(str[i][7]), stof(str[i][8]) };
+		tnl::Quaternion rot = tnl::Quaternion::RotationAxis(rot_axis, tnl::ToRadian(stof(str[i][9])));
+		tnl::Vector3 dirz = { stof(str[i][10]), stof(str[i][11]), stof(str[i][12]) };
+		tnl::Vector3 dirx = { stof(str[i][13]), stof(str[i][14]), stof(str[i][15]) };
+		Module* mod = Module::createModule(id, name, pos, rot_axis, rot, dirz, dirx);
+		rob->attachModuleTree(attachi_id, "", mod);
+	}
+	
 	printf("deb");
+
 }

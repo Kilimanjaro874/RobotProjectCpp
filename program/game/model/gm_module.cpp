@@ -69,7 +69,19 @@ void Module::attachModule(Module* parent, Module* child, _attach_type type) {
 	_dk_st_next = _dk_st;
 }
 
-void Module::removeModuleTree(Module* mod, int id, std::string name, bool is_erase, _attach_type at) {
+void Module::attachModuleTree(int id, std::string name, Module* child, _attach_type type) {
+	// ----- モジュールツリー構造の、特定の親(id, 名前参照)に子モジュールを再帰的にアタッチ：preorder ---- //
+	if (this->_id == id || this->_name == name) {
+		attachModule(this, child, type);
+		return;
+	}
+	if (this->_children.size() == 0) { return; }
+	for (int i = 0; i < this->_children.size(); i++) {
+		this->_children[i]->attachModuleTree(id, name, child, type);
+	}
+}
+
+void Module::removeModuleTree(int id, std::string name, bool is_erase, _attach_type at) {
 	// ----- mod より子にある特定のid、「又は」名前のモジュールを運動学計算のメンバから外す ----- //
 	// また、is_erase == true であれば、モジュール自体を消去する
 		// ---- モジュールiの子を、モジュールiの親に橋渡し ---- //
@@ -98,7 +110,7 @@ void Module::removeModuleTree(Module* mod, int id, std::string name, bool is_era
 		}
 		if (_children.size() == 0) return;
 		for (int i = 0; i < _children.size(); i++) {
-			_children[i]->removeModuleTree(_children[i], id, name, is_erase);	// 子の関数実施
+			_children[i]->removeModuleTree(id, name, is_erase);	// 子の関数実施
 		}
 	}
 

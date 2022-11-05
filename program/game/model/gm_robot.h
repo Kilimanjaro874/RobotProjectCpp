@@ -36,6 +36,6 @@ public:
 
 
 	// ---- CSVÉfÅ[É^ì«Ç›çûÇ›ä÷êî ---- //
-	void getModuleDataCSV(std::string csv_path);
+	void getModuleDataCSV(Robot* rob, std::string csv_path);
 	
 };
