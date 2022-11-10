@@ -63,6 +63,7 @@ void ScenePlay::update(float delta_time)
 		_robo->removeModuleTree(0, "box1", true);
 	}
 
+
 }
 
 void ScenePlay::render()

@@ -35,7 +35,9 @@ public:
 	// ---- mode01 : TPS射撃モード ---- //
 
 
+	// ---- test ---- //
 	// ---- CSVデータ読み込み関数 ---- //
 	void getModuleDataCSV(Robot* rob, std::string csv_path);
-	
+	void getPartsDataCSV(Robot* rob, std::string csv_path);
+	void getIKSetDataCSV(Robot* rob, std::string csv_path);
 };

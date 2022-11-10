@@ -10,33 +10,43 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 	rob->init(rob, 1, "rob_ref_coord", pos, { 0, 1, 0 }, rot);
 	rob->getModuleDataCSV(rob, "RP_ModuleSet001.csv");
 
+	Module* mod = new Module;
+	mod = rob->getModulePointerTree(mod, 4, "");
+	// ---- parts取付機能実装前：こちらでパーツ生成＆アッタッチ ---- //
+	// Mod id 2
+	Parts* j1 = new Parts();
+	j1->mesh_ = dxe::Mesh::CreateSphere(1);
+	j1->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	rob->attachPartsTree(2, "", j1);
+	Parts* a1 = new Parts();
+	a1->mesh_ = dxe::Mesh::CreateCylinder(0.5, 5);
+	a1->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	a1->ofs_pos_ += {0, 2.5, 0};
+	rob->attachPartsTree(2, "", a1);
+	// Mod id 3
+	Parts* j2 = new Parts();
+	j2->mesh_ = dxe::Mesh::CreateSphere(1);
+	j2->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	rob->attachPartsTree(3, "", j2);
+	Parts* a2 = new Parts();
+	a2->mesh_ = dxe::Mesh::CreateCylinder(0.5, 5);
+	a2->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	a2->ofs_pos_ += {0, 2.5, 0};
+	rob->attachPartsTree(3, "", a2);
+	// Mod id 4
+	Parts* j3 = new Parts();
+	j3->mesh_ = dxe::Mesh::CreateSphere(1);
+	j3->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	rob->attachPartsTree(4, "", j3);
+	Parts* a3 = new Parts();
+	a3->mesh_ = dxe::Mesh::CreateCylinder(0.5, 5);
+	a3->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	a3->ofs_pos_ += {0, 2.5, 0};
+	rob->attachPartsTree(4, "", a3);
 
-	// test : 四角形をアタッチする 
-	Module* box = Module::createModule(2, "box1", { 0, 5, 0 }, { 0, 1, 0 }, 
-		tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(0)));
-	box->setAxisView(0.3, 5);
-	Parts* box_s = new Parts();
-	box_s->mesh_ = dxe::Mesh::CreateBox(3);
-	box_s->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	box->_parts.push_back(box_s);
 
-	rob->attachModule(rob, box);
-
-	// test : 更に四角形をアタッチする
-	Module* box2 = Module::createModule(3, "box2", { 0, 15, 0 }, { 0, 1, 0 },
-		tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(-45)));
-	box2->setAxisView(0.3, 5);
-	Parts* box_2s = new Parts();
-	box_2s->mesh_ = dxe::Mesh::CreateBox(3);
-	box_2s->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	box2->_parts.push_back(box_2s);
-
-	box->attachModule(box, box2);
-
-	
 
 	return rob;
-
 }
 
 void Robot::init(Robot* rob, int id, std::string name, 
@@ -58,11 +68,11 @@ void Robot::init(Robot* rob, int id, std::string name,
 }
 
 void Robot::getModuleDataCSV(Robot* rob, std::string csv_path) {
-	// ---- モジュールの構築情報をCSVから取得 ---- //
+	// ---- モジュールの構築情報をCSVから取得＆ツリー構造構築 ---- //
 	std::string str_buf;
 	std::string str_conma_buf;
 	
-	std::string str[102][19];
+	static std::string str[102][19];
 	int i = 0;
 	int j = 0;
 	
@@ -84,7 +94,7 @@ void Robot::getModuleDataCSV(Robot* rob, std::string csv_path) {
 		i++;
 	}
 
-	for (int i = 2; i < 102; i++) {
+	for (int i = 2; i < 102; i++) {		// ヘッダ2行は無視
 		if (str[i][0] == "") { continue; }
 		int attachi_id = stoi(str[i][0]);
 		int id = stoi(str[i][1]);
@@ -94,10 +104,47 @@ void Robot::getModuleDataCSV(Robot* rob, std::string csv_path) {
 		tnl::Quaternion rot = tnl::Quaternion::RotationAxis(rot_axis, tnl::ToRadian(stof(str[i][9])));
 		tnl::Vector3 dirz = { stof(str[i][10]), stof(str[i][11]), stof(str[i][12]) };
 		tnl::Vector3 dirx = { stof(str[i][13]), stof(str[i][14]), stof(str[i][15]) };
-		Module* mod = Module::createModule(id, name, pos, rot_axis, rot, dirz, dirx);
-		rob->attachModuleTree(attachi_id, "", mod);
+		Module* mod = Module::createModule(id, name, pos, rot_axis, rot, dirz, dirx);	// モジュール生成
+		
+		rob->attachModuleTree(attachi_id, "", mod);			// アタッチ
 	}
-	
-	printf("deb");
+}
+
+void Robot::getPartsDataCSV(Robot* rob, std::string csv_path) {
+	// ---- パーツの構築情報をCSVから取得 ---- //
+
+
+	// やり方が分からない.. 保留;
+
+
+
+
+
+	// --- 今度はこれをアッタッチしたい --- 
+	//Parts* box_s = new Parts();
+	//box_s->mesh_ = dxe::Mesh::CreateBox(3);
+	//box_s->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	//box->_parts.push_back(box_s);
+
+	//rob->attachModule(rob, box);
+
+	//// test : 更に四角形をアタッチする
+	//Module* box2 = Module::createModule(3, "box2", { 0, 15, 0 }, { 0, 1, 0 },
+	//	tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(-45)));
+	//box2->setAxisView(0.3, 5);
+	//Parts* box_2s = new Parts();
+	//box_2s->mesh_ = dxe::Mesh::CreateBox(3);
+	//box_2s->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	//box2->_parts.push_back(box_2s);
+
+	//box->attachModule(box, box2);
 
 }
+
+void Robot::getIKSetDataCSV(Robot* rob, std::string csv_path) {
+	// ---- 逆運動学計算の設定をCSVから取得&特定モジュールに情報格納 ---- //
+
+
+}
+
+

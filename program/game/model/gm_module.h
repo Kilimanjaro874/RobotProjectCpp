@@ -31,6 +31,29 @@ public:
 	std::vector<dk_st> _dk_st_tmp;		// Update実行中の子モジュールまでの相対座標を格納：初期値(_dk_st)からの回転量で(_rot)で計算
 	std::vector<dk_st> _dk_st_next;		//　子モジュールのΣoに対する座標を格納
 
+	// ----- 逆運動学計算用(IK) ----- //
+	enum _ik_type {
+		// ---- 制御モジュール - 制御目標モジュール同士をどの種類のIKで実施するか指定用 ---- //
+		pos_to_pos,						// 位置同士を近づける
+		dirz_look_pos,					// z軸を目標位置に向ける
+		dirx_look_pos,
+		dirz_as_dirz,					// z軸を目標姿勢z軸と同じ向きに近づける
+		dirx_as_dirx,
+		dirz_as_dirx,
+		dirx_as_dirz,
+	};
+
+	struct ik_st {
+		// ---- 本モジュールでIK実施のためのパラメータを構造体で定義。 ---- //
+		int _id;
+		std::string _name;
+		int _type;						// IKの種類を格納
+		float _kp;						// IK係数
+		Module* _target;				// 制御目標モジュール
+		Module* _object;				// 制御対象モジュール
+	};
+	std::vector<ik_st> _ik_st;			// IK構造体
+
 	// ----- 座標系定義用 ----- //
 	tnl::Vector3 _pos;					// モジュールiの位置(ワールド座標：Σo)
 	tnl::Vector3 _rot_axis;				// モジュールi回転軸(Σo)
@@ -46,16 +69,7 @@ public:
 	tnl::Quaternion _rot_tmp;			// モジュールiまでの回転量総量を一時格納(Σo ~ Σi-1)
 	// ----- 逆運動学計算用 ----- //
 
-	enum _ik_type {
-		// ---- 制御モジュール - 制御目標モジュール同士をどの種類のIKで実施するか指定用 ---- //
-		pos_to_pos,						// 位置同士を近づける
-		dirz_look_pos,					// z軸を目標位置に向ける
-		dirx_look_pos,					
-		dirz_as_dirz,					// z軸を目標姿勢z軸と同じ向きに近づける
-		dirx_as_dirx,
-		dirz_as_dirx,
-		dirx_as_dirz,
-	};
+	
 
 	enum _attach_type {
 		// ---- モジュールを親にアタッチする時、位置：絶対座標系参照 or 相対座標参照か
@@ -73,9 +87,19 @@ public:
 		tnl::Vector3 dir_z = { 0, 0, 1 }, tnl::Vector3 dir_x = { 1, 0, 0 });
 	void attachModule(Module* parent, Module* child, _attach_type type = absolute);
 	void attachModuleTree(int id, std::string name, Module* child, _attach_type type = absolute);
+	void attachPartsTree(int id, std::string name,  Parts* parts);
+	void attachIKstTree(std::vector<ik_st>& ik);
+	Module* getModulePointerTree(Module* mod, int id, std::string name);
 	void removeModuleTree(int id, std::string name, bool is_erase = false, _attach_type type = absolute);
 	void directKinematics(const std::vector<dk_st>& dk);
+	void directKinematicsAnkIK(const std::vector<dk_st>& dk, float delta_time);
 	void directKinematicsTree(const Module* mod, std::vector<dk_st>& dk);
+	void directKinematicsAndIKTree(const Module* mod, std::vector<dk_st>& dk, float delta_time);
+	tnl::Quaternion inverseKinematics(float delta_time);
 	void setAxisView(float size = 0.1, float length = 1.0);
-	
+	// --- ファイル操作系 --- //
+	void exportForFileBinary(const std::string& file_path);
+	void loadFromFileBinary(const std::string& file_path);
+	// --- test --- //
+	void debugShowState();
 };
