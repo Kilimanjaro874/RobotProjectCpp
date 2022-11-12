@@ -9,7 +9,7 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 	// ---- rob : プレイヤーの操作を受け付ける。そのための初期化実施 ---- //
 	rob->init(rob, 1, "rob_ref_coord", pos, { 0, 1, 0 }, rot);
 	rob->getModuleDataCSV(rob, "RP_ModuleSet001.csv");
-
+	rob->getIKSetDataCSV(rob, "RP_ModuleIKSet001.csv");
 	Module* mod = new Module;
 	mod = rob->getModulePointerTree(mod, 4, "");
 	// ---- parts取付機能実装前：こちらでパーツ生成＆アッタッチ ---- //
@@ -105,7 +105,12 @@ void Robot::getModuleDataCSV(Robot* rob, std::string csv_path) {
 		tnl::Vector3 dirz = { stof(str[i][10]), stof(str[i][11]), stof(str[i][12]) };
 		tnl::Vector3 dirx = { stof(str[i][13]), stof(str[i][14]), stof(str[i][15]) };
 		Module* mod = Module::createModule(id, name, pos, rot_axis, rot, dirz, dirx);	// モジュール生成
-		
+		if (str[i][16] == "on") {
+			// 座標系を表示するか
+			float size = stof(str[i][17]);
+			float length = stof(str[i][18]);
+			mod->setAxisView(size, length);
+		}
 		rob->attachModuleTree(attachi_id, "", mod);			// アタッチ
 	}
 }
@@ -143,8 +148,51 @@ void Robot::getPartsDataCSV(Robot* rob, std::string csv_path) {
 
 void Robot::getIKSetDataCSV(Robot* rob, std::string csv_path) {
 	// ---- 逆運動学計算の設定をCSVから取得&特定モジュールに情報格納 ---- //
+	std::string str_buf;
+	std::string str_conma_buf;
+	ik_st tmp_ikst;
+	std::vector<ik_st> tmp_iksts;
 
+	static std::string str[102][8];
+	int i = 0;
+	int j = 0;
 
+	// --- csvを開く ---
+	std::ifstream ifs(csv_path);
+	if (!ifs) {
+		printf("error! File can't opened");
+	}
+	while (std::getline(ifs, str_buf)) {
+		std::string tmp = "";
+		std::istringstream stream(str_buf);
+
+		while (std::getline(stream, tmp, ','))
+		{
+			str[i][j] = tmp;
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+
+	for (int i = 2; i < 102; i++) {		// ヘッダ2行は無視
+		if (str[i][0] == "") { continue; }
+		int attachi_id = stoi(str[i][0]);
+		std::string attachi_name = str[i][1];
+		int cont_id = stoi(str[i][2]);
+		std::string cont_name = str[i][3];
+		int target_id = stoi(str[i][4]);
+		std::string target_name = str[i][5];
+		int type = (int)std::atoi(str[i][6].c_str());
+		float kp = stof(str[i][7]);
+		Module* cont_mod = new Module;
+		cont_mod = rob->getModulePointerTree(cont_mod, cont_id, cont_name);
+		Module* target_mod = new Module;
+		target_mod = rob->getModulePointerTree(target_mod, target_id, target_name);
+		tmp_ikst = { attachi_id, attachi_name, type, kp, target_mod, cont_mod };
+		tmp_iksts.push_back(tmp_ikst);
+	}
+	rob->attachIKstTree(tmp_iksts);
 }
 
 

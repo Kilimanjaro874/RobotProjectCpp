@@ -56,7 +56,8 @@ void ScenePlay::update(float delta_time)
 	// Test
 	//
 	_controller->update(delta_time);
-	_robo->directKinematicsTree(_robo, _robo->_dk_input);
+	//_robo->directKinematicsTree(_robo, _robo->_dk_input);
+	_robo->directKinematicsAndIKTree(_robo, _robo->_dk_input, delta_time);
 	_robo->partsUpdateTree(_robo, delta_time);
 
 	if (tnl::Input::IsKeyDown(eKeys::KB_SPACE)) {
