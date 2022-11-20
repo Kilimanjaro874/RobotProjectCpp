@@ -158,7 +158,7 @@ void Module::removeModuleTree(int id, std::string name, bool is_erase, _attach_t
 void Module::directKinematics(const std::vector<dk_st>&dk) {
 	// ----- 主に親モジュールのdk_stを参照し、自身の座標系・姿勢更新する関数 ----- //
 	debugShowState();
-	if (_id == 3 || _id == 4) {
+	if (_id == 930 || _id == 4) {
 		printf("deb#)");
 	}
 	// ---- 相対的な回転量初期化 ---- //
@@ -194,6 +194,9 @@ void Module::directKinematics(const std::vector<dk_st>&dk) {
 void Module::directKinematicsAnkIK(const std::vector<dk_st>& dk, float delta_time) {
 	// ----- 運動学＆逆運動学計算を同時に実行したい場合、本関数を使用 ----- //
 	debugShowState();
+	if (_id == 930 || _id == 4) {
+		printf("deb#)");
+	}
 	// ---- 相対的な回転量初期化 ---- //
 	for (auto d : _dk_st) {
 		d._rot_sum = tnl::Quaternion::RotationAxis(_rot_axis, 0);
@@ -255,6 +258,9 @@ tnl::Quaternion Module::inverseKinematics(float delta_time) {
 		// 定義が無ければ、回転無しのクォータニオンを返す
 		return tnl::Quaternion::RotationAxis(_rot_axis_tmp, 0);
 	}		
+	if (_id == 303) {
+		printf("deb");
+	}
 	// ---- 逆運動学計算 ---- //
 	float dth = 0;				// 偏角格納
 	float dth_sum = 0;			// 偏角総和
@@ -311,6 +317,9 @@ tnl::Quaternion Module::inverseKinematics(float delta_time) {
 			(float)-1, (float)1
 		));
 		if (!isfinite(dth)) { dth = 0; }	// 回転軸上にtarget or object : 特異点->dth = 0でエラー回避
+		if (dth > tnl::PI / 24) {
+			dth = tnl::PI / 24;
+		}
 		tnl::Vector3 axis = x.cross(y) / x.length() / y.length();	// 回転方向決定
 		dth *= _rot_axis_tmp.dot(axis) >= 0 ? 1 : -1;
 		dth_sum += dth;
@@ -417,11 +426,9 @@ void Module::loadFromFileBinary(const std::string& file_path) {
 	}
 }
 
-
 void Module::debugShowState() {
 	
 	// ----- 位置・姿勢等表示 ----- //
 	DrawStringEx(10, _id * 20, -1, "pos = (%f, %f, %f)", _pos.x, _pos.y, _pos.z);
 	
-
 }

@@ -8,41 +8,68 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 	Robot* rob = new Robot();
 	// ---- rob : プレイヤーの操作を受け付ける。そのための初期化実施 ---- //
 	rob->init(rob, 1, "rob_ref_coord", pos, { 0, 1, 0 }, rot);
-	rob->getModuleDataCSV(rob, "RP_ModuleSet001.csv");
-	rob->getIKSetDataCSV(rob, "RP_ModuleIKSet001.csv");
+	rob->setAxisView(0.2, 2.0);
+	rob->getModuleDataCSV(rob, "RP_ModuleTestRArm001.csv");
+	rob->getIKSetDataCSV(rob, "RP_ModuleIKTestRArm001.csv");
 	Module* mod = new Module;
 	mod = rob->getModulePointerTree(mod, 4, "");
 	// ---- parts取付機能実装前：こちらでパーツ生成＆アッタッチ ---- //
+	
+	
+	
+	// ---- RArmXX: 右腕のメッシュ生成 ---- //
+	int const sRA = 3;
+	Parts* RA0X_J[sRA];
+	Parts* RA0X_A[sRA];
+	int sRAid[sRA] = { 301, 303, 306 };
+	float sRAsize[sRA] = { 2, 2, 1 };
+	for (int i = 0; i < sRA; i++) {
+		RA0X_J[i] = new Parts();
+		RA0X_J[i]->mesh_ = dxe::Mesh::CreateSphere(0.3);
+		RA0X_J[i]->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+		rob->attachPartsTree(sRAid[i], "", RA0X_J[i]);
+		RA0X_A[i] = new Parts();
+		RA0X_A[i]->mesh_ = dxe::Mesh::CreateCylinder(0.2, sRAsize[i]);
+		RA0X_A[i]->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+		RA0X_A[i]->ofs_pos_ += {0, - sRAsize[i]/2, 0};
+		rob->attachPartsTree(sRAid[i], "", RA0X_A[i]);
+	}
+
+	// -----LArmXX: 左腕のメッシュ生成 ---- //
+	
+	
 	// Mod id 2
-	Parts* j1 = new Parts();
-	j1->mesh_ = dxe::Mesh::CreateSphere(1);
-	j1->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	rob->attachPartsTree(2, "", j1);
-	Parts* a1 = new Parts();
-	a1->mesh_ = dxe::Mesh::CreateCylinder(0.5, 5);
-	a1->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	a1->ofs_pos_ += {0, 2.5, 0};
-	rob->attachPartsTree(2, "", a1);
-	// Mod id 3
-	Parts* j2 = new Parts();
-	j2->mesh_ = dxe::Mesh::CreateSphere(1);
-	j2->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	rob->attachPartsTree(3, "", j2);
-	Parts* a2 = new Parts();
-	a2->mesh_ = dxe::Mesh::CreateCylinder(0.5, 5);
-	a2->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	a2->ofs_pos_ += {0, 2.5, 0};
-	rob->attachPartsTree(3, "", a2);
-	// Mod id 4
-	Parts* j3 = new Parts();
-	j3->mesh_ = dxe::Mesh::CreateSphere(1);
-	j3->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	rob->attachPartsTree(4, "", j3);
-	Parts* a3 = new Parts();
-	a3->mesh_ = dxe::Mesh::CreateCylinder(0.5, 5);
-	a3->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	a3->ofs_pos_ += {0, 2.5, 0};
-	rob->attachPartsTree(4, "", a3);
+
+
+	//Parts* j1 = new Parts();
+	//j1->mesh_ = dxe::Mesh::CreateSphere(1);
+	//j1->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	//rob->attachPartsTree(2, "", j1);
+	//Parts* a1 = new Parts();
+	//a1->mesh_ = dxe::Mesh::CreateCylinder(0.5, 5);
+	//a1->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	//a1->ofs_pos_ += {0, 2.5, 0};
+	//rob->attachPartsTree(2, "", a1);
+	//// Mod id 3
+	//Parts* j2 = new Parts();
+	//j2->mesh_ = dxe::Mesh::CreateSphere(1);
+	//j2->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	//rob->attachPartsTree(3, "", j2);
+	//Parts* a2 = new Parts();
+	//a2->mesh_ = dxe::Mesh::CreateCylinder(0.5, 5);
+	//a2->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	//a2->ofs_pos_ += {0, 2.5, 0};
+	//rob->attachPartsTree(3, "", a2);
+	//// Mod id 4
+	//Parts* j3 = new Parts();
+	//j3->mesh_ = dxe::Mesh::CreateSphere(1);
+	//j3->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	//rob->attachPartsTree(4, "", j3);
+	//Parts* a3 = new Parts();
+	//a3->mesh_ = dxe::Mesh::CreateCylinder(0.5, 5);
+	//a3->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+	//a3->ofs_pos_ += {0, 2.5, 0};
+	//rob->attachPartsTree(4, "", a3);
 
 
 
