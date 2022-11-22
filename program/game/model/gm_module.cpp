@@ -278,9 +278,13 @@ void Module::Tranlate(tnl::Vector3& move, _attach_type type) {
 	// ---- 親のdk_st変更 ---- //
 	if (_parent == nullptr) { return; }		// 親がいなければ終了
 	for (int i = 0; i < _parent->_dk_st.size(); i++) {
-		
+		if (_parent->_dk_st[i]._id != _id) { continue; }
+		tnl::Vector3 delta_pos = _pos - _parent->_pos;
+		float delta_length = delta_pos.length();
+		delta_pos.normalize();
+		_parent->_dk_st[i]._dir = delta_pos;
+		_parent->_dk_st[i]._length = delta_length;
 	}
-
 }
 
 tnl::Quaternion Module::inverseKinematics(float delta_time) {
