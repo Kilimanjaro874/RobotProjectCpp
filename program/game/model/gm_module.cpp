@@ -267,6 +267,22 @@ void Module::directKinematicsAndIKTree(const Module* mod, std::vector<dk_st>& dk
 	}
 }
 
+void Module::Tranlate(tnl::Vector3& move, _attach_type type) {
+	// ----- モジュールの位置を変化させる ----- //
+	// absolute : move位置へ移動
+	// relative : 現モジュール座標からの移動量
+
+	// ---- 位置変更 ---- //
+	if (absolute == type) { _pos = move; }
+	if (relative == type) { _pos += move; }
+	// ---- 親のdk_st変更 ---- //
+	if (_parent == nullptr) { return; }		// 親がいなければ終了
+	for (int i = 0; i < _parent->_dk_st.size(); i++) {
+		
+	}
+
+}
+
 tnl::Quaternion Module::inverseKinematics(float delta_time) {
 	// ----- _ik_stの定義通りに逆運動学計算を実施する ----- //
 	if (_ik_st.size() == 0) {

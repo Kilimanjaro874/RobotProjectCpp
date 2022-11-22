@@ -14,7 +14,7 @@ public:
 	//// ------ メンバ変数 ------ ////
 	Robot* _robot = nullptr;
 	float _move_speed = 10.f;			// 移動速度(m/s)
-	float _rot_speed = tnl::PI / 10;	// 回転速度(rad / s)
+	float _rot_speed = tnl::PI / 1;	// 回転速度(rad / s)
 
 	// ----- 操作の影響を運動学計算に記述＆ロボットに渡す、そのための構造体 ----- //
 	struct dk_st {

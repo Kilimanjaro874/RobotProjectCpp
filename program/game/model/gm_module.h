@@ -92,6 +92,7 @@ public:
 	void directKinematicsAnkIK(const std::vector<dk_st>& dk, float delta_time);
 	void directKinematicsTree(const Module* mod, std::vector<dk_st>& dk);
 	void directKinematicsAndIKTree(const Module* mod, std::vector<dk_st>& dk, float delta_time);
+	void Tranlate(tnl::Vector3& move, _attach_type type = relative);
 	tnl::Quaternion inverseKinematics(float delta_time);
 	void setAxisView(float size = 0.1, float length = 1.0);
 	// --- ƒtƒ@ƒCƒ‹‘€ìŒn --- //
