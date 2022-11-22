@@ -9,15 +9,66 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 	// ---- rob : プレイヤーの操作を受け付ける。そのための初期化実施 ---- //
 	rob->init(rob, 1, "rob_ref_coord", pos, { 0, 1, 0 }, rot);
 	rob->setAxisView(0.2, 2.0);
-	rob->getModuleDataCSV(rob, "RP_ModuleTestRArm001.csv");
-	rob->getIKSetDataCSV(rob, "RP_ModuleIKTestRArm001.csv");
-	Module* mod = new Module;
-	mod = rob->getModulePointerTree(mod, 4, "");
+	rob->getModuleDataCSV(rob, "RP_ModuleSet001.csv");
+	rob->getIKSetDataCSV(rob, "RP_ModuleIKSet001.csv");
+	
 	// ---- parts取付機能実装前：こちらでパーツ生成＆アッタッチ ---- //
+	std::string normal_texture = "graphics/test.jpg";
 	
+
+	// ---- LBXX : 100 腰のメッシュ生成 ---- //
+	int const sLB = 2;
+	Parts* LB0X_J[sLB];
+	int sLBid[sLB] = { 102, 102 };
+	LB0X_J[0] = new Parts();
+	LB0X_J[0]->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2);
+	LB0X_J[0]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
+	LB0X_J[1] = new Parts();
+	LB0X_J[1]->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2);
+	LB0X_J[1]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
+	LB0X_J[1]->ofs_pos_ += {0, -1, 0};
+	LB0X_J[1]->ofs_rot_ = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(90));
+	// --- attach --- //
+	for (int i = 0; i < sLB; i++) {
+		rob->attachPartsTree(sLBid[i], "", LB0X_J[i]);
+	}
+
+	// ---- BDXX : 200 体のメッシュ生成 ---- //
+	int const sBD = 6;
+	Parts* BD0X_J[sBD];
+	int sBDid = 202;
+	BD0X_J[0] = new Parts();
+	BD0X_J[0]->mesh_ = dxe::Mesh::CreateSphere(0.3);
+	BD0X_J[0]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
+	BD0X_J[1] = new Parts();
+	BD0X_J[1]->mesh_ = dxe::Mesh::CreateCylinder(0.2, 0.5);
+	BD0X_J[1]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
+	BD0X_J[1]->ofs_pos_ += {0, 0.25, 0};
+	BD0X_J[2] = new Parts();
+	BD0X_J[2]->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2.1213);
+	BD0X_J[2]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
+	BD0X_J[2]->ofs_rot_ = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(45));
+	BD0X_J[2]->ofs_pos_ += {-0.75, 1.25, 0};
+	BD0X_J[3] = new Parts();
+	BD0X_J[3]->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2.1213);
+	BD0X_J[3]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
+	BD0X_J[3]->ofs_rot_ = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(-45));
+	BD0X_J[3]->ofs_pos_ += {0.75, 1.25, 0};
+	BD0X_J[4] = new Parts();
+	BD0X_J[4]->mesh_ = dxe::Mesh::CreateCylinder(0.2, 4.0);
+	BD0X_J[4]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
+	BD0X_J[4]->ofs_rot_ = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(90));
+	BD0X_J[4]->ofs_pos_ += {0, 2, 0};
+	BD0X_J[5] = new Parts();
+	BD0X_J[5]->mesh_ = dxe::Mesh::CreateSphere(0.75);
+	BD0X_J[5]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
+	BD0X_J[5]->ofs_pos_ += {0, 1.2, 0};
+	for (int i = 0; i < sBD; i++) {
+		rob->attachPartsTree(sBDid, "", BD0X_J[i]);
+	}
+
 	
-	
-	// ---- RArmXX: 右腕のメッシュ生成 ---- //
+	// ---- RArmXX: 300 右腕のメッシュ生成 ---- //
 	int const sRA = 3;
 	Parts* RA0X_J[sRA];
 	Parts* RA0X_A[sRA];
@@ -35,8 +86,23 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 		rob->attachPartsTree(sRAid[i], "", RA0X_A[i]);
 	}
 
-	// -----LArmXX: 左腕のメッシュ生成 ---- //
-	
+	// ---- LArmXX: 400 左腕のメッシュ生成 ---- //
+	int const sLA = 3;
+	Parts* LA0X_J[sLA];
+	Parts* LA0X_A[sLA];
+	int sLAid[sLA] = { 401, 403, 406 };
+	float sLAsize[sLA] = { 2, 2, 1 };
+	for (int i = 0; i < sLA; i++) {
+		LA0X_J[i] = new Parts();
+		LA0X_J[i]->mesh_ = dxe::Mesh::CreateSphere(0.3);
+		LA0X_J[i]->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+		rob->attachPartsTree(sLAid[i], "", LA0X_J[i]);
+		LA0X_A[i] = new Parts();
+		LA0X_A[i]->mesh_ = dxe::Mesh::CreateCylinder(0.2, sLAsize[i]);
+		LA0X_A[i]->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+		LA0X_A[i]->ofs_pos_ += {0, -sLAsize[i] / 2, 0};
+		rob->attachPartsTree(sLAid[i], "", LA0X_A[i]);
+	}
 	
 	// Mod id 2
 

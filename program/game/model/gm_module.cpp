@@ -197,6 +197,10 @@ void Module::directKinematicsAnkIK(const std::vector<dk_st>& dk, float delta_tim
 	if (_id == 930 || _id == 4) {
 		printf("deb#)");
 	}
+	
+
+	// --- test end --- //
+
 	// ---- 相対的な回転量初期化 ---- //
 	for (auto d : _dk_st) {
 		d._rot_sum = tnl::Quaternion::RotationAxis(_rot_axis, 0);
@@ -210,6 +214,11 @@ void Module::directKinematicsAnkIK(const std::vector<dk_st>& dk, float delta_tim
 		_rot_axis_tmp = tnl::Vector3::TransformCoord(_rot_axis, _rot);	// IK実施前に座標系を更新しておく
 		_dir_z_tmp = tnl::Vector3::TransformCoord(_dir_z, _rot);		// 〃 
 		_dir_x_tmp = tnl::Vector3::TransformCoord(_dir_x, _rot);		// 〃
+		// --- test --- //
+
+
+
+		// --- test End --- //
 	}
 	// ---- 逆運動学計算実施 ---- //
 	tnl::Quaternion rot_ik = inverseKinematics(delta_time);
@@ -223,6 +232,12 @@ void Module::directKinematicsAnkIK(const std::vector<dk_st>& dk, float delta_tim
 	for (int i = 0; i < _dk_st.size(); i++) {
 		_dk_st_tmp[i]._dir = tnl::Vector3::TransformCoord(_dk_st[i]._dir, _rot);
 		_dk_st_tmp[i]._rot_sum = _rot_tmp;
+		// --- TEST --- //
+		/*if (_dk_st_tmp[i]._id == 910) {
+			_dk_st_tmp[i]._rot_sum *= tnl::Quaternion::RotationAxis(_rot_axis_tmp, tnl::ToRadian(1));
+		}*/
+
+		// --- TEST END --- //
 	}
 	// ---- 子モジュールまでの絶対座標を更新：子モジュールに渡すのはこちら ---- //
 	_dk_st_next = _dk_st_tmp;
