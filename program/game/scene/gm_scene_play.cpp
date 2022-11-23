@@ -22,6 +22,16 @@ void ScenePlay::initialzie() {
 	_robo = Robot::Create({ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
 	_robo->partsUpdateTree(_robo, 0);
 	_controller = new RobotCont(_robo);
+
+	_targets[0]._pos = { 5, 10, 50 };
+	_targets[0]._rot_axis = { 0, 0, 1 };
+	_targets[0]._angle = tnl::ToRadian(1);
+	_targets[0]._rot = tnl::Quaternion::RotationAxis(_targets[0]._rot_axis, _targets[0]._angle);
+	_targets[1]._pos = { -5, 10, 50 };
+	_targets[1]._rot_axis = { 0, 0, -1 };
+	_targets[1]._angle = tnl::ToRadian(1);
+	_targets[1]._rot = tnl::Quaternion::RotationAxis(_targets[1]._rot_axis, _targets[1]._angle);
+
 }
 
 void ScenePlay::update(float delta_time)
@@ -57,6 +67,14 @@ void ScenePlay::update(float delta_time)
 	//
 	_controller->update(delta_time);
 	//_robo->directKinematicsTree(_robo, _robo->_dk_input);
+	_targets[0]._pos = _targets[0]._pos.TransformCoord(_targets[0]._pos, _targets[0]._rot);
+	_targets[1]._pos = _targets[1]._pos.TransformCoord(_targets[1]._pos, _targets[1]._rot);
+	_robo->TranlateTree(930, "", _targets[0]._pos, _robo->absolute);
+	_robo->setEffectIKTree(930, "", false);
+	_robo->TranlateTree(940, "", _targets[1]._pos, _robo->absolute);
+	_robo->setEffectIKTree(940, "", false);
+
+	
 	_robo->directKinematicsAndIKTree(_robo, _robo->_dk_input, delta_time);
 	_robo->partsUpdateTree(_robo, delta_time);
 
@@ -64,7 +82,12 @@ void ScenePlay::update(float delta_time)
 		_robo->removeModuleTree(0, "box1", true);
 	}
 
+	//_targets[0]._rot *= tnl::Quaternion::RotationAxis(_targets[0]._rot_axis, _targets[0]._angle);
+	
 
+	
+	
+	
 }
 
 void ScenePlay::render()

@@ -6,8 +6,8 @@
 class GmCamera;
 
 class ScenePlay : public SceneBase {
-public :
-	ScenePlay(){}
+public:
+	ScenePlay() {}
 	~ScenePlay();
 
 	GmCamera* _camera = nullptr;
@@ -17,6 +17,16 @@ public :
 	void initialzie() override;
 	void update(float delta_time) override;
 	void render() override;
+
+	// --- objects --- //
+	struct Target {
+		tnl::Vector3 _pos;
+		tnl::Vector3 _rot_axis;
+		float _angle;
+		tnl::Quaternion _rot;
+	};
+
+	Target _targets[10];
 
 };
 

@@ -11,6 +11,7 @@ public:
 	// ----- Render ----- //
 	std::vector<Parts*> _parts;			// パーツクラス
 	bool _is_render = true;				// 描画判定
+	bool _is_ik = true;				// IK実施判定
 
 	// ----- Parameter ----- //
 	int _id;							// ID: ツリー構造の検索等に用いる
@@ -26,6 +27,7 @@ public:
 		tnl::Vector3 _dir;				// 子モジュールの方向を単位ベクトルで格納(Σo)
 		float _length;					// 子モジュールの距離をfloatで格納(Σo)
 		tnl::Quaternion _rot_sum;		// 親モジュールからの回転量総量を格納する(Σo)
+		bool _is_effect_ik = true;		// IKの影響を次モジュールに与えるかどうか
 	};
 	std::vector<dk_st> _dk_st;			// 子モジュールまでの相対座標を格納
 	std::vector<dk_st> _dk_st_tmp;		// Update実行中の子モジュールまでの相対座標を格納：初期値(_dk_st)からの回転量で(_rot)で計算
@@ -93,7 +95,9 @@ public:
 	void directKinematicsTree(const Module* mod, std::vector<dk_st>& dk);
 	void directKinematicsAndIKTree(const Module* mod, std::vector<dk_st>& dk, float delta_time);
 	void Tranlate(tnl::Vector3& move, _attach_type type = relative);
+	void TranlateTree(int id, std::string name, tnl::Vector3& move, _attach_type type = relative);
 	tnl::Quaternion inverseKinematics(float delta_time);
+	void setEffectIKTree(int id, std::string name, bool is_ik);
 	void setAxisView(float size = 0.1, float length = 1.0);
 	// --- ファイル操作系 --- //
 	void exportForFileBinary(const std::string& file_path);

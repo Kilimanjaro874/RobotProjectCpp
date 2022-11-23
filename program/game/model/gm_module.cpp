@@ -2,6 +2,11 @@
 
 void Module::partsUpdate(float delta_time) {
 	// ---- 部品の位置・姿勢をモジュール座標系に応じて更新 ---- //
+
+	if (_id == 930) {
+		printf("deb");
+	}
+
 	for (auto pts : _parts) {
 		pts->mesh_->pos_ = _pos + tnl::Vector3::TransformCoord(pts->ofs_pos_, _rot);
 		pts->mesh_->rot_q_ = pts->ofs_rot_ * _rot;
@@ -10,6 +15,11 @@ void Module::partsUpdate(float delta_time) {
 
 void Module::partsRender(dxe::Camera* camera) {
 	// ----- 部品のシェーダーを描画する ----- //
+
+	if (_id == 930) {
+		printf("deb");
+	}
+
 	if (!_is_render) { return; }
 	for (auto pts : _parts) {
 		if (!pts->is_render_) continue;
@@ -230,14 +240,10 @@ void Module::directKinematicsAnkIK(const std::vector<dk_st>& dk, float delta_tim
 	// ---- 子モジュールまでの相対座標を更新 ---- //
 	_dk_st_tmp = _dk_st;
 	for (int i = 0; i < _dk_st.size(); i++) {
-		_dk_st_tmp[i]._dir = tnl::Vector3::TransformCoord(_dk_st[i]._dir, _rot);
-		_dk_st_tmp[i]._rot_sum = _rot_tmp;
-		// --- TEST --- //
-		/*if (_dk_st_tmp[i]._id == 910) {
-			_dk_st_tmp[i]._rot_sum *= tnl::Quaternion::RotationAxis(_rot_axis_tmp, tnl::ToRadian(1));
-		}*/
-
-		// --- TEST END --- //
+		if (_dk_st[i]._is_effect_ik) {
+			_dk_st_tmp[i]._dir = tnl::Vector3::TransformCoord(_dk_st[i]._dir, _rot);
+			_dk_st_tmp[i]._rot_sum = _rot_tmp;
+		}
 	}
 	// ---- 子モジュールまでの絶対座標を更新：子モジュールに渡すのはこちら ---- //
 	_dk_st_next = _dk_st_tmp;
@@ -271,6 +277,9 @@ void Module::Tranlate(tnl::Vector3& move, _attach_type type) {
 	// ----- モジュールの位置を変化させる ----- //
 	// absolute : move位置へ移動
 	// relative : 現モジュール座標からの移動量
+	if (_id == 930) {
+		printf("deb");
+	}
 
 	// ---- 位置変更 ---- //
 	if (absolute == type) { _pos = move; }
@@ -286,6 +295,25 @@ void Module::Tranlate(tnl::Vector3& move, _attach_type type) {
 		_parent->_dk_st[i]._length = delta_length;
 	}
 }
+
+void Module::TranlateTree(int id, std::string name, tnl::Vector3& move, _attach_type type) {
+	// ----- Translaateを特定の子モジュールに再帰敵に実施: preorder ----- //
+	// absolute : move位置へ移動
+	// relative : 現モジュール座標からの移動量
+	if (_id == 200) {
+		printf("deb");
+	}
+	if (_id == id || _name == name) {
+		Tranlate(move, type);
+		return;
+	}
+	if (_children.size() == 0) return;
+	for (int i = 0; i < _children.size(); i++) {
+		_children[i]->TranlateTree(id, name, move, type);
+	}
+}
+
+
 
 tnl::Quaternion Module::inverseKinematics(float delta_time) {
 	// ----- _ik_stの定義通りに逆運動学計算を実施する ----- //
@@ -362,6 +390,19 @@ tnl::Quaternion Module::inverseKinematics(float delta_time) {
 	tnl::Quaternion rot = tnl::Quaternion::RotationAxis(_rot_axis_tmp, dth_sum);
 	
 	return rot;
+}
+
+void Module::setEffectIKTree(int id, std::string name, bool is_ik) {
+	// ----- setEffectIKを特定の子モジュールが現れるまで再帰的に実施 : preorder ----- //
+	for (int i = 0; i < _dk_st.size(); i++) {
+		if (_dk_st[i]._id == id || _dk_st[i]._name == name) {
+			_dk_st[i]._is_effect_ik = is_ik;
+		}
+	}
+	for (int i = 0; i < _children.size(); i++) {
+		_children[i]->setEffectIKTree(id, name, is_ik);
+	}
+	return;
 }
 
 void Module::setAxisView(float size, float length) {
