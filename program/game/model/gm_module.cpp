@@ -398,6 +398,7 @@ void Module::setEffectIKTree(int id, std::string name, bool is_ik) {
 		if (_dk_st[i]._id == id || _dk_st[i]._name == name) {
 			_dk_st[i]._is_effect_ik = is_ik;
 		}
+
 	}
 	for (int i = 0; i < _children.size(); i++) {
 		_children[i]->setEffectIKTree(id, name, is_ik);
