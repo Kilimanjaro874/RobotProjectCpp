@@ -8,7 +8,7 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 	Robot* rob = new Robot();
 	// ---- rob : プレイヤーの操作を受け付ける。そのための初期化実施 ---- //
 	rob->init(rob, 1, "rob_ref_coord", pos, { 0, 1, 0 }, rot);
-	rob->setAxisView(0.2, 2.0);
+	//rob->setAxisView(0.2, 2.0);
 	rob->getModuleDataCSV(rob, "RP_ModuleSet001.csv");
 	rob->getIKSetDataCSV(rob, "RP_ModuleIKSet001.csv");
 	
