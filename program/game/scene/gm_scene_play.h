@@ -9,7 +9,6 @@ class ScenePlay : public SceneBase {
 public:
 	ScenePlay() {}
 	~ScenePlay();
-
 	GmCamera* _camera = nullptr;
 	Robot* _robo = nullptr;
 	RobotCont* _controller = nullptr;

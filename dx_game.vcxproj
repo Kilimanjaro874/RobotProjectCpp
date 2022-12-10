@@ -35,6 +35,7 @@
     <ClCompile Include="program\dxlib_ext\dxlib_ext_texture.cpp" />
     <ClCompile Include="program\dxlib_ext\OBJLoader.cpp" />
     <ClCompile Include="program\game\gm_camera.cpp" />
+    <ClCompile Include="program\game\gm_input_manager.cpp" />
     <ClCompile Include="program\game\gm_main.cpp" />
     <ClCompile Include="program\game\gm_manager.cpp" />
     <ClCompile Include="program\game\model\gm_airplane.cpp" />
@@ -67,6 +68,7 @@
     <ClInclude Include="program\dxlib_ext\dxlib_ext_texture.h" />
     <ClInclude Include="program\dxlib_ext\OBJLoader.h" />
     <ClInclude Include="program\game\gm_camera.h" />
+    <ClInclude Include="program\game\gm_input_manager.h" />
     <ClInclude Include="program\game\gm_main.h" />
     <ClInclude Include="program\game\gm_manager.h" />
     <ClInclude Include="program\game\model\gm_airplane.h" />

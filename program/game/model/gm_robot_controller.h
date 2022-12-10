@@ -1,5 +1,6 @@
 #pragma once
 #include "gm_robot.h";
+#include "../../game/gm_input_manager.h"
 
 class RobotCont {
 public:
@@ -15,5 +16,5 @@ public:
 	float _rot_speed = tnl::PI / 90;	// ‰ñ“]‘¬“x(rad / s)
 
 	//// ----- ƒƒ“ƒoŠÖ” ------ ////
-	void update(float delta_time);
+	void update(float delta_time, const InputMgr& InMgr);
 };

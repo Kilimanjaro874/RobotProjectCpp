@@ -37,6 +37,7 @@ void ScenePlay::initialzie() {
 void ScenePlay::update(float delta_time)
 {
 	GameManager* mgr = GameManager::GetInstance();
+	mgr->_input_mg1.update(delta_time);
 
 	//------------------------------------------------------------------
 	//

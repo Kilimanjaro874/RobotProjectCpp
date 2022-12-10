@@ -1,6 +1,6 @@
 #include "gm_robot_controller.h"
 
-void RobotCont::update(float delta_time) {
+void RobotCont::update(float delta_time, const InputMgr& InMgr) {
 	// ----- プレイヤー操作の影響をロボットクラスに与える ----- //
 	
 	// ---- 初期化 ---- //
