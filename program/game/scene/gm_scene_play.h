@@ -9,9 +9,11 @@ class ScenePlay : public SceneBase {
 public:
 	ScenePlay() {}
 	~ScenePlay();
+	//// ----- ƒƒ“ƒo•Ï” ----- //
 	GmCamera* _camera = nullptr;
 	Robot* _robo = nullptr;
 	RobotCont* _controller = nullptr;
+	Parts* _background = nullptr;
 
 	void initialzie() override;
 	void update(float delta_time) override;

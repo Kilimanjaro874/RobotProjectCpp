@@ -172,10 +172,10 @@
     <ClCompile Include="program\game\model\gm_robot.cpp">
       <Filter>program\game\model\robot</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_robot_controller.cpp">
+    <ClCompile Include="program\game\gm_input_manager.cpp">
       <Filter>program\game</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\gm_input_manager.cpp">
+    <ClCompile Include="program\game\gm_robot_controller.cpp">
       <Filter>program\game</Filter>
     </ClCompile>
   </ItemGroup>
@@ -297,10 +297,10 @@
     <ClInclude Include="program\game\model\gm_robot.h">
       <Filter>program\game\model\robot</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_robot_controller.h">
+    <ClInclude Include="program\game\gm_input_manager.h">
       <Filter>program\game</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\gm_input_manager.h">
+    <ClInclude Include="program\game\gm_robot_controller.h">
       <Filter>program\game</Filter>
     </ClInclude>
   </ItemGroup>

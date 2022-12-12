@@ -2,16 +2,22 @@
 #include "../gm_camera.h"
 #include "gm_scene_play.h"
 #include "gm_scene_result.h"
+#include "../../dxlib_ext/dxlib_ext.h"
 
 
 ScenePlay::~ScenePlay() {
 	delete _camera;
 	delete _robo;
 	delete _controller;
+	delete _background;
 }
 
 
 void ScenePlay::initialzie() {
+	// ----- DxLib設定 ----- //
+	SetMouseDispFlag(false);			// マウス表示を消去
+	SetMousePoint(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2);		// TPSでマウス位置を画面中央に固定
+	// ----- 自作クラス設定 ----- //
 	_camera = new GmCamera();
 	_camera->pos_ = { 0, 150, -300 };
 
@@ -19,6 +25,7 @@ void ScenePlay::initialzie() {
 	//
 	// Test
 	//
+	// 操作ロボット生成
 	_robo = Robot::Create({ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
 	_robo->partsUpdateTree(_robo, 0);
 	_controller = new RobotCont(_robo);
@@ -32,18 +39,25 @@ void ScenePlay::initialzie() {
 	_targets[1]._angle = tnl::ToRadian(1);
 	_targets[1]._rot = tnl::Quaternion::RotationAxis(_targets[1]._rot_axis, _targets[1]._angle);
 
+	// 背景
+	_background = new Parts();
+	_background->mesh_ = dxe::Mesh::CreateSphere(500);
+	_background->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue.bmp"));
 }
 
 void ScenePlay::update(float delta_time)
 {
+	// ----- DxLib設定 ----- //
+	
+
 	GameManager* mgr = GameManager::GetInstance();
-	mgr->_input_mg1.update(delta_time);
+
 
 	//------------------------------------------------------------------
 	//
 	// カメラ制御
 	//
-	tnl::Vector3 rot[4] = {
+	/*tnl::Vector3 rot[4] = {
 		{ 0, tnl::ToRadian(1.0f), 0 },
 		{ 0, -tnl::ToRadian(1.0f), 0 },
 		{ tnl::ToRadian(1.0f), 0, 0 },
@@ -57,7 +71,7 @@ void ScenePlay::update(float delta_time)
 	}
 	if (tnl::Input::IsKeyDown(eKeys::KB_X)) {
 		_camera->target_distance_ -= 1.0f;
-	}
+	}*/
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
 		mgr->chengeScene(new SceneResult());
 	}
@@ -66,7 +80,7 @@ void ScenePlay::update(float delta_time)
 	//
 	// Test
 	//
-	_controller->update(delta_time);
+	_controller->update(delta_time, _camera);
 	//_robo->directKinematicsTree(_robo, _robo->_dk_input);
 	_targets[0]._pos = _targets[0]._pos.TransformCoord(_targets[0]._pos, _targets[0]._rot);
 	_targets[1]._pos = _targets[1]._pos.TransformCoord(_targets[1]._pos, _targets[1]._rot);
@@ -78,10 +92,6 @@ void ScenePlay::update(float delta_time)
 	
 	_robo->directKinematicsAndIKTree(_robo, _robo->_dk_input, delta_time);
 	_robo->partsUpdateTree(_robo, delta_time);
-
-	if (tnl::Input::IsKeyDown(eKeys::KB_SPACE)) {
-		_robo->removeModuleTree(0, "box1", true);
-	}
 
 	//_targets[0]._rot *= tnl::Quaternion::RotationAxis(_targets[0]._rot_axis, _targets[0]._angle);
 	
@@ -101,5 +111,6 @@ void ScenePlay::render()
 	// Test
 	//
 	_robo->partsRenderTree(_robo, _camera);
+	//_background->mesh_->render(_camera);
 
 }

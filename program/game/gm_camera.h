@@ -3,11 +3,14 @@
 
 class GmCamera : public dxe::Camera {
 public :
+	//// ------ ƒƒ“ƒo•Ï” ------ ////
 	GmCamera() : dxe::Camera(DXE_WINDOW_WIDTH, DXE_WINDOW_HEIGHT) {}
 	~GmCamera(){}
 	tnl::Vector3 free_look_angle_xy_ = { tnl::ToRadian(30), 0, 0 };
 	float target_distance_ = 50;
+	// -----
 
+	//// ------ ƒƒ“ƒoŠÖ” ------ ////
 	void update();
 };
 
