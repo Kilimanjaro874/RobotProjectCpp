@@ -41,5 +41,5 @@ public:
 	//// ----- ƒƒ“ƒoŠÖ” ------ ////
 	void update(float delta_time, GmCamera* _camera);
 	void input(float delta_time);
-	int getAngleDir(const tnl::Vector3& cam_dir_z, const tnl::Vector3& rob_dir_z);
+	int getAngleDir(float tolerance_deg, const tnl::Vector3& cam_dir_z, const tnl::Vector3& rob_dir_z);
 };
