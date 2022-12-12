@@ -10,7 +10,7 @@ public:
 		_dk_st_next._name = robot->_name;
 	};
 	~RobotCont() {
-		delete _robot;
+		
 	}
 	//// ------ ƒƒ“ƒo•Ï” ------ ////
 	Robot* _robot = nullptr;

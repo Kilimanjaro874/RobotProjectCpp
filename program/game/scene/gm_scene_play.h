@@ -14,6 +14,7 @@ public:
 	Robot* _robo = nullptr;
 	RobotCont* _controller = nullptr;
 	Parts* _background = nullptr;
+	Parts* _aim_pos = nullptr;
 
 	void initialzie() override;
 	void update(float delta_time) override;

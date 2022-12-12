@@ -10,6 +10,7 @@ ScenePlay::~ScenePlay() {
 	delete _robo;
 	delete _controller;
 	delete _background;
+	delete _aim_pos;
 }
 
 
@@ -43,6 +44,11 @@ void ScenePlay::initialzie() {
 	_background = new Parts();
 	_background->mesh_ = dxe::Mesh::CreateSphere(500);
 	_background->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue.bmp"));
+	// Target 
+	_aim_pos = new Parts();
+	_aim_pos->mesh_ = dxe::Mesh::CreateSphere(25);
+	_aim_pos->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue.bmp"));
+
 }
 
 void ScenePlay::update(float delta_time)
@@ -95,8 +101,8 @@ void ScenePlay::update(float delta_time)
 
 	//_targets[0]._rot *= tnl::Quaternion::RotationAxis(_targets[0]._rot_axis, _targets[0]._angle);
 	
-
 	
+	_aim_pos->mesh_->pos_ = _camera->_aim_pos;
 	
 	
 }
@@ -112,5 +118,10 @@ void ScenePlay::render()
 	//
 	_robo->partsRenderTree(_robo, _camera);
 	//_background->mesh_->render(_camera);
+
+	
+	tnl::Vector3 _aim_poss = _camera->_aim_pos;
+	DrawStringEx(50, 70, -1, "f = %f, %f, %f", _aim_poss.x, _aim_poss.y, _aim_poss.z);
+	_aim_pos->mesh_->render(_camera);
 
 }

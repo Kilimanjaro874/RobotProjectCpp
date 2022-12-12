@@ -9,9 +9,9 @@ void RobotCont::update(float delta_time, GmCamera* camera) {
 	tnl::Vector3 d_move = tnl::Vector3{ 0, 0, 0 };
 	// ---- TPSカメラワーク ---- //
 	camera->target_ = tnl::Vector3{ _robot->_pos.x, this->_camera_height, _robot->_pos.z };
-	camera->target_distance_ = this->_camera_distance;
+	camera->_target_distance = this->_camera_distance;
 	DrawStringEx(50, 200, -1, "%2.5f, %2.5f, %2.5f", _robot->_pos.x, _robot->_pos.y, _robot->_pos.z);
-	camera->free_look_angle_xy_ += tnl::Vector3{
+	camera->_free_look_angle_xy += tnl::Vector3{
 		(float)_mouse_input_st.y_delta_move, 
 		(float)_mouse_input_st.x_delta_move, 
 		0
@@ -24,6 +24,7 @@ void RobotCont::update(float delta_time, GmCamera* camera) {
 	int angle_dir = getAngleDir(1.0, cam_dir, _robot->_dir_z_tmp);		// ロボットの回転方向決定(0 or 1 or -1)
 	rot_move = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, angle_dir * _rot_speed * delta_time);
 	
+	DrawStringEx(50, 100, -1, "f = %f, %f, %f", camera->_focus_dir_tmp.x, camera->_focus_dir_tmp.y, camera->_focus_dir_tmp.z);
 
 	// ---- ロボットの座標変換のためのパラメータ(水平移動、回転移動)を格納 ---- //
 	if (_robot->_dk_input.size() == 0) {
@@ -63,7 +64,7 @@ int RobotCont::getAngleDir(float tolerance_deg, const tnl::Vector3& cam_dir_z, c
 	int dir = axis.dot(cam_dir_xz.cross(rob_dir_xz));
 	float angle = tnl::Vector3::Dot(cam_dir_xz, rob_dir_xz);
 	DrawStringEx(50, 85, -1, "%f", angle);
-	if (1.0 - cos(tnl::ToRadian(90 - tolerance_deg)) < angle) { return 0; }			// 1°の誤差は許容
+	if (1.0 - cos(tnl::ToRadian(90 - tolerance_deg)) < angle) { return 0; }			//許容誤差
 	return - axis.dot(cam_dir_xz.cross(rob_dir_xz)) >= 0 ? 1 : -1;
 }
 
