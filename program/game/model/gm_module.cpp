@@ -380,7 +380,7 @@ tnl::Quaternion Module::inverseKinematics(float delta_time) {
 			(float)-1, (float)1
 		));
 		if (!isfinite(dth)) { dth = 0; }	// ‰ñ“]Ž²ã‚Étarget or object : “ÁˆÙ“_->dth = 0‚ÅƒGƒ‰[‰ñ”ð
-		if (dth > tnl::PI / 24) {
+		if (dth > tnl::PI / 24) {			
 			dth = tnl::PI / 24;
 		}
 		tnl::Vector3 axis = x.cross(y) / x.length() / y.length();	// ‰ñ“]•ûŒüŒˆ’è

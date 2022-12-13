@@ -11,8 +11,8 @@ public :
 	// ----- 焦点への単位ベクトル ----- //
 	tnl::Vector3 _focus_dir = { 0, 0, 1 };		// 初期値
 	tnl::Vector3 _focus_dir_tmp = _focus_dir;	// Update中の値
-	tnl::Vector3 _aim_pos;
-	float _aim_distance = 1000;
+	//tnl::Vector3 _aim_pos;
+	//float _aim_distance = 1000;
 
 	//// ------ メンバ関数 ------ ////
 	void update();

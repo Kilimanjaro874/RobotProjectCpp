@@ -16,7 +16,11 @@ public:
 	Robot* _robot = nullptr;
 	float _move_speed = 10.0f;			// 移動速度(m/s)
 	float _rot_speed = tnl::PI / 1;	// 回転速度(rad / s)
-
+	// ----- ロボットの動作モードを定義 ----- //
+	enum move_mode {
+		normal, aiming
+	};
+	move_mode mode = aiming;			// 初期状態：エイム状態
 	// ----- 操作の影響を運動学計算に記述＆ロボットに渡す、そのための構造体 ----- //
 	struct dk_st {
 		// ---- 親から子モジュールへ運動学計算を実施するためのパラメータを構造体で定義しておく ---- //
@@ -34,12 +38,17 @@ public:
 		int y_delta_move;
 	} _mouse_input_st;
 	float _camera_rot_coefficient = 0.2f;	// カメラ動作マウス感度
-	// ---- カメラ設定 ---- 
+	// ---- カメラ設定 ---- //
 	float _camera_distance = 20;			// ロボットとカメラの距離指定
 	float _camera_height = 10.0f;			// ロボット原点(x, y=0 + this, z)からのカメラ注視点を指定
-
+	// ---- エイム関係 ---- //
+	float _focal_length = 500;				// エイム焦点距離
+	tnl::Vector3 _aim_target_r;				// 右腕のエイム対象座標を格納
+	tnl::Vector3 _aim_target_l;				// 左腕のエイム対象座標を格納
 	//// ----- メンバ関数 ------ ////
 	void update(float delta_time, GmCamera* _camera);
 	void input(float delta_time);
 	int getAngleDir(float tolerance_deg, const tnl::Vector3& cam_dir_z, const tnl::Vector3& rob_dir_z);
-};
+	tnl::Vector3 getAimPosition(const GmCamera& g_cam, const tnl::Vector3& dir, float fo_len, tnl::Vector3 offset = { 0, 0, 0 });
+	void cameraWorkTPS(float delta_time, GmCamera* g_cam);
+};	

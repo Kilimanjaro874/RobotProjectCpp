@@ -102,7 +102,7 @@ void ScenePlay::update(float delta_time)
 	//_targets[0]._rot *= tnl::Quaternion::RotationAxis(_targets[0]._rot_axis, _targets[0]._angle);
 	
 	
-	_aim_pos->mesh_->pos_ = _camera->_aim_pos;
+	//_aim_pos->mesh_->pos_ = _camera->_aim_pos;
 	
 	
 }
@@ -120,8 +120,8 @@ void ScenePlay::render()
 	//_background->mesh_->render(_camera);
 
 	
-	tnl::Vector3 _aim_poss = _camera->_aim_pos;
-	DrawStringEx(50, 70, -1, "f = %f, %f, %f", _aim_poss.x, _aim_poss.y, _aim_poss.z);
+	//tnl::Vector3 _aim_poss = _camera->_aim_pos;
+	//DrawStringEx(50, 70, -1, "f = %f, %f, %f", _aim_poss.x, _aim_poss.y, _aim_poss.z);
 	_aim_pos->mesh_->render(_camera);
 
 }

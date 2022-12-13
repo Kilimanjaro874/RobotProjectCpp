@@ -2,20 +2,23 @@
 
 void RobotCont::update(float delta_time, GmCamera* camera) {
 	// ----- プレイヤー操作の影響をロボットクラスに与える ----- //
-	// ---- 入力情報取得 ---- //
-	input(delta_time);
 	// ---- ロボット移動量初期化 ---- //
 	tnl::Quaternion rot_move = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
 	tnl::Vector3 d_move = tnl::Vector3{ 0, 0, 0 };
+	// ---- 入力情報取得 ---- //
+	input(delta_time);
 	// ---- TPSカメラワーク ---- //
-	camera->target_ = tnl::Vector3{ _robot->_pos.x, this->_camera_height, _robot->_pos.z };
+	cameraWorkTPS(delta_time, camera);
+	/*camera->target_ = tnl::Vector3{ _robot->_pos.x, this->_camera_height, _robot->_pos.z };
 	camera->_target_distance = this->_camera_distance;
 	DrawStringEx(50, 200, -1, "%2.5f, %2.5f, %2.5f", _robot->_pos.x, _robot->_pos.y, _robot->_pos.z);
 	camera->_free_look_angle_xy += tnl::Vector3{
 		(float)_mouse_input_st.y_delta_move, 
 		(float)_mouse_input_st.x_delta_move, 
 		0
-	} * delta_time * _camera_rot_coefficient;
+	} * delta_time * _camera_rot_coefficient;*/
+
+
 	// ---- ロボット水平移動 ---- //
 	d_move += _robot->_dir_z_tmp * delta_time * _move.y * _move_speed;
 	d_move += _robot->_dir_x_tmp * delta_time * _move.x * _move_speed;
@@ -68,3 +71,21 @@ int RobotCont::getAngleDir(float tolerance_deg, const tnl::Vector3& cam_dir_z, c
 	return - axis.dot(cam_dir_xz.cross(rob_dir_xz)) >= 0 ? 1 : -1;
 }
 
+tnl::Vector3 RobotCont::getAimPosition(const GmCamera& g_cam, const tnl::Vector3& dir, float fo_len, tnl::Vector3 offset) {
+	// ---- カメラ焦点方向を参照・エイム焦点位置を返す ---- //
+	tnl::Vector3 aim_pos = g_cam.pos_ + g_cam._focus_dir_tmp * _focal_length;
+	return aim_pos;
+}
+
+void RobotCont::cameraWorkTPS(float delta_time, GmCamera* g_cam) {
+	// ---- マウス移動量に応じてカメラの向き変更 ---- //
+	g_cam->target_ = tnl::Vector3{ _robot->_pos.x, this->_camera_height, _robot->_pos.z };
+	g_cam->_target_distance = this->_camera_distance;
+	DrawStringEx(50, 200, -1, "%2.5f, %2.5f, %2.5f", _robot->_pos.x, _robot->_pos.y, _robot->_pos.z);
+	g_cam->_free_look_angle_xy += tnl::Vector3{
+		(float)_mouse_input_st.y_delta_move,
+		(float)_mouse_input_st.x_delta_move,
+		0
+	} *delta_time * _camera_rot_coefficient;
+
+}
