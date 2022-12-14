@@ -18,7 +18,7 @@ void RobotCont::update(float delta_time, GmCamera* camera) {
 	int angle_dir = getAngleDir(1.0, cam_dir, _robot->_dir_z_tmp);		// ロボットの回転方向決定(0 or 1 or -1)
 	rot_move = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, angle_dir * _rot_speed * delta_time);
 	// ---- ロボットの座標変換のためのパラメータ(水平移動、回転移動)を格納 ---- //
-	_robot->move(delta_time, _acc_in, rot_move, { 0, 0, 0 });
+	_robot->move(delta_time, _pow, rot_move, { 0, 0, 0 });
 	/*if (_robot->_dk_input.size() == 0) {
 		printf("プレイヤー操作受付のための_dk_inputを初期化して下さい");
 		return;
@@ -43,6 +43,9 @@ void RobotCont::input(float delta_time) {
 	if (tnl::Input::IsKeyDown(eKeys::KB_D) || tnl::Input::IsKeyDown(eKeys::KB_RIGHT)) { _move.x = 1; }
 	else if (tnl::Input::IsKeyDown(eKeys::KB_A) || tnl::Input::IsKeyDown(eKeys::KB_LEFT)) { _move.x = -1; }
 	else { _move.x = 0; }
+	// 上
+	if (tnl::Input::IsKeyDown(eKeys::KB_SPACE)) { _move.y = 1; }
+	else { _move.y = 0; }
 	// 処理：前後左右入力値Vectorの大きさが1以上：　正規化
 	if (_move.length() > 1.0) { _move.normalize(); }
 	// マウス : カーソル位置を画面中央に固定、1フレーム間のマウス移動量を_mouse_input_stに格納
@@ -107,13 +110,16 @@ void RobotCont::robMoveCont(float delta_time) {
 	// 水平方向
 	_vel_ref += _robot->_dir_z_tmp * _move.z * _horizontal_speed_lim;
 	_vel_ref += _robot->_dir_x_tmp * _move.x * _horizontal_speed_lim;
+	_vel_ref += tnl::Vector3{ 0, 1, 0 } *_move.y * _vertical_speed_lim;
+	DrawStringEx(50, 50, -1, "vel_ref x=%f, z = %f", _vel_ref.x, _vel_ref.z);
 	_vel_error = _vel_ref - _robot->vel_;
+	DrawStringEx(50, 70, -1, "vel_error x=%f, z = %f", _vel_error.x, _vel_error.z);
 	// PID制御 : 制御入力値決定
 	_vel_error_integral += (_vel_error + _vel_error_pre) / 2 * delta_time; // 速度誤差積算値
-	tnl::Vector3 pow = _vel_error * _kp +
+	_pow = _vel_error * _kp +
 		_vel_error_integral * _ki +
 		(_vel_error - _vel_error_pre) / delta_time;
-	_acc_in = pow / _mass;	// a = F/mで加速度指令値決定
+	//_acc_in += pow / _mass;	// a = F/mで加速度指令値決定
 	// 情報格納
 	_vel_error_pre = _vel_ref;
 }

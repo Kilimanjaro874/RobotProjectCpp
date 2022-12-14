@@ -24,7 +24,7 @@ public:
 	tnl::Quaternion rot_move_;		// 1フレーム間の回転量を格納
 	std::vector<dk_st> _dk_input;	// コントローラーからのDK情報を格納
 	// ----- ロボット速度制御パラメータ ----- //
-	float mass = 1000;				// 質量(kg)
+	float mass = 500;				// 質量(kg)
 	tnl::Vector3 vel_;				// 速度
 	tnl::Vector3 acc_;				// 加速度
 	// ----- csvからモジュールを構築するためのパラメータ ----- //
@@ -36,7 +36,7 @@ public:
 	static Robot* Create(const tnl::Vector3 pos, const tnl::Quaternion rot);
 	void init(Robot* rob, int id, std::string name, 
 		tnl::Vector3 pos, tnl::Vector3 rot_axis, tnl::Quaternion rot);
-	void move(float delta_time, const tnl::Vector3& acc, const tnl::Quaternion& rot_move, const tnl::Vector3& gravity);
+	void move(float delta_time, const tnl::Vector3& pow, const tnl::Quaternion& rot_move, const tnl::Vector3& gravity);
 	
 	// ---- test ---- //
 	// ---- CSVデータ読み込み関数 ---- //
