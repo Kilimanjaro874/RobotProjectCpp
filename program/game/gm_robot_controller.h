@@ -47,6 +47,26 @@ public:
 	tnl::Vector3 _aim_target_l;				// 左腕のエイム対象座標を格納
 	int _aim_target_r_id;					// 右腕のエイムターゲットIDを格納
 	int _aim_target_l_id;					// 左腕のエイムターゲットIDを格納
+	// ---- ロボット制御用パラメータ ---- //
+	
+	tnl::Vector3 _vel_cont_target;	// 速度目標
+	tnl::Vector3 _vel_lim_normal;
+	tnl::Vector3 _vel_lim_qBoost;
+	tnl::Vector3 _thrust_pow;
+	tnl::Vector3 _vel_ref;				// 目標速度
+	tnl::Vector3 _vel_error;			// 目標速度とのエラー
+	tnl::Vector3 _vel_error_pre;		// 目標速度とのエラー(1フレーム前)
+	tnl::Vector3 _acc_in;				// 加速度入力値
+	tnl::Vector3 _vel_error_integral;	// 速度誤差積算値
+		
+	float _mass = 1000;							// ロボット質量(kg)
+	float _horizontal_speed_lim = 27.8;			// 水平速度限界(m/s)
+	float _vertical_speed_lim = 10.0;			// 垂直上方速度限界(m/s)
+	float _kp = 15.0;
+	float _ki = 0.005;
+	float _kd = 0.2;
+	
+
 	//// ----- メンバ関数 ------ ////
 	void update(float delta_time, GmCamera* _camera);
 	void input(float delta_time);
@@ -55,4 +75,5 @@ public:
 	tnl::Vector3 getAimPosition(const GmCamera* g_cam, tnl::Vector3 offset = { 0, 0, 0 });
 	void cameraWorkTPS(float delta_time, GmCamera* g_cam);
 	void fireUpdate(float delta_time, const GmCamera* g_cam);
+	void robMoveCont(float delta_time);
 };	
