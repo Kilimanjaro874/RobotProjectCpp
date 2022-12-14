@@ -160,6 +160,18 @@ void Robot::init(Robot* rob, int id, std::string name,
 	rob->_dk_st = rob->_dk_input;
 }
 
+void Robot::move(float delta_time, const tnl::Vector3& acc,  const tnl::Quaternion& rot_move, const tnl::Vector3& gravity) {
+	// ---- ロボットに加速度を与える：値に応じて座標更新 ---- //
+	if (_dk_input.size() == 0) {
+		printf("エラー：プレイヤー操作受付のための_dk_inputを初期化してください.");
+		return;
+	}
+	vel_ += acc * delta_time;
+	_dk_input[0]._dir = _pos + vel_;
+	_dk_input[0]._length = 1;
+	_dk_input[0]._rot_sum = rot_move;
+}
+
 void Robot::getModuleDataCSV(Robot* rob, std::string csv_path) {
 	// ---- モジュールの構築情報をCSVから取得＆ツリー構造構築 ---- //
 	std::string str_buf;
