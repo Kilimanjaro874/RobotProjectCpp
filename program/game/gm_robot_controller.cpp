@@ -9,16 +9,6 @@ void RobotCont::update(float delta_time, GmCamera* camera) {
 	input(delta_time);
 	// ---- TPSカメラワーク ---- //
 	cameraWorkTPS(delta_time, camera);
-	/*camera->target_ = tnl::Vector3{ _robot->_pos.x, this->_camera_height, _robot->_pos.z };
-	camera->_target_distance = this->_camera_distance;
-	DrawStringEx(50, 200, -1, "%2.5f, %2.5f, %2.5f", _robot->_pos.x, _robot->_pos.y, _robot->_pos.z);
-	camera->_free_look_angle_xy += tnl::Vector3{
-		(float)_mouse_input_st.y_delta_move, 
-		(float)_mouse_input_st.x_delta_move, 
-		0
-	} * delta_time * _camera_rot_coefficient;*/
-
-
 	// ---- ロボット水平移動 ---- //
 	d_move += _robot->_dir_z_tmp * delta_time * _move.y * _move_speed;
 	d_move += _robot->_dir_x_tmp * delta_time * _move.x * _move_speed;
@@ -26,9 +16,6 @@ void RobotCont::update(float delta_time, GmCamera* camera) {
 	tnl::Vector3 cam_dir = camera->front();
 	int angle_dir = getAngleDir(1.0, cam_dir, _robot->_dir_z_tmp);		// ロボットの回転方向決定(0 or 1 or -1)
 	rot_move = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, angle_dir * _rot_speed * delta_time);
-	
-	DrawStringEx(50, 100, -1, "f = %f, %f, %f", camera->_focus_dir_tmp.x, camera->_focus_dir_tmp.y, camera->_focus_dir_tmp.z);
-
 	// ---- ロボットの座標変換のためのパラメータ(水平移動、回転移動)を格納 ---- //
 	if (_robot->_dk_input.size() == 0) {
 		printf("プレイヤー操作受付のための_dk_inputを初期化して下さい");
@@ -37,6 +24,11 @@ void RobotCont::update(float delta_time, GmCamera* camera) {
 	_robot->_dk_input[0]._dir = _robot->_pos + d_move;
 	_robot->_dk_input[0]._length = 1;
 	_robot->_dk_input[0]._rot_sum = rot_move;
+	// ---- 以下、モード別の処理 ---- //
+	if(_mode == aiming){
+		// ---- 射撃モード時のupdate処理 ---- //
+		fireUpdate(delta_time, camera);
+	}
 }
 
 void RobotCont::input(float delta_time) {
@@ -71,9 +63,9 @@ int RobotCont::getAngleDir(float tolerance_deg, const tnl::Vector3& cam_dir_z, c
 	return - axis.dot(cam_dir_xz.cross(rob_dir_xz)) >= 0 ? 1 : -1;
 }
 
-tnl::Vector3 RobotCont::getAimPosition(const GmCamera& g_cam, const tnl::Vector3& dir, float fo_len, tnl::Vector3 offset) {
+tnl::Vector3 RobotCont::getAimPosition(const GmCamera* g_cam, tnl::Vector3 offset) {
 	// ---- カメラ焦点方向を参照・エイム焦点位置を返す ---- //
-	tnl::Vector3 aim_pos = g_cam.pos_ + g_cam._focus_dir_tmp * _focal_length;
+	tnl::Vector3 aim_pos = g_cam->pos_ + g_cam->_focus_dir_tmp * _focal_length;
 	return aim_pos;
 }
 
@@ -87,5 +79,20 @@ void RobotCont::cameraWorkTPS(float delta_time, GmCamera* g_cam) {
 		(float)_mouse_input_st.x_delta_move,
 		0
 	} *delta_time * _camera_rot_coefficient;
+
+}
+
+void RobotCont::fireUpdate(float delta_time, const GmCamera* g_cam) {
+	// ---- エイム＆射撃を管理する関数 ---- //
+	_aim_target_r = getAimPosition(g_cam);		// 右腕のエイムターゲット取得
+	_aim_target_l = getAimPosition(g_cam);		// 左腕のエイムターゲット取得
+	_robot->TranlateTree(930, "", _aim_target_r, _robot->absolute);		// 初期化処理等でIDを予め取得すべきだ
+	_robot->setEffectIKTree(930, "", false);
+	_robot->TranlateTree(940, "", _aim_target_l, _robot->absolute);
+	_robot->setEffectIKTree(940, "", false);
+	// ---- ロボットのDK&IK, 部品DK更新 ---- //
+	_robot->directKinematicsAndIKTree(_robot, _robot->_dk_input, delta_time);
+	_robot->partsUpdateTree(_robot, delta_time);
+
 
 }

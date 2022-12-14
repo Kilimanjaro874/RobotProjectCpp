@@ -11,7 +11,7 @@ public:
 	// ----- Render ----- //
 	std::vector<Parts*> _parts;			// パーツクラス
 	bool _is_render = true;				// 描画判定
-	bool _is_ik = true;				// IK実施判定
+	bool _is_ik = true;					// IK実施判定
 
 	// ----- Parameter ----- //
 	int _id;							// ID: ツリー構造の検索等に用いる
