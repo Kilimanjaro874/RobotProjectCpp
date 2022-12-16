@@ -18,6 +18,18 @@ void ScenePlay::initialzie() {
 	// ----- DxLib設定 ----- //
 	SetMouseDispFlag(false);			// マウス表示を消去
 	SetMousePoint(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2);		// TPSでマウス位置を画面中央に固定
+	// ----- ステージ生成 ----- //
+	_floor_obj_li.resize(1);
+	_floor_obj_li[0]= dxe::Mesh::CreatePlane({ 100, 100, 0 });
+	_floor_obj_li[0]->setTexture(dxe::Texture::CreateFromFile("graphics/blue.bmp"));
+	_floor_obj_li[0]->rot_q_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(90));
+	
+	
+
+	/*_floor_obj_li.push_back(dxe::Mesh::CreatePlane({100, 100, 0}));
+	
+	_floor_obj_li[0]->setTexture(dxe::Texture::CreateFromFile("graphics/blue.bmp"));*/
+																	
 	// ----- 自作クラス設定 ----- //
 	_camera = new GmCamera();
 	_camera->pos_ = { 0, 150, -300 };
@@ -31,14 +43,17 @@ void ScenePlay::initialzie() {
 	_robo->partsUpdateTree(_robo, 0);
 	_controller = new RobotCont(_robo);
 
-	_targets[0]._pos = { 5, 10, 50 };
-	_targets[0]._rot_axis = { 0, 0, 1 };
-	_targets[0]._angle = tnl::ToRadian(1);
-	_targets[0]._rot = tnl::Quaternion::RotationAxis(_targets[0]._rot_axis, _targets[0]._angle);
-	_targets[1]._pos = { -5, 10, 50 };
-	_targets[1]._rot_axis = { 0, 0, -1 };
-	_targets[1]._angle = tnl::ToRadian(1);
-	_targets[1]._rot = tnl::Quaternion::RotationAxis(_targets[1]._rot_axis, _targets[1]._angle);
+
+
+
+	//_targets[0]._pos = { 5, 10, 50 };
+	//_targets[0]._rot_axis = { 0, 0, 1 };
+	//_targets[0]._angle = tnl::ToRadian(1);
+	//_targets[0]._rot = tnl::Quaternion::RotationAxis(_targets[0]._rot_axis, _targets[0]._angle);
+	//_targets[1]._pos = { -5, 10, 50 };
+	//_targets[1]._rot_axis = { 0, 0, -1 };
+	//_targets[1]._angle = tnl::ToRadian(1);
+	//_targets[1]._rot = tnl::Quaternion::RotationAxis(_targets[1]._rot_axis, _targets[1]._angle);
 
 	// 背景
 	_background = new Parts();
@@ -88,12 +103,12 @@ void ScenePlay::update(float delta_time)
 	//
 	_controller->update(delta_time, _camera);
 	//_robo->directKinematicsTree(_robo, _robo->_dk_input);
-	_targets[0]._pos = _targets[0]._pos.TransformCoord(_targets[0]._pos, _targets[0]._rot);
-	_targets[1]._pos = _targets[1]._pos.TransformCoord(_targets[1]._pos, _targets[1]._rot);
-	_robo->TranlateTree(930, "", _targets[0]._pos, _robo->absolute);
+	/*_targets[0]._pos = _targets[0]._pos.TransformCoord(_targets[0]._pos, _targets[0]._rot);
+	_targets[1]._pos = _targets[1]._pos.TransformCoord(_targets[1]._pos, _targets[1]._rot);*/
+	/*_robo->TranlateTree(930, "", _targets[0]._pos, _robo->absolute);
 	_robo->setEffectIKTree(930, "", false);
 	_robo->TranlateTree(940, "", _targets[1]._pos, _robo->absolute);
-	_robo->setEffectIKTree(940, "", false);
+	_robo->setEffectIKTree(940, "", false);*/
 
 	
 	//_robo->directKinematicsAndIKTree(_robo, _robo->_dk_input, delta_time);
@@ -119,7 +134,9 @@ void ScenePlay::render()
 	_robo->partsRenderTree(_robo, _camera);
 	//_background->mesh_->render(_camera);
 
-	
+	for (auto floor : _floor_obj_li) {
+		floor->render(_camera);
+	}
 	//tnl::Vector3 _aim_poss = _camera->_aim_pos;
 	//DrawStringEx(50, 70, -1, "f = %f, %f, %f", _aim_poss.x, _aim_poss.y, _aim_poss.z);
 	//_aim_pos->mesh_->render(_camera);

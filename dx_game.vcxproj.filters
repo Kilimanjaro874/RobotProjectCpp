@@ -178,6 +178,9 @@
     <ClCompile Include="program\game\gm_robot_controller.cpp">
       <Filter>program\game</Filter>
     </ClCompile>
+    <ClCompile Include="program\game\model\gm_weapon.cpp">
+      <Filter>program\game\model\robot</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="program\library\picojson.h">
@@ -302,6 +305,9 @@
     </ClInclude>
     <ClInclude Include="program\game\gm_robot_controller.h">
       <Filter>program\game</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\model\gm_weapon.h">
+      <Filter>program\game\model\robot</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
