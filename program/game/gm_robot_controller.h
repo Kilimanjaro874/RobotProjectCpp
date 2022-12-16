@@ -54,7 +54,7 @@ public:
 	tnl::Vector3 _acc_in;				// 加速度入力値
 	tnl::Vector3 _pow;					// ロボットへの制御推力値
 	tnl::Vector3 _vel_error_integral;	// 速度誤差積算値
-		
+
 	float _mass = 500;							// ロボット質量(kg)
 	float _horizontal_speed_lim = 27.8/30;		// 水平速度限界(m/s)
 	//float _vertical_speed_lim = 27.8 / 30;		// 垂直速度限界(m/s)
@@ -62,7 +62,6 @@ public:
 	float _kp = 1500.0;
 	float _ki = 1555;
 	float _kd = 200;
-	
 
 	//// ----- メンバ関数 ------ ////
 	void update(float delta_time, GmCamera* _camera);

@@ -9,13 +9,12 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 	// ---- rob : プレイヤーの操作を受け付ける。そのための初期化実施 ---- //
 	rob->init(rob, 1, "rob_ref_coord", pos, { 0, 1, 0 }, rot);
 	rob->setAxisView(0.2, 2.0);
-	rob->getModuleDataCSV(rob, "RP_ModuleSet001.csv");
-	rob->getIKSetDataCSV(rob, "RP_ModuleIKSet001.csv");
+	rob->getModuleDataCSV(rob, "RP_ModuleSet002.csv");
+	rob->getIKSetDataCSV(rob, "RP_ModuleIKSet002.csv");
 	
 	// ---- parts取付機能実装前：こちらでパーツ生成＆アッタッチ ---- //
 	std::string normal_texture = "graphics/test.jpg";
 	
-
 	// ---- LBXX : 100 腰のメッシュ生成 ---- //
 	int const sLB = 2;
 	Parts* LB0X_J[sLB];
@@ -24,7 +23,7 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 	LB0X_J[0]->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2);
 	LB0X_J[0]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
 	LB0X_J[1] = new Parts();
-	LB0X_J[1]->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2);
+	LB0X_J[1]->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2.5);
 	LB0X_J[1]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
 	LB0X_J[1]->ofs_pos_ += {0, -1, 0};
 	LB0X_J[1]->ofs_rot_ = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(90));
@@ -66,7 +65,6 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 	for (int i = 0; i < sBD; i++) {
 		rob->attachPartsTree(sBDid, "", BD0X_J[i]);
 	}
-
 	
 	// ---- RArmXX: 300 右腕のメッシュ生成 ---- //
 	int const sRA = 3;
@@ -77,11 +75,11 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 	for (int i = 0; i < sRA; i++) {
 		RA0X_J[i] = new Parts();
 		RA0X_J[i]->mesh_ = dxe::Mesh::CreateSphere(0.3);
-		RA0X_J[i]->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+		RA0X_J[i]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
 		rob->attachPartsTree(sRAid[i], "", RA0X_J[i]);
 		RA0X_A[i] = new Parts();
 		RA0X_A[i]->mesh_ = dxe::Mesh::CreateCylinder(0.2, sRAsize[i]);
-		RA0X_A[i]->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+		RA0X_A[i]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
 		RA0X_A[i]->ofs_pos_ += {0, - sRAsize[i]/2, 0};
 		rob->attachPartsTree(sRAid[i], "", RA0X_A[i]);
 	}
@@ -95,11 +93,11 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 	for (int i = 0; i < sLA; i++) {
 		LA0X_J[i] = new Parts();
 		LA0X_J[i]->mesh_ = dxe::Mesh::CreateSphere(0.3);
-		LA0X_J[i]->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+		LA0X_J[i]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
 		rob->attachPartsTree(sLAid[i], "", LA0X_J[i]);
 		LA0X_A[i] = new Parts();
 		LA0X_A[i]->mesh_ = dxe::Mesh::CreateCylinder(0.2, sLAsize[i]);
-		LA0X_A[i]->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+		LA0X_A[i]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
 		LA0X_A[i]->ofs_pos_ += {0, -sLAsize[i] / 2, 0};
 		rob->attachPartsTree(sLAid[i], "", LA0X_A[i]);
 	}
@@ -137,7 +135,54 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 	//a3->ofs_pos_ += {0, 2.5, 0};
 	//rob->attachPartsTree(4, "", a3);
 
+	// ---- RLXX: 600 右脚のメッシュ生成 ---- //
+	int const sRL = 3;
+	Parts* RL0X_J[sRL];
+	Parts* RL0X_A[sRL];
+	Parts* RLTOE;
+	int sRLid[sRL] = { 601, 602, 605 };
+	float sRLsize[sRL] = { 2.5, 2.5, 1 };
+	for (int i = 0; i < sRL; i++) {
+		RL0X_J[i] = new Parts();
+		RL0X_J[i]->mesh_ = dxe::Mesh::CreateSphere(0.4);
+		RL0X_J[i]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
+		rob->attachPartsTree(sRLid[i], "", RL0X_J[i]);
+		RL0X_A[i] = new Parts();
+		RL0X_A[i]->mesh_ = dxe::Mesh::CreateCylinder(0.3, sRLsize[i]);
+		RL0X_A[i]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
+		RL0X_A[i]->ofs_pos_ += {0, -sRLsize[i] / 2, 0};
+		rob->attachPartsTree(sRLid[i], "", RL0X_A[i]);
+	}
+	RLTOE = new Parts();
+	RLTOE->mesh_ = dxe::Mesh::CreateBox(0.5);
+	RLTOE->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
+	RLTOE->ofs_pos_ += {0, -0.75, 0.5};
+	rob->attachPartsTree(605, "", RLTOE);
 
+
+	// ---- LLXX: 700 右脚のメッシュ生成 ---- //
+	int const sLL = 3;
+	Parts* LL0X_J[sLL];
+	Parts* LL0X_A[sLL];
+	Parts* LLTOE;
+	int sLLid[sLL] = { 701, 702, 705 };
+	float sLLsize[sLL] = { 2.5, 2.5, 1 };
+	for (int i = 0; i < sLL; i++) {
+		LL0X_J[i] = new Parts();
+		LL0X_J[i]->mesh_ = dxe::Mesh::CreateSphere(0.4);
+		LL0X_J[i]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
+		rob->attachPartsTree(sLLid[i], "", LL0X_J[i]);
+		LL0X_A[i] = new Parts();
+		LL0X_A[i]->mesh_ = dxe::Mesh::CreateCylinder(0.3, sLLsize[i]);
+		LL0X_A[i]->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
+		LL0X_A[i]->ofs_pos_ += {0, -sLLsize[i] / 2, 0};
+		rob->attachPartsTree(sLLid[i], "", LL0X_A[i]);
+	}
+	LLTOE = new Parts();
+	LLTOE->mesh_ = dxe::Mesh::CreateBox(0.5);
+	LLTOE->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
+	LLTOE->ofs_pos_ += {0, -0.75, 0.5};
+	rob->attachPartsTree(705, "", LLTOE);
 
 	return rob;
 }

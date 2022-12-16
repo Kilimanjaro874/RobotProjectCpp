@@ -12,7 +12,11 @@ void Module::partsUpdate(float delta_time) {
 		pts->mesh_->rot_q_ = pts->ofs_rot_ * _rot;
 	}
 }
-
+/// <summary>
+///  ----- 部品のシェーダーを描画する ----- //
+/// 
+/// </summary>
+/// <param name="camera"></param>
 void Module::partsRender(dxe::Camera* camera) {
 	// ----- 部品のシェーダーを描画する ----- //
 
