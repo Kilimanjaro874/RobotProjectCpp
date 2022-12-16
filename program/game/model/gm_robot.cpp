@@ -101,39 +101,19 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 		LA0X_A[i]->ofs_pos_ += {0, -sLAsize[i] / 2, 0};
 		rob->attachPartsTree(sLAid[i], "", LA0X_A[i]);
 	}
-	
-	// Mod id 2
 
-
-	//Parts* j1 = new Parts();
-	//j1->mesh_ = dxe::Mesh::CreateSphere(1);
-	//j1->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	//rob->attachPartsTree(2, "", j1);
-	//Parts* a1 = new Parts();
-	//a1->mesh_ = dxe::Mesh::CreateCylinder(0.5, 5);
-	//a1->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	//a1->ofs_pos_ += {0, 2.5, 0};
-	//rob->attachPartsTree(2, "", a1);
-	//// Mod id 3
-	//Parts* j2 = new Parts();
-	//j2->mesh_ = dxe::Mesh::CreateSphere(1);
-	//j2->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	//rob->attachPartsTree(3, "", j2);
-	//Parts* a2 = new Parts();
-	//a2->mesh_ = dxe::Mesh::CreateCylinder(0.5, 5);
-	//a2->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	//a2->ofs_pos_ += {0, 2.5, 0};
-	//rob->attachPartsTree(3, "", a2);
-	//// Mod id 4
-	//Parts* j3 = new Parts();
-	//j3->mesh_ = dxe::Mesh::CreateSphere(1);
-	//j3->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	//rob->attachPartsTree(4, "", j3);
-	//Parts* a3 = new Parts();
-	//a3->mesh_ = dxe::Mesh::CreateCylinder(0.5, 5);
-	//a3->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
-	//a3->ofs_pos_ += {0, 2.5, 0};
-	//rob->attachPartsTree(4, "", a3);
+	// ---- HDXX: 500 頭のメッシュ生成 ---- //
+	Parts* Neck;
+	Parts* Head;
+	Neck = new Parts();
+	Neck->mesh_ = dxe::Mesh::CreateCylinder(0.2, 0.5);
+	Neck->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
+	Neck->ofs_pos_ += {0, 0.25, 0};
+	rob->attachPartsTree(501, "", Neck);
+	Head = new Parts();
+	Head->mesh_ = dxe::Mesh::CreateBox(0.5);
+	Head->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_texture));
+	rob->attachPartsTree(502, "", Head);
 
 	// ---- RLXX: 600 右脚のメッシュ生成 ---- //
 	int const sRL = 3;

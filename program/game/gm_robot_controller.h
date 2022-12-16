@@ -66,7 +66,6 @@ public:
 	//// ----- ƒƒ“ƒoŠÖ” ------ ////
 	void update(float delta_time, GmCamera* _camera);
 	void input(float delta_time);
-	void aimingUpdate(float delta_time, GmCamera);
 	int getAngleDir(float tolerance_deg, const tnl::Vector3& cam_dir_z, const tnl::Vector3& rob_dir_z);
 	tnl::Vector3 getAimPosition(const GmCamera* g_cam, tnl::Vector3 offset = { 0, 0, 0 });
 	void cameraWorkTPS(float delta_time, GmCamera* g_cam);
