@@ -45,6 +45,7 @@ public:
 	float _focal_length = 500;				// エイム焦点距離
 	tnl::Vector3 _aim_target_r;				// 右腕のエイム対象座標を格納
 	tnl::Vector3 _aim_target_l;				// 左腕のエイム対象座標を格納
+	tnl::Vector3 _head_target;				// 頭を向ける対象座標を格納
 	int _aim_target_r_id;					// 右腕のエイムターゲットIDを格納
 	int _aim_target_l_id;					// 左腕のエイムターゲットIDを格納
 	// ---- ロボット制御用パラメータ ---- //

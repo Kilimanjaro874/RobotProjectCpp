@@ -91,12 +91,17 @@ void RobotCont::cameraWorkTPS(float delta_time, GmCamera* g_cam) {
 
 void RobotCont::fireUpdate(float delta_time, const GmCamera* g_cam) {
 	// ---- エイム＆射撃を管理する関数 ---- //
+	// --- 両腕の処理 --- //
 	_aim_target_r = getAimPosition(g_cam);		// 右腕のエイムターゲット取得
 	_aim_target_l = getAimPosition(g_cam);		// 左腕のエイムターゲット取得
 	_robot->TranlateTree(930, "", _aim_target_r, _robot->absolute);		// 初期化処理等でIDを予め取得すべきだ
 	_robot->setEffectIKTree(930, "", false);
 	_robot->TranlateTree(940, "", _aim_target_l, _robot->absolute);
 	_robot->setEffectIKTree(940, "", false);
+	// --- 頭部の処理 --- //
+	_head_target = getAimPosition(g_cam);		// 頭のエイムターゲット取得
+	_robot->TranlateTree(951, "", _head_target, _robot->absolute);
+	_robot->setEffectIKTree(951, "", false);
 	// ---- ロボットのDK&IK, 部品DK更新 ---- //
 	_robot->directKinematicsAndIKTree(_robot, _robot->_dk_input, delta_time);
 	_robot->partsUpdateTree(_robot, delta_time);
