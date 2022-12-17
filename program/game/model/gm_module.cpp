@@ -208,7 +208,7 @@ void Module::directKinematics(const std::vector<dk_st>&dk) {
 void Module::directKinematicsAnkIK(const std::vector<dk_st>& dk, float delta_time) {
 	// ----- 運動学＆逆運動学計算を同時に実行したい場合、本関数を使用 ----- //
 	debugShowState();
-	if (_id == 930 || _id == 4) {
+	if (_id == 307 || _id == 4) {
 		printf("deb#)");
 	}
 	

@@ -1,4 +1,5 @@
 #include "gm_robot.h"
+#include "gm_weapon.h"
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -164,6 +165,25 @@ Robot* Robot::Create(const tnl::Vector3 pos, const tnl::Quaternion rot) {
 	LLTOE->ofs_pos_ += {0, -0.75, 0.5};
 	rob->attachPartsTree(705, "", LLTOE);
 
+	// ---- RWXX : 800 右手武器生成 ---- //
+	Module* r_arm = rob->getModulePointerTree(rob, 307, "RA04_EE");	// 右手武器をアタッチするモジュールポインタ取得
+	Weapon* R_RIFLE = Weapon::createWeaponMod(800, "RW_01", 1.0/15, 100, r_arm->_pos, r_arm->_rot_axis, r_arm->_rot, r_arm->_dir_z, r_arm->_dir_x);
+	R_RIFLE->setAxisView(0.5, 1);
+	rob->attachModuleTree(r_arm->_id, r_arm->_name, R_RIFLE);
+	// ---- LWXX : 850 左手武器生成 ----- //
+	Module* l_arm = rob->getModulePointerTree(rob, 407, "LA04_EE");	// 右手武器をアタッチするモジュールポインタ取得
+	Weapon* L_RIFLE = Weapon::createWeaponMod(850, "LW_01", 1.0/15, 100, l_arm->_pos, l_arm->_rot_axis, l_arm->_rot, l_arm->_dir_z, l_arm->_dir_x);
+	L_RIFLE->setAxisView(0.5, 1);
+	rob->attachModuleTree(l_arm->_id, l_arm->_name, L_RIFLE);
+
+	//Module* mod = Module::createModule(id, name, pos, rot_axis, rot, dirz, dirx);	// モジュール生成
+	//if (str[i][16] == "on") {
+	//	// 座標系を表示するか
+	//	float size = stof(str[i][17]);
+	//	float length = stof(str[i][18]);
+	//	mod->setAxisView(size, length);
+	//}
+	//rob->attachModuleTree(attachi_id, "", mod);			// アタッチ
 	return rob;
 }
 

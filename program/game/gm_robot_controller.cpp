@@ -1,4 +1,5 @@
 #include "gm_robot_controller.h"
+#include "../game/model/gm_weapon.h"
 
 void RobotCont::update(float delta_time, GmCamera* camera) {
 	// ----- プレイヤー操作の影響をロボットクラスに与える ----- //
@@ -53,6 +54,13 @@ void RobotCont::input(float delta_time) {
 	_mouse_input_st.x_delta_move = _mouse_input_st.x_delta_move - DXE_WINDOW_WIDTH / 2;
 	_mouse_input_st.y_delta_move = _mouse_input_st.y_delta_move - DXE_WINDOW_HEIGHT / 2;
 	SetMousePoint(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2);		// TPSでマウス位置を画面中央に固定
+	// 火器管制
+	_is_weapon_l_fire = false;	// リセット
+	_is_weapon_r_fire = false;
+	if (tnl::Input::IsMouseDown(tnl::Input::eMouse::LEFT)) { _is_weapon_l_fire = true; }
+	if (tnl::Input::IsMouseDown(tnl::Input::eMouse::RIGHT)) {
+		_is_weapon_r_fire = true; 
+	}
 }
 
 int RobotCont::getAngleDir(float tolerance_deg, const tnl::Vector3& cam_dir_z, const tnl::Vector3& rob_dir_z) {
@@ -98,6 +106,11 @@ void RobotCont::fireUpdate(float delta_time, const GmCamera* g_cam) {
 	_robot->setEffectIKTree(930, "", false);
 	_robot->TranlateTree(940, "", _aim_target_l, _robot->absolute);
 	_robot->setEffectIKTree(940, "", false);
+	// --- 射撃の処理 --- //
+	Weapon* r_weapon = static_cast<Weapon*>(_robot->getModulePointerTree(_robot, 800, ""));
+	r_weapon->genBullet(delta_time, _is_weapon_r_fire);
+	Weapon* l_weapon = static_cast<Weapon*>(_robot->getModulePointerTree(_robot, 850, ""));
+	l_weapon->genBullet(delta_time, _is_weapon_l_fire);
 	// --- 頭部の処理 --- //
 	_head_target = getAimPosition(g_cam);		// 頭のエイムターゲット取得
 	_robot->TranlateTree(951, "", _head_target, _robot->absolute);

@@ -37,6 +37,8 @@ public:
 		int x_delta_move;
 		int y_delta_move;
 	} _mouse_input_st;
+	bool _is_weapon_r_fire = false;			// 右武器トリガー
+	bool _is_weapon_l_fire = false;			// 左武器トリガー
 	float _camera_rot_coefficient = 0.2f;	// カメラ動作マウス感度
 	// ---- カメラ設定 ---- //
 	float _camera_distance = 20;			// ロボットとカメラの距離指定
