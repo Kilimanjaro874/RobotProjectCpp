@@ -47,5 +47,5 @@ public:
 		tnl::Quaternion rot = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0),
 		tnl::Vector3 dir_z = { 0, 0, 1 }, tnl::Vector3 dir_x = { 1, 0, 0 });
 	void init_bulletParts();
-	void genBullet(float delta_time, bool fire_trigger);
+	bool genBullet(float delta_time, bool fire_trigger);
 };

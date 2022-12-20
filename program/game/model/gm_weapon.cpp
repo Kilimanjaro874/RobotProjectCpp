@@ -56,16 +56,17 @@ Weapon* Weapon::createWeaponMod(int id, std::string name,
 /// </summary>
 /// <param name="delta_time"></param>
 /// <param name="fire_trigger"></param>
-void Weapon::genBullet(float delta_time, bool fire_trigger) {
+bool Weapon::genBullet(float delta_time, bool fire_trigger) {
 	_reload_count = _reload_count + delta_time;
 	if (_reload_count >= _reload_time) { _reload_count = _reload_time; }
-	if (_reload_count < _reload_time) { return; }
-	if (!fire_trigger) { return; }
+	if (_reload_count < _reload_time) { return false; }
+	if (!fire_trigger) { return false; }
 	_reload_count = 0;
 	// ---- ’e‚Ì¶¬ˆ— ---- //
 	if (_bullet_type == normal) {
 		dxe::Mesh* bullet = _bulletParts[normal]->createClone();			// V‚½‚È’eŠÛƒƒbƒVƒ…‚ğ¶¬
-		_bullets.push_back(new Bullet(_dir_z_tmp, _pos, 10, 100, bullet));	// V‚½‚È’eŠÛƒNƒ‰ƒX‚ğ“o˜^
+		_bullets.push_back(new Bullet(_dir_z_tmp, _pos, 10, 2000, bullet));	// V‚½‚È’eŠÛƒNƒ‰ƒX‚ğ“o˜^
 	}
+	return true;
 }
 

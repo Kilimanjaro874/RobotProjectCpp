@@ -212,7 +212,13 @@ void Robot::move(float delta_time, const tnl::Vector3& pow,  const tnl::Quaterni
 		return;
 	}
 	acc_ = pow / mass;
-	vel_ += acc_ * delta_time;
+	DrawStringEx(50, 120, -1, "acc x=%f, y=%f z=%f", acc_.x, acc_.y, acc_.z);
+	vel_ += acc_ * delta_time + gravity * delta_time;
+	
+	// ---- 当たり判定や着地処理 ---- //
+	// 1. 着地処理 
+	if (_pos.y <= 0) { _pos.y = 0; }
+
 	_dk_input[0]._dir = _pos + vel_;
 	_dk_input[0]._length = 1;
 	_dk_input[0]._rot_sum = rot_move;
@@ -269,13 +275,7 @@ void Robot::getModuleDataCSV(Robot* rob, std::string csv_path) {
 void Robot::getPartsDataCSV(Robot* rob, std::string csv_path) {
 	// ---- パーツの構築情報をCSVから取得 ---- //
 
-
 	// やり方が分からない.. 保留;
-
-
-
-
-
 	// --- 今度はこれをアッタッチしたい --- 
 	//Parts* box_s = new Parts();
 	//box_s->mesh_ = dxe::Mesh::CreateBox(3);

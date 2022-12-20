@@ -10,7 +10,7 @@ void RobotCont::update(float delta_time, GmCamera* camera) {
 	input(delta_time);
 	// ---- TPSカメラワーク ---- //
 	cameraWorkTPS(delta_time, camera);
-	// ---- ロボット水平移動 ---- //
+	// ---- ロボット水平・垂直移動 ---- //
 	robMoveCont(delta_time);	
 	//d_move += _robot->_dir_z_tmp * delta_time * _move.z * _move_speed;
 	//d_move += _robot->_dir_x_tmp * delta_time * _move.x * _move_speed;
@@ -19,7 +19,10 @@ void RobotCont::update(float delta_time, GmCamera* camera) {
 	int angle_dir = getAngleDir(1.0, cam_dir, _robot->_dir_z_tmp);		// ロボットの回転方向決定(0 or 1 or -1)
 	rot_move = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, angle_dir * _rot_speed * delta_time);
 	// ---- ロボットの座標変換のためのパラメータ(水平移動、回転移動)を格納 ---- //
-	_robot->move(delta_time, _pow, rot_move, { 0, 0, 0 });
+	_robot->move(delta_time, _pow, rot_move, { 0, -9.8, 0 });
+	// ---- 足裏接地座標を取得 ---- //
+
+
 	/*if (_robot->_dk_input.size() == 0) {
 		printf("プレイヤー操作受付のための_dk_inputを初期化して下さい");
 		return;
@@ -46,7 +49,7 @@ void RobotCont::input(float delta_time) {
 	else { _move.x = 0; }
 	// 上
 	if (tnl::Input::IsKeyDown(eKeys::KB_SPACE)) { _move.y = 1; }
-	else { _move.y = 0; }
+	else { _move.y = -0.1; }
 	// 処理：前後左右入力値Vectorの大きさが1以上：　正規化
 	if (_move.length() > 1.0) { _move.normalize(); }
 	// マウス : カーソル位置を画面中央に固定、1フレーム間のマウス移動量を_mouse_input_stに格納
@@ -56,7 +59,7 @@ void RobotCont::input(float delta_time) {
 	SetMousePoint(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2);		// TPSでマウス位置を画面中央に固定
 	// 火器管制
 	_is_weapon_l_fire = false;	// リセット
-	_is_weapon_r_fire = false;
+	_is_weapon_r_fire = false;	
 	if (tnl::Input::IsMouseDown(tnl::Input::eMouse::LEFT)) { _is_weapon_l_fire = true; }
 	if (tnl::Input::IsMouseDown(tnl::Input::eMouse::RIGHT)) {
 		_is_weapon_r_fire = true; 
@@ -86,7 +89,7 @@ tnl::Vector3 RobotCont::getAimPosition(const GmCamera* g_cam, tnl::Vector3 offse
 
 void RobotCont::cameraWorkTPS(float delta_time, GmCamera* g_cam) {
 	// ---- マウス移動量に応じてカメラの向き変更 ---- //
-	g_cam->target_ = tnl::Vector3{ _robot->_pos.x, this->_camera_height, _robot->_pos.z };
+	g_cam->target_ = tnl::Vector3{ _robot->_pos.x, this->_camera_height + _robot->_pos.y, _robot->_pos.z };
 	g_cam->_target_distance = this->_camera_distance;
 	DrawStringEx(50, 200, -1, "%2.5f, %2.5f, %2.5f", _robot->_pos.x, _robot->_pos.y, _robot->_pos.z);
 	g_cam->_free_look_angle_xy += tnl::Vector3{
@@ -94,7 +97,7 @@ void RobotCont::cameraWorkTPS(float delta_time, GmCamera* g_cam) {
 		(float)_mouse_input_st.x_delta_move,
 		0
 	} *delta_time * _camera_rot_coefficient;
-
+	//g_cam->pos_.y += _robot->_pos.y + _camera_height;
 }
 
 void RobotCont::fireUpdate(float delta_time, const GmCamera* g_cam) {
@@ -107,10 +110,22 @@ void RobotCont::fireUpdate(float delta_time, const GmCamera* g_cam) {
 	_robot->TranlateTree(940, "", _aim_target_l, _robot->absolute);
 	_robot->setEffectIKTree(940, "", false);
 	// --- 射撃の処理 --- //
-	Weapon* r_weapon = static_cast<Weapon*>(_robot->getModulePointerTree(_robot, 800, ""));
-	r_weapon->genBullet(delta_time, _is_weapon_r_fire);
-	Weapon* l_weapon = static_cast<Weapon*>(_robot->getModulePointerTree(_robot, 850, ""));
-	l_weapon->genBullet(delta_time, _is_weapon_l_fire);
+	if (_r_weapon == nullptr) {
+		_r_weapon = dynamic_cast<Weapon*>(_robot->getModulePointerTree(_robot, 800, ""));	// ダウンキャストでWeaaponクラス取得
+	}
+	if (_l_weapon == nullptr) {
+		_l_weapon = dynamic_cast<Weapon*>(_robot->getModulePointerTree(_robot, 850, ""));
+	}
+
+	if (_r_weapon->genBullet(delta_time, _is_weapon_r_fire)) {
+		// 右武器の射撃に成功した時の処理
+		_sound_mgr->playSound(_sound_mgr->se, 1, "", _sound_mgr->one_shot);
+	}
+
+	if (_l_weapon->genBullet(delta_time, _is_weapon_l_fire)) {
+		// 左武器の射撃に成功した時の処理
+		_sound_mgr->playSound(_sound_mgr->se, 2, "", _sound_mgr->one_shot);
+	}
 	// --- 頭部の処理 --- //
 	_head_target = getAimPosition(g_cam);		// 頭のエイムターゲット取得
 	_robot->TranlateTree(951, "", _head_target, _robot->absolute);
@@ -118,6 +133,8 @@ void RobotCont::fireUpdate(float delta_time, const GmCamera* g_cam) {
 	// ---- ロボットのDK&IK, 部品DK更新 ---- //
 	_robot->directKinematicsAndIKTree(_robot, _robot->_dk_input, delta_time);
 	_robot->partsUpdateTree(_robot, delta_time);
+	// ---- 当たり判定処理系のパラメータ更新 ----- //
+	
 }
 
 void RobotCont::robMoveCont(float delta_time) {

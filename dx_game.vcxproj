@@ -34,6 +34,7 @@
     <ClCompile Include="program\dxlib_ext\dxlib_ext_mesh.cpp" />
     <ClCompile Include="program\dxlib_ext\dxlib_ext_texture.cpp" />
     <ClCompile Include="program\dxlib_ext\OBJLoader.cpp" />
+    <ClCompile Include="program\game\gm_bgm_se_manager.cpp" />
     <ClCompile Include="program\game\gm_camera.cpp" />
     <ClCompile Include="program\game\gm_input_manager.cpp" />
     <ClCompile Include="program\game\gm_main.cpp" />
@@ -68,6 +69,7 @@
     <ClInclude Include="program\dxlib_ext\dxlib_ext_mesh.h" />
     <ClInclude Include="program\dxlib_ext\dxlib_ext_texture.h" />
     <ClInclude Include="program\dxlib_ext\OBJLoader.h" />
+    <ClInclude Include="program\game\gm_bgm_se_manager.h" />
     <ClInclude Include="program\game\gm_camera.h" />
     <ClInclude Include="program\game\gm_input_manager.h" />
     <ClInclude Include="program\game\gm_main.h" />
