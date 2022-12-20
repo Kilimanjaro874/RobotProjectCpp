@@ -14,13 +14,15 @@ public:
 
 	class Bullet {
 	public:
-		Bullet(tnl::Vector3 dir, tnl::Vector3 pos, float bs, float rd, dxe::Mesh* ms) {
+		Bullet(tnl::Vector3 dir, tnl::Vector3 pos, float bs, float rd, float size, float damage, dxe::Mesh* ms) {
 			_dir = dir;
 			_pos = pos;
 			_init_pos = pos;
 			_bullet_speed = bs;
 			_range_distance = rd;
+			_circle_size = size;
 			_bullet = ms;
+			
 		};
 		~Bullet() {
 			delete _bullet;
@@ -30,6 +32,8 @@ public:
 		tnl::Vector3 _init_pos;
 		float _bullet_speed;
 		float _range_distance;
+		float _damage;
+		float _circle_size;
 		bool _is_hit = false;
 		dxe::Mesh* _bullet = nullptr;
 	};
@@ -42,7 +46,7 @@ public:
 	void partsUpdate(float delta_time) override;
 	void partsRender(dxe::Camera* camera) override;
 	static Weapon* createWeaponMod(int id, std::string name, 
-		float reload_time, int bullet_num,
+		float reload_time, int bullet_num, enum bullet_type,
 		tnl::Vector3 pos, tnl::Vector3 rot_axis,
 		tnl::Quaternion rot = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0),
 		tnl::Vector3 dir_z = { 0, 0, 1 }, tnl::Vector3 dir_x = { 1, 0, 0 });

@@ -11,6 +11,7 @@ ScenePlay::~ScenePlay() {
 	delete _controller;
 	delete _background;
 	delete _aim_pos;
+	delete _hit_manager;
 	for( auto tar : _target_obj_v) { delete tar; }
 }
 
@@ -18,14 +19,19 @@ ScenePlay::~ScenePlay() {
 void ScenePlay::initialzie() {
 	// ----- DxLib設定 ----- //
 	GameManager* mgr = GameManager::GetInstance();
-
+	_hit_manager = new HitManager();
 	SetMouseDispFlag(false);			// マウス表示を消去
 	SetMousePoint(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2);		// TPSでマウス位置を画面中央に固定
 	// ----- ステージ生成 ----- //
 	_floor_obj_li.resize(1);
-	_floor_obj_li[0]= dxe::Mesh::CreatePlane({ 1000, 1000, 0 });
+	_floor_obj_li[0]= dxe::Mesh::CreatePlane({ 1500, 1500, 0 });
 	_floor_obj_li[0]->setTexture(dxe::Texture::CreateFromFile("graphics/gray.bmp"));
 	_floor_obj_li[0]->rot_q_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(90));
+	_floor_obj_li[0]->pos_ += {0, -1, 0};
+	// 背景
+	_background = new Parts();
+	_background->mesh_ = dxe::Mesh::CreateSphere(700);
+	_background->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue2.bmp"));
 																	
 	// ----- 自作クラス設定 ----- //
 	_camera = new GmCamera();
@@ -39,10 +45,6 @@ void ScenePlay::initialzie() {
 	_robo = Robot::Create({ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
 	_robo->partsUpdateTree(_robo, 0);
 	_controller = new RobotCont(_robo, mgr->_soundMgr);
-	// 背景
-	_background = new Parts();
-	_background->mesh_ = dxe::Mesh::CreateSphere(500);
-	_background->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue2.bmp"));
 	// Target 
 	_aim_pos = new Parts();
 	_aim_pos->mesh_ = dxe::Mesh::CreateSphere(25);
@@ -54,11 +56,13 @@ void ScenePlay::initialzie() {
 	// TargetObjects
 	std::vector<tnl::Vector3> points1;
 	points1.push_back({ 0, 10, 0 });
-	points1.push_back({ 100, 10, 0 });
+	points1.push_back({ 10, 10, 0 });
 	_target_obj_v.resize(1);
 	_target_obj_v[0] = ShotTarget::init(points1, 2.0);
 	
 
+	// sight
+	_sight_UI_gh = LoadGraph("graphics/sight.png");
 }
 
 void ScenePlay::update(float delta_time)
@@ -78,10 +82,17 @@ void ScenePlay::update(float delta_time)
 	// Test
 	//
 	_controller->update(delta_time, _camera);
+	// 右武器の当たり判定
+	_hit_manager->CheckBulletTargetHit(_controller->_r_weapon->_bullets, _target_obj_v, mgr->_soundMgr);
+	// 左武器の当たり判定
+	_hit_manager->CheckBulletTargetHit(_controller->_l_weapon->_bullets, _target_obj_v, mgr->_soundMgr);
+
 
 	_target_obj_v[0]->partsUpdate(delta_time);
 	_target_obj_v[0]->move(delta_time);
 	
+	
+	// sightDXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT
 	
 	
 }
@@ -89,7 +100,7 @@ void ScenePlay::update(float delta_time)
 void ScenePlay::render()
 {
 	_camera->update();
-	DrawGridGround(_camera, 1, 200);
+	
 	//------------------------------------------------------------------
 	//
 	// Test
@@ -102,4 +113,6 @@ void ScenePlay::render()
 	}
 
 	_target_obj_v[0]->partsRender(_camera);
+	DrawGridGround(_camera, 5, 300);
+	DrawRotaGraph(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2, 0.01, 0, _sight_UI_gh, true, false);
 }

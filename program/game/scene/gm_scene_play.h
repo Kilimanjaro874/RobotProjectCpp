@@ -3,6 +3,7 @@
 #include "../model/gm_robot.h"
 #include "../gm_robot_controller.h"
 #include "../model/gm_shot_taget.h"
+#include "../gm_hit_manager.h"
 
 class GmCamera;
 
@@ -16,6 +17,7 @@ public:
 	RobotCont* _controller = nullptr;
 	Parts* _background = nullptr;
 	Parts* _aim_pos = nullptr;
+	HitManager* _hit_manager;
 
 	// --- Map object --- //
 	std::vector<Parts*> _field_obj_li;	// 
@@ -24,20 +26,12 @@ public:
 	// --- ShotTargetObject --- //
 	std::vector<ShotTarget*> _target_obj_v;
 
+	// --- UI --- //
+	int _sight_UI_gh;						// ロボットのサイト表示
+
 	//// ----- メンバ関数 ----- ////
 	void initialzie() override;
 	void update(float delta_time) override;
 	void render() override;
-
-	// --- objects --- //
-	/*struct Target {
-		tnl::Vector3 _pos;
-		tnl::Vector3 _rot_axis;
-		float _angle;
-		tnl::Quaternion _rot;
-	};
-
-	Target _targets[10];*/
-
 };
 

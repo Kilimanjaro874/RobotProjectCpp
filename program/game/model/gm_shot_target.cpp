@@ -6,17 +6,33 @@ ShotTarget* ShotTarget::init(std::vector<tnl::Vector3> points, float move_time) 
 	Parts* target = new Parts();
 	target->mesh_ = dxe::Mesh::CreateSphere(st->_circle_size);
 	target->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/red.bmp"));
+	Parts* target_damaged = new Parts();
+	target_damaged->mesh_ = dxe::Mesh::CreateSphere(st->_circle_size);
+	target_damaged->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/black.bmp"));
+
 	
 	st->_parts.push_back(target);
+	st->_parts.push_back(target_damaged);
 	st->_move_points = points;
 	st->_move_time = move_time;
 
 	return st;
 }
 
+void ShotTarget::partsRender(dxe::Camera* camera) {
+	if (!_is_render) { return; }
+	if (!_is_hit) {
+		_parts[0]->mesh_->render(camera);
+	}
+	else {
+		_parts[1]->mesh_->render(camera);
+	}
+}
+
 void ShotTarget::move(float delta_time) {
 	
 	// 
+
 	tnl::Vector3 Ps = _move_points[_move_point_num];
 	tnl::Vector3 Pe;
 	if (_move_point_num >= _move_points.size() - 1) {
@@ -45,7 +61,21 @@ void ShotTarget::move(float delta_time) {
 		if (_move_point_num >= _move_points.size()) {
 			_move_point_num = 0;
 		}
-
 	}
+	// ヒットフラグリセット
+	if (_is_hit) {
+		_hit_count += delta_time;
+		if (_hit_count > _hit_time) {
+			_is_hit = false; 
+			_hit_count = 0;
+		}
+	}
+}
+
+void ShotTarget::hit(float damage) {
+	_hp -= damage;
+	_is_hit = true;
+	if (_hp > 0) { return; }
+	_hp = 0;
 	
 }

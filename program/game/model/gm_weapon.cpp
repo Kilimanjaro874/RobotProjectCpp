@@ -3,8 +3,11 @@
 void Weapon::init_bulletParts() {
 	_bulletParts.resize(end);
 	// ---- normal Bullet ---- //
-	_bulletParts[normal] = dxe::Mesh::CreateSphere(0.2);
+	_bulletParts[normal] = dxe::Mesh::CreateSphere(0.4);
 	_bulletParts[normal]->setTexture(dxe::Texture::CreateFromFile("graphics/red.bmp"));
+	_bulletParts[rifle] = dxe::Mesh::CreateSphere(0.5);
+	_bulletParts[rifle]->setTexture(dxe::Texture::CreateFromFile("graphics/blue.bmp"));
+
 }
 
 void Weapon::partsUpdate(float delta_time) {
@@ -14,7 +17,7 @@ void Weapon::partsUpdate(float delta_time) {
 		_bullets[i]->_pos += _bullets[i]->_dir * _bullets[i]->_bullet_speed;
 		_bullets[i]->_bullet->pos_ = _bullets[i]->_pos;
 		tnl::Vector3 norm = _bullets[i]->_pos - _bullets[i]->_init_pos;
-		if (norm.length() > _bullets[i]->_range_distance) {
+		if (norm.length() > _bullets[i]->_range_distance || _bullets[i]->_is_hit) {
 			delete _bullets[i];
 			_bullets.erase(std::cbegin(_bullets) + i);
 		}
@@ -30,7 +33,7 @@ void Weapon::partsRender(dxe::Camera* camera) {
 }
 
 Weapon* Weapon::createWeaponMod(int id, std::string name,
-	float reload_time, int bullet_num,
+	float reload_time, int bullet_num, enum bullet_type bt,
 	tnl::Vector3 pos, tnl::Vector3 rot_axis,
 	tnl::Quaternion rot, tnl::Vector3 dir_z, tnl::Vector3 dir_x) {
 	// ----- 武器モジュールを生成する ----- //
@@ -39,6 +42,7 @@ Weapon* Weapon::createWeaponMod(int id, std::string name,
 	wea->_name = name;
 	wea->_reload_time = reload_time;
 	wea->_bullet_num = bullet_num;
+	wea->_bullet_type = bt;
 	wea->_pos = pos;
 	wea->_rot_axis = rot_axis;
 	wea->_rot = rot;
@@ -65,8 +69,12 @@ bool Weapon::genBullet(float delta_time, bool fire_trigger) {
 	// ---- 弾の生成処理 ---- //
 	if (_bullet_type == normal) {
 		dxe::Mesh* bullet = _bulletParts[normal]->createClone();			// 新たな弾丸メッシュを生成
-		_bullets.push_back(new Bullet(_dir_z_tmp, _pos, 10, 2000, bullet));	// 新たな弾丸クラスを登録
+		_bullets.push_back(new Bullet(_dir_z_tmp, _pos, 8, 600, 0.4, 5, bullet));	// 新たな弾丸クラスを登録
 	}
+	if (_bullet_type == rifle) {
+		dxe::Mesh* bullet = _bulletParts[rifle]->createClone();			// 新たな弾丸メッシュを生成
+		_bullets.push_back(new Bullet(_dir_z_tmp, _pos, 12, 1200, 0.5, 50, bullet));	// 新たな弾丸クラスを登録
+	}
+	
 	return true;
 }
-
