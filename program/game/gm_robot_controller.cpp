@@ -119,12 +119,12 @@ void RobotCont::fireUpdate(float delta_time, const GmCamera* g_cam) {
 
 	if (_r_weapon->genBullet(delta_time, _is_weapon_r_fire)) {
 		// 右武器の射撃に成功した時の処理
-		_sound_mgr->playSound(_sound_mgr->se, 1, "", _sound_mgr->one_shot);
+		_sound_mgr->playSound(_sound_mgr->se, 1, "", _sound_mgr->one_shot);	// SEの再生
 	}
 
 	if (_l_weapon->genBullet(delta_time, _is_weapon_l_fire)) {
 		// 左武器の射撃に成功した時の処理
-		_sound_mgr->playSound(_sound_mgr->se, 2, "", _sound_mgr->one_shot);
+		_sound_mgr->playSound(_sound_mgr->se, 2, "", _sound_mgr->one_shot);	// SEの再生
 	}
 	// --- 頭部の処理 --- //
 	_head_target = getAimPosition(g_cam);		// 頭のエイムターゲット取得
@@ -140,7 +140,7 @@ void RobotCont::fireUpdate(float delta_time, const GmCamera* g_cam) {
 void RobotCont::robMoveCont(float delta_time) {
 	// ---- ロボット水平＆垂直速度制御の入力値：_acc_inを決定する ---- //
 	if (delta_time == 0) { return; }	// ポーズ中等は実施無し
-	// 上方リセット
+	// 速度目標値リセット
 	_vel_ref = { 0, 0, 0 };
 	// 水平方向
 	_vel_ref += _robot->_dir_z_tmp * _move.z * _horizontal_speed_lim;

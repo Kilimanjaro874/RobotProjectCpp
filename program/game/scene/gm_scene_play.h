@@ -2,6 +2,7 @@
 #include "../model/gm_module.h"
 #include "../model/gm_robot.h"
 #include "../gm_robot_controller.h"
+#include "../model/gm_shot_taget.h"
 
 class GmCamera;
 
@@ -19,6 +20,9 @@ public:
 	// --- Map object --- //
 	std::vector<Parts*> _field_obj_li;	// 
 	std::vector<dxe::Mesh*> _floor_obj_li;	//	°ƒƒbƒVƒ…æ“¾
+
+	// --- ShotTargetObject --- //
+	std::vector<ShotTarget*> _target_obj_v;
 
 	//// ----- ƒƒ“ƒoŠÖ” ----- ////
 	void initialzie() override;

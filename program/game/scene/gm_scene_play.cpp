@@ -11,6 +11,7 @@ ScenePlay::~ScenePlay() {
 	delete _controller;
 	delete _background;
 	delete _aim_pos;
+	for( auto tar : _target_obj_v) { delete tar; }
 }
 
 
@@ -50,6 +51,14 @@ void ScenePlay::initialzie() {
 	// BGM
 	mgr->_soundMgr->playSound(mgr->_soundMgr->bgm, 2, "", mgr->_soundMgr->loop);
 
+	// TargetObjects
+	std::vector<tnl::Vector3> points1;
+	points1.push_back({ 0, 10, 0 });
+	points1.push_back({ 100, 10, 0 });
+	_target_obj_v.resize(1);
+	_target_obj_v[0] = ShotTarget::init(points1, 2.0);
+	
+
 }
 
 void ScenePlay::update(float delta_time)
@@ -69,6 +78,9 @@ void ScenePlay::update(float delta_time)
 	// Test
 	//
 	_controller->update(delta_time, _camera);
+
+	_target_obj_v[0]->partsUpdate(delta_time);
+	_target_obj_v[0]->move(delta_time);
 	
 	
 	
@@ -89,4 +101,5 @@ void ScenePlay::render()
 		floor->render(_camera);
 	}
 
+	_target_obj_v[0]->partsRender(_camera);
 }

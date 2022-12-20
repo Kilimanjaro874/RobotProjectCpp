@@ -135,7 +135,7 @@ void BGM_SE_Mgr::setSoundsSEInit(std::string se_path) {
 	int i = 0;
 	int j = 0;
 
-	// 1. BGMのCSVデータを開く 
+	// 1. SEのCSVデータを開く 
 	std::ifstream ifs1(se_path);
 	if (!ifs1) {
 		printf("error! File can't opened");

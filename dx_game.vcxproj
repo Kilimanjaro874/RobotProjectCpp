@@ -46,10 +46,12 @@
     <ClCompile Include="program\game\model\gm_module.cpp" />
     <ClCompile Include="program\game\model\gm_parts.cpp" />
     <ClCompile Include="program\game\model\gm_robot.cpp" />
+    <ClCompile Include="program\game\model\gm_shot_target.cpp" />
     <ClCompile Include="program\game\model\gm_weapon.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_play.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_result.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_title.cpp" />
+    <ClCompile Include="program\game\gm_hit_manager.cpp" />
     <ClCompile Include="program\library\tnl_font_texture.cpp" />
     <ClCompile Include="program\library\tnl_input.cpp" />
     <ClCompile Include="program\library\tnl_intersect.cpp" />
@@ -71,6 +73,7 @@
     <ClInclude Include="program\dxlib_ext\OBJLoader.h" />
     <ClInclude Include="program\game\gm_bgm_se_manager.h" />
     <ClInclude Include="program\game\gm_camera.h" />
+    <ClInclude Include="program\game\gm_hit_manager.h" />
     <ClInclude Include="program\game\gm_input_manager.h" />
     <ClInclude Include="program\game\gm_main.h" />
     <ClInclude Include="program\game\gm_manager.h" />
@@ -81,6 +84,7 @@
     <ClInclude Include="program\game\model\gm_module.h" />
     <ClInclude Include="program\game\model\gm_parts.h" />
     <ClInclude Include="program\game\model\gm_robot.h" />
+    <ClInclude Include="program\game\model\gm_shot_taget.h" />
     <ClInclude Include="program\game\model\gm_weapon.h" />
     <ClInclude Include="program\game\scene\gm_scene_base.h" />
     <ClInclude Include="program\game\scene\gm_scene_play.h" />
