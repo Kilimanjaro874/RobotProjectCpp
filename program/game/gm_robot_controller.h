@@ -69,7 +69,7 @@ public:
 	tnl::Vector3 _vel_error_integral;	// 速度誤差積算値
 
 	float _mass = 500;							// ロボット質量(kg)
-	float _horizontal_speed_lim = 27.8/30;		// 水平速度限界(m/s)
+	float _horizontal_speed_lim = 27.8/25;		// 水平速度限界(m/s)
 	//float _vertical_speed_lim = 27.8 / 30;		// 垂直速度限界(m/s)
 	float _vertical_speed_lim = 5.0;			// 垂直上方速度限界(m/s)
 	float _kp = 1500.0;

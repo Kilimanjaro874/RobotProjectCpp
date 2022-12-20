@@ -75,7 +75,6 @@ void ShotTarget::move(float delta_time) {
 void ShotTarget::hit(float damage) {
 	_hp -= damage;
 	_is_hit = true;
-	if (_hp > 0) { return; }
-	_hp = 0;
+	if (_hp <= 0) { _hp = 0; };
 	
 }

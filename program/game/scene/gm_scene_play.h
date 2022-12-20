@@ -5,8 +5,6 @@
 #include "../model/gm_shot_taget.h"
 #include "../gm_hit_manager.h"
 
-class GmCamera;
-
 class ScenePlay : public SceneBase {
 public:
 	ScenePlay() {}
@@ -28,10 +26,15 @@ public:
 
 	// --- UI --- //
 	int _sight_UI_gh;						// ロボットのサイト表示
+	
+	// --- flag --- //
+	bool _is_clear = false;
+	float _clear_time = 0;
 
 	//// ----- メンバ関数 ----- ////
 	void initialzie() override;
 	void update(float delta_time) override;
 	void render() override;
+	void setTargets();
 };
 

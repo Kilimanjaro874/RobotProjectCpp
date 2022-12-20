@@ -49,7 +49,7 @@ void RobotCont::input(float delta_time) {
 	else { _move.x = 0; }
 	// 上
 	if (tnl::Input::IsKeyDown(eKeys::KB_SPACE)) { _move.y = 1; }
-	else { _move.y = -0.1; }
+	else { _move.y = -0.2; }
 	// 処理：前後左右入力値Vectorの大きさが1以上：　正規化
 	if (_move.length() > 1.0) { _move.normalize(); }
 	// マウス : カーソル位置を画面中央に固定、1フレーム間のマウス移動量を_mouse_input_stに格納
@@ -76,7 +76,6 @@ int RobotCont::getAngleDir(float tolerance_deg, const tnl::Vector3& cam_dir_z, c
 	tnl::Vector3 axis = { 0, 1, 0 };
 	int dir = axis.dot(cam_dir_xz.cross(rob_dir_xz));
 	float angle = tnl::Vector3::Dot(cam_dir_xz, rob_dir_xz);
-	DrawStringEx(50, 85, -1, "%f", angle);
 	if (1.0 - cos(tnl::ToRadian(90 - tolerance_deg)) < angle) { return 0; }			//許容誤差
 	return - axis.dot(cam_dir_xz.cross(rob_dir_xz)) >= 0 ? 1 : -1;
 }

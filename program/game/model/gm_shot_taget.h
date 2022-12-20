@@ -5,7 +5,7 @@ class ShotTarget : public Module{
 public:
 
 	std::vector<tnl::Vector3> _move_points;
-	float _circle_size = 8;
+	float _circle_size = 12;
 	float _move_time = 0;
 	float _move_time_count = 0;
 	int _move_point_num = 0;

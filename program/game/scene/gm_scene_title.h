@@ -8,5 +8,7 @@ public:
 	void initialzie() override;
 	void update(float delta_time) override;
 	void render() override;
+	int _title_img_hd;
+	bool _init = false;
 
 };

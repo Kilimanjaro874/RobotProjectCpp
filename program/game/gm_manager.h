@@ -54,6 +54,7 @@ public :
 	// ゲーム全体で参照したい変数はここで用意
 	//InputMgr _input_mg1;				// プレイヤーの入力情報を操作量に変換するクラス
 	BGM_SE_Mgr* _soundMgr;
+	float _clear_time = 0;
 };
 
 

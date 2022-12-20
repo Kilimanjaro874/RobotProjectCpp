@@ -20,6 +20,7 @@ public:
 			_init_pos = pos;
 			_bullet_speed = bs;
 			_range_distance = rd;
+			_damage = damage;
 			_circle_size = size;
 			_bullet = ms;
 			
