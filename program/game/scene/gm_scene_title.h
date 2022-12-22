@@ -10,5 +10,6 @@ public:
 	void render() override;
 	int _title_img_hd;
 	bool _init = false;
+	bool _stop = false;
 
 };
