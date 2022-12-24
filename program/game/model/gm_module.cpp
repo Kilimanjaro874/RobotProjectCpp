@@ -418,13 +418,13 @@ void Module::setAxisView(float size, float length) {
 	sp->mesh_ = dxe::Mesh::CreateSphere(size);
 	sp->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/gray.bmp"));
 	this->_parts.push_back(sp);
-	/*Parts* x = new Parts();
+	Parts* x = new Parts();
 	x->mesh_ = dxe::Mesh::CreateCylinder(size/2, length);
 	x->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue.bmp"));
 	x->ofs_pos_ = this->_dir_x * length / 2;
 	x->ofs_rot_ = this->_rot;
 	x->ofs_rot_ *= tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(90));
-	this->_parts.push_back(x);*/
+	this->_parts.push_back(x);
 	Parts* z = new Parts();
 	z->mesh_ = dxe::Mesh::CreateCylinder(size/2, length);
 	z->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/red.bmp"));
