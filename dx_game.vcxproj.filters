@@ -160,9 +160,6 @@
     <ClCompile Include="program\game\model\gm_model.cpp">
       <Filter>program\game\model</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_parts.cpp">
-      <Filter>program\game\model</Filter>
-    </ClCompile>
     <ClCompile Include="program\game\gm_camera.cpp">
       <Filter>program\game</Filter>
     </ClCompile>
@@ -297,9 +294,6 @@
     <ClInclude Include="program\game\model\gm_model.h">
       <Filter>program\game\model</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_parts.h">
-      <Filter>program\game\model</Filter>
-    </ClInclude>
     <ClInclude Include="program\game\gm_camera.h">
       <Filter>program\game</Filter>
     </ClInclude>
@@ -326,6 +320,9 @@
     </ClInclude>
     <ClInclude Include="program\game\gm_hit_manager.h">
       <Filter>program\game</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\model\gm_robot_define.h">
+      <Filter>program\game\model\robot</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
