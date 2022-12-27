@@ -44,6 +44,7 @@
     <ClCompile Include="program\game\model\gm_anim_sprite3d.cpp" />
     <ClCompile Include="program\game\model\gm_model.cpp" />
     <ClCompile Include="program\game\model\gm_module.cpp" />
+    <ClCompile Include="program\game\model\gm_parts.cpp" />
     <ClCompile Include="program\game\model\gm_robot.cpp" />
     <ClCompile Include="program\game\model\gm_shot_target.cpp" />
     <ClCompile Include="program\game\model\gm_weapon.cpp" />
@@ -81,6 +82,7 @@
     <ClInclude Include="program\game\model\gm_anim_sprite3d.h" />
     <ClInclude Include="program\game\model\gm_model.h" />
     <ClInclude Include="program\game\model\gm_module.h" />
+    <ClInclude Include="program\game\model\gm_parts.h" />
     <ClInclude Include="program\game\model\gm_robot.h" />
     <ClInclude Include="program\game\model\gm_robot_define.h" />
     <ClInclude Include="program\game\model\gm_shot_taget.h" />

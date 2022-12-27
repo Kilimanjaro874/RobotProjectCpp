@@ -13,30 +13,30 @@ Module::Module() {
 }
 
 /// <summary>
-/// Update render position / orientation
+/// Update render position / orientation.
 /// (according to module coordinate)
 /// <param name="delta_time">game tick time </param>
 /// </summary>
 void Module::partsUpdate(float delta_time) {
 	for (auto p : parts_) {
-		p.mesh_->pos_ = pos_ + tnl::Vector3::TransformCoord(p.ofs_pos_, rot_upd_);
-		p.mesh_->rot_q_ = p.ofs_rot_ * rot_upd_;
+		p->mesh_->pos_ = pos_ + tnl::Vector3::TransformCoord(p->ofs_pos_, rot_upd_);
+		p->mesh_->rot_q_ = p->ofs_rot_ * rot_upd_;
 	}
 }
 
 /// <summary>
-/// show the parts to the camera
+/// show the parts to the camera.
 /// </summary>
 /// <param name="camera"> game camera </param>
 void Module::partsRender(dxe::Camera* camera) {
 	for (auto p : parts_) {
-		if (!p.is_render_) { continue; }
-		p.mesh_->render(camera);
+		if (!p->is_render_) { continue; }
+		p->mesh_->render(camera);
 	}
 }
 
 /// <summary>
-/// Perform partsUpdate to all child modules (pre order)
+/// Perform partsUpdate to all child modules (pre order).
 /// </summary>
 /// <param name="mod"> module class (parent)</param>
 /// <param name="delta_time"></param>
@@ -47,7 +47,7 @@ void Module::partsUpdateTree(const Module* mod, float delta_time) {
 }
 
 /// <summary>
-/// Perform partsRender to all child modules (pre order)
+/// Perform partsRender to all child modules (pre order).
 /// </summary>
 /// <param name="mod"> module cllass (parent)</param>
 /// <param name="camera"> game camera </param>
@@ -58,7 +58,7 @@ void Module::partsRenderTree(const Module* mod, dxe::Camera* camera) {
 }
 
 /// <summary>
-/// return the pointer after creating the module
+/// Return the pointer after creating the module.
 /// </summary>
 /// <param name="id"> module id</param>
 /// <param name="name"> module name </param>
@@ -86,11 +86,11 @@ Module* Module::createModule(
 }
 
 /// <summary>
-/// attach child module and set up dk_st
+/// Attach child module and set up dk_st.
 /// </summary>
-/// <param name="parent"></param>
-/// <param name="child"></param>
-/// <param name="type"></param>
+/// <param name="parent"> module parent</param>
+/// <param name="child"> attach module</param>
+/// <param name="type"> relative / absolute attach to parent (pos) </param>
 void Module::attachModule(Module* parent, Module* child, attach_type type) {
 	// ---- attach mod. ---- //
 	parent->children_.push_back(child);
@@ -110,17 +110,82 @@ void Module::attachModule(Module* parent, Module* child, attach_type type) {
 		tnl::Quaternion::RotationAxis({0, 1, 0}, 0),
 		true
 		});
+	
 }
+
+/// <summary>
+/// Attach child module to specific parent (id or name) [recursive process].
+/// </summary>
+/// <param name="id"> parent module id </param>
+/// <param name="name"> parent module name </param>
+/// <param name="child"> attach module </param>
+/// <param name="type"> relative / absolute attach to parent (pos) </param>
+void Module::attachModuleTree(
+	const int* id,
+	const std::string* name,
+	Module* child,
+	attach_type type
+	) {
+	if (id_ == *id || name_ == *name) {
+		attachModule(this, child, type);
+		return;
+	}
+	if (children_.size() == 0) { return; }
+	for (auto c : children_) { c->attachModuleTree(id, name, child, type); }
+}
+
+/// <summary>
+/// Attach parts class to specific module (id or name) [recursive process].
+/// </summary>
+/// <param name="id"> module id </param>
+/// <param name="name"> module name </param>
+/// <param name="parts"> ref parts class </param>
+void Module::attachPartsTree(
+	const int* id,
+	const std::string* name,
+	Parts* parts
+	) {
+	if (id_ == *id || name_ == *name) {
+		setParts(parts);
+		return;
+	}
+	if (children_.size() == 0) { return; }
+	for (auto c : children_) { c->attachPartsTree(id, name, parts); }
+}
+
+/// <summary>
+/// Attach ik_st to specific module (id or name) [recursive process].
+/// </summary>
+/// <param name="ik_st"> please reffer to header file </param>
+void Module::attachIKstTree(const std::vector<ik_st>* ik_st) {
+	for (auto ik : *ik_st) {
+		if (id_ == ik.id_ || name_ == ik.name_) {
+			ik_st_init_.push_back(ik);
+		}
+	}
+	if (children_.size() == 0) { return; }
+	for (auto c : children_) { c->attachIKstTree(ik_st); }
+}
+
+
+
+Module* Module::getModuleTree(const int* id, const std::string* name, Module* mod) {
+	if (id_ == *id || name_ == *name) {
+		mod = this;
+		return mod;
+	}
+	for (auto c : children_) {
+		mod = c->getModuleTree(id, name, mod); 
+		if (mod != nullptr) { return mod; }
+		else { continue; }
+	}
+	return nullptr;
+}
+
+
 
 
 // ----- getter, setter ----- //
-
-void Module::setDK_st(dk_st dk) {
-	dk_st_init_.push_back(dk);
-}
-
-
-
 
 
 

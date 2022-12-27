@@ -5,7 +5,7 @@ class Module {
 private:
 	Module();
 	virtual ~Module() {
-		for (auto p : parts_) { delete p.mesh_; }
+		for (auto p : parts_) { delete p; }
 	}
 
 	// ----- General ----- //
@@ -15,14 +15,7 @@ private:
 	std::vector<Module*> children_;		// Store children
 
 	// ----- Render ----- //
-	struct parts_st
-	{
-		bool is_render_ = true;			// draw flag
-		tnl::Vector3 ofs_pos_;			// offset distance from module coordinate
-		tnl::Quaternion ofs_rot_;		// offset rot with module coordinate
-		dxe::Mesh* mesh_ = nullptr;		// mesh object pointer
-	};
-	std::vector<parts_st> parts_;		// render parts st.
+	std::vector<Parts*> parts_;		// render parts st.
 	bool is_render_ = true;				// render : draw flag(batch setting)
 	
 	// ----- Coordinate system ------ //
@@ -47,16 +40,15 @@ private:
 		bool is_effect_ik_ = true;		// flag to affecto IK to child
 	};
 	std::vector<dk_st> dk_st_init_;		// init value;
-	std::vector<dk_st> dk_st_up_;		// update value;
+	std::vector<dk_st> dk_st_upd_;		// update value;
 	enum attach_type {
 		absolute, relative				// Module attachment : absolute / relative ref.
 	};
-	
 	// ----- Inverse Kinematics ----- //
 	struct ik_st {
 		// ---- IK dataset definition for child Module ---- //
-		int child_id_;
-		std::string child_name_;
+		int id_;
+		std::string name_;
 		code rot_vec_;					// specity which rot axis to rotate
 		int type_ik_;
 		float kp_;						// Coefficient of IK
@@ -64,7 +56,7 @@ private:
 		Module* object_;				// IK controll object
 	};
 	std::vector<ik_st> ik_st_init_;		// init value;
-	std::vector<ik_st> ik_st_up_;		// update value;
+	std::vector<ik_st> ik_st_upd_;		// update value;
 	
 public:
 	virtual void partsUpdate(float delta_time);
@@ -79,9 +71,26 @@ public:
 		std::vector<tnl::Vector3> ob_rot_vec_v,
 		tnl::Quaternion ofs_rot = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0)	 // no-rotation q
 	);
-	void attachModule(Module* parent, Module* child, attach_type type = relative);
-	
-
+	void attachModule(Module* parent, Module* child, attach_type type = absolute);
+	void attachModuleTree(
+		const int* id,
+		const std::string* name,
+		Module* child,
+		attach_type type = absolute
+	);
+	void attachPartsTree(
+		const int* id,
+		const std::string* name,
+		Parts* parts
+	);
+	void attachIKstTree(const std::vector<ik_st>* ik_st);
+	Module* getModuleTree(
+		const int* id,
+		const std::string* name,
+		Module* mod = nullptr
+	);
 	// ----- getter, setter ----- //
-	void setDK_st(dk_st dk);
+	void setDK_st(dk_st dk) { dk_st_init_.push_back(dk); }
+	void setParts(Parts* parts) { parts_.push_back(parts); }
+
 };
