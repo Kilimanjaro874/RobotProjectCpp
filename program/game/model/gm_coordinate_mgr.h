@@ -6,8 +6,8 @@ class CoordinateMgr : Coordinate {
 public:
 	CoordinateMgr() { init(); };
 	~CoordinateMgr() {};
-	enum co_type{
-		com_normal, com_target, com_object, com_end
+	enum class co_type{
+		normal, target, object, end
 	};
 
 private:
@@ -18,5 +18,5 @@ public:
 	void update(float delta_time) override;
 	void render(dxe::Camera* camera) override;
 	void registrateOrigine(Coordinate* origine, co_type type);
-	bool registrateCoordinate(int parent_id, std::string parent_name, Coordinate* coord, co_type type, attach_type = absolute);
+	bool registrateCoordinate(int parent_id, std::string parent_name, Coordinate* coord, co_type type, attach_type = attach_type::absolute);
 };

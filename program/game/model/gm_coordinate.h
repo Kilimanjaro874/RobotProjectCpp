@@ -6,7 +6,7 @@ public:
 	Coordinate() {};
 	virtual ~Coordinate() {};
 
-	enum attach_type {
+	enum class attach_type {
 		absolute, relative
 	};
 
@@ -20,8 +20,8 @@ private:
 		int com_row;
 	};
 	tree_st_ tree_st_data_;
-	enum coordinate {
-		co_x, co_y, co_z, co_end
+	enum class coordinate {
+		x, y, z, end
 	};
 	tnl::Vector3 pos_;
 	std::vector<tnl::Vector3> 

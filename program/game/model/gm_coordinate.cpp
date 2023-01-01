@@ -20,19 +20,19 @@ void Coordinate::setCoordinate(
 	tnl::Vector3 rot_z,
 	tnl::Quaternion offset_rot
 ) {
-	oc_vec_v_.resize(co_end);
-	oc_rot_vec_v_.resize(co_end);
+	oc_vec_v_.resize(static_cast<int>(coordinate::end));
+	oc_rot_vec_v_.resize(static_cast<int>(coordinate::end));
 	id_ = id;
 	name_ = name;
 	pos_ = pos;
-	oc_vec_v_[co_x] = x;
-	oc_vec_v_[co_y] = y;
-	oc_vec_v_[co_z] = z;
+	oc_vec_v_[static_cast<int>(coordinate::x)] = x;
+	oc_vec_v_[static_cast<int>(coordinate::y)] = y;
+	oc_vec_v_[static_cast<int>(coordinate::z)] = z;
 	for (auto ocv : oc_vec_v_) { ocv.normalize(); }
 	oc_vec_upd_v_ = oc_vec_v_;
-	oc_rot_vec_v_[co_x] = rot_x;
-	oc_rot_vec_v_[co_y] = rot_y;
-	oc_rot_vec_v_[co_z] = rot_z;
+	oc_rot_vec_v_[static_cast<int>(coordinate::x)] = rot_x;
+	oc_rot_vec_v_[static_cast<int>(coordinate::y)] = rot_y;
+	oc_rot_vec_v_[static_cast<int>(coordinate::z)] = rot_z;
 	for (auto ocr : oc_rot_vec_v_) { ocr.normalize(); }
 	oc_rot_vec_upd_v_ = oc_rot_vec_v_;
 	oc_rot_ = offset_rot;
@@ -57,7 +57,7 @@ void Coordinate::directKinematics(tnl::Quaternion rot) {
 	rot_from_parent_ *= rot;
 	oc_rot_upd_ *= rot_from_parent_;
 	
-	for (int i = 0; i < co_end; i++) {
+	for (int i = 0; i < static_cast<int>(coordinate::end); i++) {
 		oc_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_vec_v_[i], oc_rot_upd_);
 		oc_rot_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_rot_vec_v_[i], oc_rot_upd_);
 	}

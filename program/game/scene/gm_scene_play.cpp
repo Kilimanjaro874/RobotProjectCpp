@@ -35,10 +35,10 @@ void ScenePlay::initialzie() {
 		mod_[i]->setParts(p);
 
 		if (i == 0) {
-			co_mgr_->registrateOrigine(mod_[i], CoordinateMgr::com_normal); 
+			co_mgr_->registrateOrigine(mod_[i], CoordinateMgr::co_type::normal); 
 		}
 		else {
-			co_mgr_->registrateCoordinate(i - 1, "", mod_[i], CoordinateMgr::com_normal);
+			co_mgr_->registrateCoordinate(i - 1, "", mod_[i], CoordinateMgr::co_type::normal);
 		}
 
 	/*	if (i > 0) {

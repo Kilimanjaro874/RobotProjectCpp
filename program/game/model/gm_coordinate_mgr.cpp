@@ -2,7 +2,7 @@
 #include <algorithm>
 
 void CoordinateMgr::init() {
-	hierarchy_v_.resize(com_end);
+	hierarchy_v_.resize(static_cast<int>(co_type::end));
 	for (int i = 0; i < hierarchy_v_.size(); i++) {
 		hierarchy_v_[i].resize(1);
 	}
@@ -31,7 +31,7 @@ void CoordinateMgr::render(dxe::Camera* camera) {
 }
 
 void CoordinateMgr::registrateOrigine(Coordinate* origine, co_type type) {
-	hierarchy_v_[type][0].push_back(origine);
+	hierarchy_v_[static_cast<int>(type)][0].push_back(origine);
 }
 
 bool CoordinateMgr::registrateCoordinate(int parent_id, std::string parent_name, Coordinate* coord, 
@@ -40,16 +40,17 @@ bool CoordinateMgr::registrateCoordinate(int parent_id, std::string parent_name,
 	int col = -1;
 	int itr_index = -1;
 	// ---- id or name search ---- //
-	for (int c = 0; c < hierarchy_v_[type].size(); c++) {
-		auto itr = std::find_if(hierarchy_v_[type][c].begin(), hierarchy_v_[type][c].end(), [&](auto& c) {
+	int type_no = static_cast<int>(type);
+	for (int c = 0; c < hierarchy_v_[type_no].size(); c++) {
+		auto itr = std::find_if(hierarchy_v_[type_no][c].begin(), hierarchy_v_[type_no][c].end(), [&](auto& c) {
 			return (c->getId() == parent_id || c->getName() == parent_name);
 			});
-		if (itr != hierarchy_v_[type][c].end()) {
+		if (itr != hierarchy_v_[type_no][c].end()) {
 			col = c;
-			int itr_index = std::distance (hierarchy_v_[type][c].begin(), itr);
-			hierarchy_v_[type][col][itr_index]->setChildAndDKInit(coord, a_type);
-			if (hierarchy_v_[type][col].size() <= (col + 1)) { hierarchy_v_[type].resize(col + 2); }
-			hierarchy_v_[type][col + 1].push_back(coord);
+			int itr_index = std::distance (hierarchy_v_[type_no][c].begin(), itr);
+			hierarchy_v_[type_no][col][itr_index]->setChildAndDKInit(coord, a_type);
+			if (hierarchy_v_[type_no][col].size() <= (col + 1)) { hierarchy_v_[type_no].resize(col + 2); }
+			hierarchy_v_[type_no][col + 1].push_back(coord);
 
 			return true;
 		}

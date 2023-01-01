@@ -1,16 +1,13 @@
 ﻿  gm_coordinate_mgr.cpp
-C:\Users\waltz\Documents\CppProjects\GitManagements\RobotProject221231\program\game\model\gm_coordinate_mgr.cpp(6,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\RobotProject221231\program\game\model\gm_coordinate_mgr.cpp(12,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\RobotProject221231\program\game\model\gm_coordinate_mgr.cpp(13,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\RobotProject221231\program\game\model\gm_coordinate_mgr.cpp(14,22): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\RobotProject221231\program\game\model\gm_coordinate_mgr.cpp(23,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\RobotProject221231\program\game\model\gm_coordinate_mgr.cpp(24,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\RobotProject221231\program\game\model\gm_coordinate_mgr.cpp(25,22): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\RobotProject221231\program\game\model\gm_coordinate_mgr.cpp(43,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\RobotProject221231\program\game\model\gm_coordinate_mgr.cpp(51,39): warning C4018: '<=': signed と unsigned の数値を比較しようとしました。
-  gm_scene_play.cpp
-C:\Users\waltz\Documents\CppProjects\GitManagements\RobotProject221231\program\game\scene\gm_scene_play.cpp(22,15): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
-C:\Users\waltz\Documents\CppProjects\GitManagements\RobotProject221231\program\game\scene\gm_scene_play.cpp(33,41): warning C4305: '引数': 'double' から 'const float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(6,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(12,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(13,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(14,22): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(23,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(24,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(25,22): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(44,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(52,42): warning C4018: '<=': signed と unsigned の数値を比較しようとしました。
   gm_scene_title.cpp
   コードを生成中...
-  dx_game.vcxproj -> C:\Users\waltz\Documents\CppProjects\GitManagements\RobotProject221231\Debug\dx_game.exe
+  dx_game.vcxproj -> C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\Debug\dx_game.exe

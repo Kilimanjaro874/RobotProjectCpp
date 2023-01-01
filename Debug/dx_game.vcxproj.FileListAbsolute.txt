@@ -1,2 +1,3 @@
 C:\Users\waltz\Documents\CppProjects\GitManagements\RobotProject221228\Debug\dx_game.exe
 C:\Users\waltz\Documents\CppProjects\GitManagements\RobotProject221231\Debug\dx_game.exe
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\Debug\dx_game.exe
