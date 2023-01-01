@@ -58,3 +58,30 @@ bool CoordinateMgr::registrateCoordinate(int parent_id, std::string parent_name,
 
 	return false;
 }
+
+void CoordinateMgr::viewCoordinateState(co_type type, view_param param) {
+	int count = 0;
+	int col = 10;
+	int row = 5;
+	int col_quantity = 20;
+	int row_quantity = 5;
+	switch (param)
+	{
+	case CoordinateMgr::view_param::pos:
+		for (int c = 0; c < hierarchy_v_[static_cast<int>(type)].size(); c++) {
+			for (int r = 0; r < hierarchy_v_[static_cast<int>(type)][c].size(); r++) {
+				Coordinate* tmp_h = hierarchy_v_[static_cast<int>(type)][c][r];
+				tnl::Vector3 tmp = tmp_h->getPos();
+				DrawStringEx(row, col, -1, "%s(id:%d) pos = (%5.2f, %5.2f, %5.2f)", tmp_h->getName().c_str(), tmp_h->getId(), tmp.x, tmp.y, tmp.z);
+				col += col_quantity;
+			}
+			row += row_quantity;
+		}
+		break;
+	case CoordinateMgr::view_param::rot_deg:
+
+		break;
+	default:
+		break;
+	}
+}

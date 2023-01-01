@@ -16,9 +16,9 @@ void ScenePlay::initialzie() {
 	camera_ = new GmCamera();
 	camera_->pos_ = { 0, 150, -300 };
 	co_mgr_ = new CoordinateMgr();
-	mod_.resize(500);
-	coord_.resize(500);
-	for (int i = 0; i < 500; i++) {
+	mod_.resize(3);
+	coord_.resize(3);
+	for (int i = 0; i < 3; i++) {
 		float delta = 50.0 * (float)i;
 		mod_[i] = new Module();
 		mod_[i]->setCoordinate(
@@ -27,10 +27,11 @@ void ScenePlay::initialzie() {
 			{ delta, 0, 0 },
 			{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
 			{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
-			tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0)
+			tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(0))
 		);
+		mod_[i]->setViewCoorinate(1, 10);
 		Parts* p = new Parts();
-		p->mesh_ = dxe::Mesh::CreateSphere(5.3);
+		p->mesh_ = dxe::Mesh::CreateSphere(1);
 		p->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
 		mod_[i]->setParts(p);
 
@@ -41,13 +42,9 @@ void ScenePlay::initialzie() {
 			co_mgr_->registrateCoordinate(i - 1, "", mod_[i], CoordinateMgr::co_type::normal);
 		}
 
-	/*	if (i > 0) {
-			mod_[i - 1]->setChildAndDKInit(mod_[i], Coordinate::absolute);
-		}
-		
-		coord_[i] = mod_[i];*/
-		printf("");
 	}
+
+
 
 }
 
@@ -102,9 +99,10 @@ void ScenePlay::render()
 	}*/
 
 	co_mgr_->render(camera_);
+	co_mgr_->viewCoordinateState(CoordinateMgr::co_type::normal, CoordinateMgr::view_param::pos);
 
-	DrawStringEx(50, 50, -1, "scene play");
+	/*DrawStringEx(50, 50, -1, "scene play");
 	DrawStringEx(50, 70, -1, "camera [ ← : A ] [ ↑ : W ] [ → : D ] [ ↓ : S ]");
 	DrawStringEx(50, 90, -1, "camera [ 遠 : Z ] [ 近 : X ] ");
-	DrawStringEx(50, 120, -1, "character [ 左 : ← ] [ 奥 : ↑ ] [ 右 : → ] [ 手前 : ↓ ] ");
+	DrawStringEx(50, 120, -1, "character [ 左 : ← ] [ 奥 : ↑ ] [ 右 : → ] [ 手前 : ↓ ] ");*/
 }

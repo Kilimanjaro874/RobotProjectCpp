@@ -3,10 +3,19 @@
 void Coordinate::init() {}
 
 void Coordinate::update(float delta_time) {
-	directKinematics(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0.005));
+	directKinematics(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0.00));
+	for (auto cod : coordinate_parts_) {
+		cod->mesh_->pos_ = getPos() + tnl::Vector3::TransformCoord(cod->ofs_pos_, getRot());
+		cod->mesh_->rot_q_ = cod->ofs_rot_ * getRot();
+	}
 }
 
-void Coordinate::render(dxe::Camera* camera) {}
+void Coordinate::render(dxe::Camera* camera) {
+	for (auto cod : coordinate_parts_) {
+		if (!cod->is_render_) { continue; }
+		cod->mesh_->render(camera);
+	}
+}
 
 void Coordinate::setCoordinate(
 	int id,
@@ -20,6 +29,7 @@ void Coordinate::setCoordinate(
 	tnl::Vector3 rot_z,
 	tnl::Quaternion offset_rot
 ) {
+
 	oc_vec_v_.resize(static_cast<int>(coordinate::end));
 	oc_rot_vec_v_.resize(static_cast<int>(coordinate::end));
 	id_ = id;
@@ -36,8 +46,12 @@ void Coordinate::setCoordinate(
 	for (auto ocr : oc_rot_vec_v_) { ocr.normalize(); }
 	oc_rot_vec_upd_v_ = oc_rot_vec_v_;
 	oc_rot_ = offset_rot;
-	oc_rot_upd_ = oc_rot_;
+	oc_rot_upd_ = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);	// set non rot
 
+	for (int i = 0; i < static_cast<int>(coordinate::end); i++) {
+		oc_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_vec_v_[i], oc_rot_);
+		oc_rot_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_rot_vec_v_[i], oc_rot_);
+	}
 }
 
 void Coordinate::setChildAndDKInit(Coordinate* child, attach_type type) {
@@ -76,10 +90,42 @@ void Coordinate::directKinematics(tnl::Quaternion rot) {
 	rot_from_parent_ = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
 }
 
+void Coordinate::setIKObjectTargetInit(Coordinate* object, Coordinate* target, ik_type type, float kp,
+	bool is_rot_axis_x, bool is_rot_axis_y, bool is_rot_axis_z ) {
+	ik_st_ tmp = { object, target, type, kp, is_rot_axis_x, is_rot_axis_y, is_rot_axis_z };
+	ik_settings_.push_back(tmp);
+}
+
+tnl::Quaternion Coordinate::inverseKinematics() {
+
+	return tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
+}
+
 // ----- setter, getter ----- //
 void Coordinate::setTreeLocateInfo(int type, int col, int row) {
 	tree_st_data_.com_type = type;
 	tree_st_data_.com_col = col;
 	tree_st_data_.com_row = row;
+}
+
+void Coordinate::setViewCoorinate(float radius, float length) {
+	Parts* x = new Parts();
+	x->mesh_ = dxe::Mesh::CreateCylinder(radius, length);
+	x->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue.bmp"));
+	x->ofs_pos_ = oc_vec_upd_v_[static_cast<int>(coordinate::x)] * length / 2;
+	x->ofs_rot_ = oc_rot_ * tnl::Quaternion::RotationAxis(oc_rot_vec_upd_v_[static_cast<int>(coordinate::z)], tnl::ToRadian(90));
+	coordinate_parts_.push_back(x);
+	Parts* y = new Parts();
+	y->mesh_ = dxe::Mesh::CreateCylinder(radius, length);
+	y->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/green.bmp"));
+	y->ofs_pos_ = oc_vec_upd_v_[static_cast<int>(coordinate::y)] * length / 2;
+	y->ofs_rot_ = oc_rot_ * tnl::Quaternion::RotationAxis(oc_rot_vec_upd_v_[static_cast<int>(coordinate::z)], tnl::ToRadian(0));
+	coordinate_parts_.push_back(y);
+	Parts* z = new Parts();
+	z->mesh_ = dxe::Mesh::CreateCylinder(radius, length);
+	z->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/red.bmp"));
+	z->ofs_pos_ = oc_vec_upd_v_[static_cast<int>(coordinate::z)] * length / 2;
+	z->ofs_rot_ = oc_rot_ * tnl::Quaternion::RotationAxis(oc_rot_vec_upd_v_[static_cast<int>(coordinate::x)], tnl::ToRadian(90));
+	coordinate_parts_.push_back(z);
 }
 

@@ -9,7 +9,9 @@ public:
 	enum class co_type{
 		normal, target, object, end
 	};
-
+	enum class view_param {
+		pos, rot_deg,  
+	};
 private:
 	std::vector<std::vector<std::vector<Coordinate*>>> hierarchy_v_;
 
@@ -19,4 +21,5 @@ public:
 	void render(dxe::Camera* camera) override;
 	void registrateOrigine(Coordinate* origine, co_type type);
 	bool registrateCoordinate(int parent_id, std::string parent_name, Coordinate* coord, co_type type, attach_type = attach_type::absolute);
+	void viewCoordinateState(co_type type, view_param param);
 };

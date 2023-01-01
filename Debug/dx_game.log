@@ -8,6 +8,6 @@ C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\progra
 C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(25,22): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
 C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(44,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
 C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(52,42): warning C4018: '<=': signed と unsigned の数値を比較しようとしました。
-  gm_scene_title.cpp
-  コードを生成中...
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(71,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(72,22): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
   dx_game.vcxproj -> C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\Debug\dx_game.exe
