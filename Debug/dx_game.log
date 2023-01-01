@@ -1,13 +1,5 @@
-﻿  gm_coordinate_mgr.cpp
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(6,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(12,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(13,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(14,22): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(23,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(24,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(25,22): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(44,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(52,42): warning C4018: '<=': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(71,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate_mgr.cpp(72,22): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+﻿  gm_coordinate.cpp
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate.cpp(130,37): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+  gm_scene_title.cpp
+  コードを生成中...
   dx_game.vcxproj -> C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\Debug\dx_game.exe

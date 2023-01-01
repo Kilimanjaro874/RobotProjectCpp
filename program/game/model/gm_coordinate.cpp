@@ -3,7 +3,7 @@
 void Coordinate::init() {}
 
 void Coordinate::update(float delta_time) {
-	directKinematics(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0.00));
+	directKinematics(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0.00), delta_time);
 	for (auto cod : coordinate_parts_) {
 		cod->mesh_->pos_ = getPos() + tnl::Vector3::TransformCoord(cod->ofs_pos_, getRot());
 		cod->mesh_->rot_q_ = cod->ofs_rot_ * getRot();
@@ -64,7 +64,7 @@ void Coordinate::setChildAndDKInit(Coordinate* child, attach_type type) {
 	children_.push_back(tmp);
 }
 
-void Coordinate::directKinematics(tnl::Quaternion rot) {
+void Coordinate::directKinematics(tnl::Quaternion rot, float delta_time, bool is_do_ik) {
 
 	// ----- Update self coordinate ----- //
 	pos_ = pos_from_parent_;
@@ -76,7 +76,10 @@ void Coordinate::directKinematics(tnl::Quaternion rot) {
 		oc_rot_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_rot_vec_v_[i], oc_rot_upd_);
 	}
 	// ----- effect of IK ----- //
-
+	if (is_do_ik) {
+		tnl::Quaternion tmp_rot = inverseKinematics(delta_time);
+		rot_from_parent_ *= tmp_rot;
+	}
 	tnl::Vector3 tmp_dir;
 	tnl::Vector3 tmp_pos;
 	for (auto c : children_) {
@@ -92,13 +95,55 @@ void Coordinate::directKinematics(tnl::Quaternion rot) {
 
 void Coordinate::setIKObjectTargetInit(Coordinate* object, Coordinate* target, ik_type type, float kp,
 	bool is_rot_axis_x, bool is_rot_axis_y, bool is_rot_axis_z ) {
-	ik_st_ tmp = { object, target, type, kp, is_rot_axis_x, is_rot_axis_y, is_rot_axis_z };
+	ik_st_ tmp;
+	tmp.object_ = object;
+	tmp.target_ = target;
+	tmp.ik_type_ = type;
+	tmp.kp_ = kp;
+	tmp.is_rot_[static_cast<int>(coordinate::x)] = is_rot_axis_x;
+	tmp.is_rot_[static_cast<int>(coordinate::y)] = is_rot_axis_y;
+	tmp.is_rot_[static_cast<int>(coordinate::z)] = is_rot_axis_z;
 	ik_settings_.push_back(tmp);
 }
 
-tnl::Quaternion Coordinate::inverseKinematics() {
+tnl::Quaternion Coordinate::inverseKinematics(float delta_time) {
+	tnl::Quaternion tmp_rot = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
+	if (ik_settings_.size() == 0) {
+		return tmp_rot;		// return non rot
+	}
+	float dth = 0;
+	tnl::Vector3 pe, pr, x, y, rot_axis;
+	for (auto ik : ik_settings_) {
+		for (int i = 0; i < static_cast<int>(coordinate::end); i++) {
+			// i : coordinate::x->y->z
+			if (!ik.is_rot_[i]) { continue; }
+			switch (ik.ik_type_)
+			{
+			case(ik_type::pos_to_pos):
+				pe = ik.object_->getPos() - pos_;
+				pr = ik.target_->getPos() - pos_;
+				break;
+			default:
 
-	return tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
+				break;
+			}
+
+			x = tnl::Vector3::Cross(pe, oc_rot_vec_upd_v_[i]);
+			y = tnl::Vector3::Cross(pr, oc_rot_vec_upd_v_[i]);
+			dth = delta_time * 60.0 * ik.kp_ * std::acosf(std::clamp(
+				x.dot(y) / x.length() / y.length(),
+				(float)-1, (float)1
+			));
+			if (!isfinite(dth)) { dth = 0; }	// avoid singularity : when object or target exist on the rotation axis.
+			if (dth > tnl::PI / 24) {			// limitter
+				dth = tnl::PI / 24;
+			}
+			tnl::Vector3 axis = x.cross(y) / x.length() / y.length();	// determine rotate direction.
+			dth *= oc_rot_vec_upd_v_[i].dot(axis) >= 0 ? 1 : -1;
+			tmp_rot *= tnl::Quaternion::RotationAxis(oc_rot_vec_upd_v_[i], dth);
+		}
+	}
+	return tmp_rot;
 }
 
 // ----- setter, getter ----- //

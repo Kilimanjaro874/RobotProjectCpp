@@ -15,7 +15,8 @@ public :
 	CoordinateMgr* co_mgr_;
 
 	std::vector<Module* > mod_;
-	std::vector<Coordinate* > coord_;
+	Coordinate* object_;
+	Coordinate* target_;
 	
 	void initialzie() override;
 	void update(float delta_time) override;

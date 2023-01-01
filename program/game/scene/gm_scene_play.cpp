@@ -9,6 +9,8 @@ ScenePlay::~ScenePlay() {
 	delete camera_;
 	delete co_mgr_;
 	for (auto m : mod_) delete m;
+	delete object_;
+	delete target_;
 }
 
 
@@ -17,7 +19,7 @@ void ScenePlay::initialzie() {
 	camera_->pos_ = { 0, 150, -300 };
 	co_mgr_ = new CoordinateMgr();
 	mod_.resize(3);
-	coord_.resize(3);
+	
 	for (int i = 0; i < 3; i++) {
 		float delta = 50.0 * (float)i;
 		mod_[i] = new Module();
@@ -43,6 +45,17 @@ void ScenePlay::initialzie() {
 		}
 
 	}
+	// set object target
+	target_ = new Coordinate();
+	target_->setCoordinate(
+		1, "target[1]",
+		{ 50, 0, -50 },
+		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
+		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
+		tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0)
+		);
+	target_->setViewCoorinate(1, 10);
+	co_mgr_->registrateCoordinate(0, "", target_, CoordinateMgr::co_type::target);
 
 
 

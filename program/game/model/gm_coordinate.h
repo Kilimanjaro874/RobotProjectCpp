@@ -59,9 +59,7 @@ private:
 		Coordinate* target_;
 		ik_type ik_type_;
 		float kp_;
-		bool is_rot_axis_x_;
-		bool is_rot_axis_y_;
-		bool is_rot_axis_z_;
+		bool is_rot_[static_cast<int>(coordinate::end)] = { true, true, true };
 	};
 	std::vector<ik_st_> ik_settings_;
 
@@ -83,10 +81,10 @@ public:
 	);
 	
 	void setChildAndDKInit(Coordinate* child, attach_type type);
-	void directKinematics(tnl::Quaternion ik_rot);
+	void directKinematics(tnl::Quaternion ik_rot, float delta_time, bool is_do_ik = true);
 	void setIKObjectTargetInit(Coordinate* object, Coordinate* target, ik_type type, float kp,
 		bool is_rot_axis_x = true, bool is_rot_axis_y = true, bool is_rot_axis_z = true);
-	tnl::Quaternion inverseKinematics();
+	tnl::Quaternion inverseKinematics(float delta_time);
 	// ----- setter, getter ----- //
 	void setParentParams(tnl::Vector3 pos,tnl::Quaternion rot) {
 		pos_from_parent_ = pos;  
