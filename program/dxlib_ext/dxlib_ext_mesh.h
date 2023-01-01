@@ -5,16 +5,6 @@
 
 namespace dxe {
 
-	class MeshVbo final{
-	public :
-		~MeshVbo() {
-			if (vb_hdl_) DeleteVertexBuffer(vb_hdl_);
-			if (ib_hdl_) DeleteIndexBuffer(ib_hdl_);
-		}
-		int vb_hdl_ = 0;
-		int ib_hdl_ = 0;
-	};
-
 	class Camera;
 	class Mesh final {
 	public :
@@ -32,6 +22,8 @@ namespace dxe {
 		};
 	public :
 		~Mesh() {
+			if (vb_hdl_) DeleteVertexBuffer(vb_hdl_);
+			if (ib_hdl_) DeleteIndexBuffer(ib_hdl_);
 			if (mv_hdl_) MV1DeleteModel(mv_hdl_);
 		}
 
@@ -47,10 +39,6 @@ namespace dxe {
 		// function
 		//
 		//
-
-		//------------------------------------------------------------------------------------------------------------------------
-		// クローンの生成
-		Mesh* createClone();
 
 		//-----------------------------------------------------------------------------------------------------
 		// Create*** で生成したプログラマブルメッシュを Xファイルフォーマットでリソースとして保存する
@@ -145,17 +133,6 @@ namespace dxe {
 			MV1SetMaterialEmiColor(mv_hdl_, 0, render_param_.dxlib_mtrl_.Emissive);
 			MV1SetMaterialSpcPower(mv_hdl_, 0, render_param_.dxlib_mtrl_.Power);
 		}
-
-		// インデックスの取得
-		inline const std::vector<uint32_t>& getIndexs() { return idxs_; }
-
-		// 頂点座標の取得
-		// tips... [idx[0]] [idx[1]] [idx[2]] で三角形１枚の頂点座標
-		inline const std::vector<VERTEX3D>& getVertexs() { return vtxs_; }
-
-		// ワールド行列でトランスフォームしたワールド空間頂点座標の取得
-		// tips... [0][1][2] で三角形１枚の頂点座標
-		std::vector<tnl::Vector3> createWorldVertexs();
 
 		//==========================================================================================================================
 		//
@@ -363,8 +340,10 @@ namespace dxe {
 	private:
 		Mesh(){}
 
+		int vb_hdl_ = 0;
+		int ib_hdl_ = 0;
 		int mv_hdl_ = 0;
-		std::shared_ptr<MeshVbo> vbo_			= nullptr;
+
 		std::shared_ptr<Texture> tex_ambient_	= nullptr;	// 未使用
 		std::shared_ptr<Texture> tex_diffuse_	= nullptr;
 		std::shared_ptr<Texture> tex_specular_	= nullptr;	// 未使用

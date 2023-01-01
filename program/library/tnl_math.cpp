@@ -48,36 +48,6 @@ namespace tnl {
 		}
 	}
 
-    int GetRegionPointAndAABB(const Vector3& p, const Vector3& max, const Vector3& min) {
-        int side[4] = { 0, 0, 0, 0 };
-        tnl::Vector3 t_max[4];
-        tnl::Vector3 t_min[4];
-        tnl::Vector3 vn[4];
-        t_max[0] = { max.x, 0, max.z };
-        t_min[0] = { min.x, 0, min.z };
-        t_max[1] = { max.x, 0, -max.z };
-        t_min[1] = { min.x, 0, -min.z };
-        t_max[2] = { 0, max.y, max.z };
-        t_min[2] = { 0, min.y, min.z };
-        t_max[3] = { 0, -max.y, max.z };
-        t_min[3] = { 0, -min.y, min.z };
-        vn[0] = tnl::Vector3::Normalize(tnl::Vector3::Cross((t_min[0] - t_max[0]), { 0, -1, 0 }));
-        vn[1] = tnl::Vector3::Normalize(tnl::Vector3::Cross((t_min[1] - t_max[1]), { 0, -1, 0 }));
-        vn[2] = tnl::Vector3::Normalize(tnl::Vector3::Cross((t_min[2] - t_max[2]), { -1, 0, 0 }));
-        vn[3] = tnl::Vector3::Normalize(tnl::Vector3::Cross((t_min[3] - t_max[3]), { -1, 0, 0 }));
-
-        for (int i = 0; i < 4; ++i) side[i] = GetSidesPointAndPlane(p, vn[i], t_max[i]);
-
-        // ‘O‚Ì—Ìˆæ‚É‘¶Ý
-        if (-1 == side[0] && -1 == side[1] && 1 == side[2] && -1 == side[3]) return 4;
-
-        // Œã‚Ì—Ìˆæ‚É‘¶Ý
-        if (1 == side[0] && 1 == side[1] && -1 == side[2] && 1 == side[3]) return 5;
-
-        return GetRegionPointAndRect(p, (max + min) * 0.5f, max.x - min.x, max.y - min.y);
-    }
-
-
 
     int GetXzRegionPointAndOBB(const Vector3& p, const Vector3& op, const Vector3& size, const Quaternion& q) {
         tnl::Vector3 pv1 = tnl::Vector3::Normalize(size) * 0.5f ;
@@ -106,27 +76,6 @@ namespace tnl {
     }
 
 
-    tnl::Vector3 GetNearestPointAABB(const tnl::Vector3& point, const tnl::Vector3& aabb_max, const tnl::Vector3& aabb_min) {
-        tnl::Vector3 q;
-        float v = point.x;
-        if (v < aabb_min.x) v = aabb_min.x;
-        if (v > aabb_max.x) v = aabb_max.x;
-        q.x = v;
-
-        v = point.y;
-        if (v < aabb_min.y) v = aabb_min.y;
-        if (v > aabb_max.y) v = aabb_max.y;
-        q.y = v;
-
-        v = point.z;
-        if (v < aabb_min.z) v = aabb_min.z;
-        if (v > aabb_max.z) v = aabb_max.z;
-        q.z = v;
-
-        return q;
-    }
-
-
 	tnl::Vector3 GetNearestRectPoint(const tnl::Vector3& rect_pos, float w, float h, const tnl::Vector3 &point) {
 		tnl::Vector3 nearest(0, 0, 0);
 		float hw = w * 0.5f;
@@ -139,65 +88,6 @@ namespace tnl {
 		nearest.y = (point.y > t && point.y < b) ? point.y : (point.y > t) ? b : t;
 		return nearest;
 	}
-
-
-    tnl::Vector3 GetNearestRectPoint(const tnl::Vector3& rect_pos, const tnl::Vector3& axis_x, const tnl::Vector3& axis_y, const tnl::Vector3& rect_side_length, const tnl::Vector3& point) {
-        tnl::Vector3 d = point - rect_pos;
-        tnl::Vector3 q = rect_pos;
-        float dist = tnl::Vector3::Dot(d, axis_x);
-        if (dist > rect_side_length.x) dist = rect_side_length.x;
-        if (dist < -rect_side_length.x) dist = -rect_side_length.x;
-        q += axis_x * dist;
-
-        dist = tnl::Vector3::Dot(d, axis_y);
-        if (dist > rect_side_length.y) dist = rect_side_length.y;
-        if (dist < -rect_side_length.y) dist = -rect_side_length.y;
-        q += axis_y * dist;
-        return q;
-    }
-
-
-    tnl::Vector3 GetNearestPointTriangle(const tnl::Vector3& p, const tnl::Vector3& a, const tnl::Vector3& b, const tnl::Vector3& c) {
-        tnl::Vector3 ab = b - a;
-        tnl::Vector3 ac = c - a;
-        tnl::Vector3 ap = p - a;
-        float d1 = tnl::Vector3::Dot(ab, ap);
-        float d2 = tnl::Vector3::Dot(ac, ap);
-        if (d1 <= 0.0f && d2 <= 0.0f) return a;
-
-        tnl::Vector3 bp = p - b;
-        float d3 = tnl::Vector3::Dot(ab, bp);
-        float d4 = tnl::Vector3::Dot(ac, bp);
-        if (d3 >= 0.0f && d4 <= d3) return b;
-
-        float vc = d1 * d4 - d3 * d2;
-        if (vc <= 0.0f && d1 >= 0.0f && d3 <= 0.0f) {
-            float v = d1 / (d1 - d3);
-            return a + ( ab * v );
-        }
-
-        tnl::Vector3 cp = p - c;
-        float d5 = tnl::Vector3::Dot(ab, cp);
-        float d6 = tnl::Vector3::Dot(ac, cp);
-        if (d6 >= 0.0f && d5 <= d6) return c;
-        
-        float vb = d5 * d2 - d1 * d6;
-        if (vb <= 0.0f && d2 >= 0.0f && d6 <= 0.0f) {
-            float w = d2 / (d2 - d6);
-            return a + (ac * w);
-        }
-
-        float va = d3 * d6 - d5 * d4;
-        if (va <= 0.0f && (d4 - d3) >= 0.0f && (d5 - d6) >= 0.0f) {
-            float w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
-            return b + ((c - b) * w);
-        }
-
-        float denom = 1.0f / (va + vb + vc);
-        float v = vb * denom;
-        float w = vc * denom;
-        return a + (ab * v) + (ac * w);
-    }
 
 
     tnl::Vector3 GetNearestPointPlane(const tnl::Vector3& v, const tnl::Vector3& pn, const tnl::Vector3& pv) {
@@ -238,47 +128,6 @@ namespace tnl {
 
         return Vector3( wkX, wkY, wkZ );
     }
-
-
-    int GetCorrectPositionIntersectAABB(const tnl::Vector3& a_prev, const tnl::Vector3& a_size, const tnl::Vector3& b, const tnl::Vector3& b_size, tnl::Vector3& out, const float correct_space)
-    {
-        const int DOWN = 0;
-        const int RIGHT = 1;
-        const int UP = 2;
-        const int LEFT = 3;
-        const int FRONT = 4;
-        const int BACK = 5;
-        tnl::Vector3 aa = a_prev - b;
-        tnl::Vector3 bb = { 0, 0, 0 };
-        tnl::Vector3 a_max = tnl::ToMaxAABB(aa, a_size);
-        tnl::Vector3 a_min = tnl::ToMinAABB(aa, a_size);
-        tnl::Vector3 b_max = tnl::ToMaxAABB(bb, b_size);
-        tnl::Vector3 b_min = tnl::ToMinAABB(bb, b_size);
-        tnl::Vector3 near = tnl::GetNearestPointAABB(bb, a_max, a_min);
-        int region = tnl::GetRegionPointAndAABB(near, b_max, b_min);
-
-        switch (region) {
-        case UP :
-            out.y = b.y + (b_size.y / 2) + (a_size.y / 2) + correct_space;
-            return UP;
-        case DOWN:
-            out.y = b.y - (b_size.y / 2) - (a_size.y / 2) - correct_space;
-            return DOWN;
-        case RIGHT:
-            out.x = b.x + (b_size.x / 2) + (a_size.x / 2) + correct_space;
-            return RIGHT;
-        case LEFT:
-            out.x = b.x - (b_size.x / 2) - (a_size.x / 2) - correct_space;
-            return LEFT;
-        case BACK:
-            out.z = b.z + (b_size.z / 2) + (a_size.z / 2) + correct_space;
-            return BACK;
-        case FRONT:
-            out.z = b.z - (b_size.z / 2) - (a_size.z / 2) - correct_space;
-            return FRONT;
-        }
-    }
-
 
 
 

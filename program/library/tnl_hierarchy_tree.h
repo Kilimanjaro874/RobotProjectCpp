@@ -103,11 +103,11 @@ namespace tnl {
 		//--------------------------------------------------------------------------------------
 		// このメソッドを呼び出したインスタンスが子だとして　自分と自分の子を階層構造から離脱
 		// tips... pop 関数は roundup 関数に指定するラムダ関数内では使用しないこと
-		virtual inline void pop() {
+		virtual inline void pop(bool is_departure_point = true) {
 			shared parent = parent_.lock();
-			//if (is_departure_point) {
-			if (!parent) return;
-			//}
+			if (is_departure_point) {
+				if (!parent) return;
+			}
 			link_linear::pop();
 			parent_.reset();
 		}

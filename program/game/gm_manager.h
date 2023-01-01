@@ -1,7 +1,5 @@
 #pragma once
 #include "../dxlib_ext/dxlib_ext.h"
-#include "../game/gm_input_manager.h"
-#include "../game/gm_bgm_se_manager.h"
 
 class SceneBase;
 class GameManager {
@@ -51,10 +49,10 @@ public :
 	void chengeScene(SceneBase* next);
 
 public :
+
 	// ゲーム全体で参照したい変数はここで用意
-	//InputMgr _input_mg1;				// プレイヤーの入力情報を操作量に変換するクラス
-	BGM_SE_Mgr* _soundMgr;
-	float _clear_time = 0;
+
+
 };
 
 

@@ -29,8 +29,8 @@
     <Filter Include="program\game\scene">
       <UniqueIdentifier>{36a023e8-05af-4131-819f-285ef87e3f60}</UniqueIdentifier>
     </Filter>
-    <Filter Include="program\game\model\robot">
-      <UniqueIdentifier>{f43aa23c-4998-47ed-9c50-4ea63f6a3e74}</UniqueIdentifier>
+    <Filter Include="program\game\model\Robot">
+      <UniqueIdentifier>{723a29f5-9958-4613-a3f8-60e8a4575f0d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -151,44 +151,23 @@
     <ClCompile Include="program\game\scene\gm_scene_title.cpp">
       <Filter>program\game\scene</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_airplane.cpp">
-      <Filter>program\game\model</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\model\gm_anim_sprite3d.cpp">
-      <Filter>program\game\model</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\model\gm_model.cpp">
+    <ClCompile Include="program\game\model\gm_parts.cpp">
       <Filter>program\game\model</Filter>
     </ClCompile>
     <ClCompile Include="program\game\gm_camera.cpp">
       <Filter>program\game</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_module.cpp">
-      <Filter>program\game\model\robot</Filter>
-    </ClCompile>
     <ClCompile Include="program\game\model\gm_robot.cpp">
-      <Filter>program\game\model\robot</Filter>
+      <Filter>program\game\model\Robot</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\gm_input_manager.cpp">
-      <Filter>program\game</Filter>
+    <ClCompile Include="program\game\model\gm_module.cpp">
+      <Filter>program\game\model\Robot</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\gm_robot_controller.cpp">
-      <Filter>program\game</Filter>
+    <ClCompile Include="program\game\model\gm_coordinate.cpp">
+      <Filter>program\game\model\Robot</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_weapon.cpp">
-      <Filter>program\game\model\robot</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\gm_bgm_se_manager.cpp">
-      <Filter>program\game</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\model\gm_shot_target.cpp">
-      <Filter>program\game\model</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\gm_hit_manager.cpp">
-      <Filter>program\game</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\model\gm_parts.cpp">
-      <Filter>program\game\model</Filter>
+    <ClCompile Include="program\game\model\gm_coordinate_mgr.cpp">
+      <Filter>program\game\model\Robot</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -288,47 +267,23 @@
     <ClInclude Include="program\game\scene\gm_scene_title.h">
       <Filter>program\game\scene</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_airplane.h">
-      <Filter>program\game\model</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\model\gm_anim_sprite3d.h">
-      <Filter>program\game\model</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\model\gm_model.h">
+    <ClInclude Include="program\game\model\gm_parts.h">
       <Filter>program\game\model</Filter>
     </ClInclude>
     <ClInclude Include="program\game\gm_camera.h">
       <Filter>program\game</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_module.h">
-      <Filter>program\game\model\robot</Filter>
-    </ClInclude>
     <ClInclude Include="program\game\model\gm_robot.h">
-      <Filter>program\game\model\robot</Filter>
+      <Filter>program\game\model\Robot</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\gm_input_manager.h">
-      <Filter>program\game</Filter>
+    <ClInclude Include="program\game\model\gm_module.h">
+      <Filter>program\game\model\Robot</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\gm_robot_controller.h">
-      <Filter>program\game</Filter>
+    <ClInclude Include="program\game\model\gm_coordinate.h">
+      <Filter>program\game\model\Robot</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_weapon.h">
-      <Filter>program\game\model\robot</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\gm_bgm_se_manager.h">
-      <Filter>program\game</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\model\gm_shot_taget.h">
-      <Filter>program\game\model</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\gm_hit_manager.h">
-      <Filter>program\game</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\model\gm_robot_define.h">
-      <Filter>program\game\model\robot</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\model\gm_parts.h">
-      <Filter>program\game\model</Filter>
+    <ClInclude Include="program\game\model\gm_coordinate_mgr.h">
+      <Filter>program\game\model\Robot</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

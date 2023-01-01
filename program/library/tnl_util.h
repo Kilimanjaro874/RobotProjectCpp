@@ -14,11 +14,6 @@ namespace tnl{
 	inline int RGBA8( uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255 ) { return ( r << 24 | g << 16 | b << 8 | a ); }
 	inline int ABGR8( uint8_t a, uint8_t b, uint8_t g, uint8_t r ) { return (a << 24 | b << 16 | g << 8 | r); }
 
-	inline int GetR(uint32_t rgba8) { return (rgba8 & 0xff000000) >> 24; }
-	inline int GetG(uint32_t rgba8) { return (rgba8 & 0x00ff0000) >> 16; }
-	inline int GetB(uint32_t rgba8) { return (rgba8 & 0x0000ff00) >> 8; }
-	inline int GetA(uint32_t rgba8) { return (rgba8 & 0x000000ff) ; }
-
 	//----------------------------------------------------------------------------------------------
 	// index 付き for( auto n : xxx )
 	// 利用法
@@ -37,38 +32,6 @@ namespace tnl{
 	//		TNL_ENUM_BIT_FLAG(D),	// Test::D == 1 << 3
 	// } ;
 	#define TNL_ENUM_BIT_FLAG(f) prefix_##f, f = (prefix_##f < 1)? 1 : ((prefix_##f)-1) << 1
-
-
-	//----------------------------------------------------------------------------------------------
-	// プリプロセッサによる文字列化と結合
-	#define TNL_INL_STR( str ) #str
-	#define TNL_INL_MERGE_STR( left, right ) TNL_INL_STR(left##right)
-
-
-	//----------------------------------------------------------------------------------------------
-	// 列挙型ビットフラグ用 ビットマスクオペレータ7種一括定義
-	#define TNL_ENUM_CLASS_BIT_MASK_OPERATOR( enum_class )                                              \
-	constexpr void operator |= (enum_class& left, enum_class right) {                                   \
-		left = static_cast<enum_class>(static_cast<std::underlying_type<enum_class>::type>(left) | static_cast<std::underlying_type<enum_class>::type>(right));       \
-	}                                                                                                   \
-	constexpr enum_class operator | (enum_class left, enum_class right) {                               \
-		return static_cast<enum_class>(static_cast<std::underlying_type<enum_class>::type>(left) | static_cast<std::underlying_type<enum_class>::type>(right));       \
-	}                                                                                                   \
-	constexpr void operator &= (enum_class& left, enum_class right) {                                   \
-		left = static_cast<enum_class>(static_cast<std::underlying_type<enum_class>::type>(left) & static_cast<std::underlying_type<enum_class>::type>(right));       \
-	}                                                                                                   \
-	constexpr enum_class operator & (enum_class left, enum_class right) {                               \
-		return static_cast<enum_class>(static_cast<std::underlying_type<enum_class>::type>(left) & static_cast<std::underlying_type<enum_class>::type>(right));       \
-	}                                                                                                   \
-	constexpr void operator ^= (enum_class& left, enum_class right) {                                   \
-		left = static_cast<enum_class>(static_cast<std::underlying_type<enum_class>::type>(left) ^ static_cast<std::underlying_type<enum_class>::type>(right));       \
-	}                                                                                                   \
-	constexpr enum_class operator ^ (enum_class left, enum_class right) {                               \
-		return static_cast<enum_class>(static_cast<std::underlying_type<enum_class>::type>(left) ^ static_cast<std::underlying_type<enum_class>::type>(right));       \
-	}                                                                                                   \
-	constexpr enum_class operator ~ (enum_class n) {                                                    \
-		return static_cast<enum_class>(~static_cast<std::underlying_type<enum_class>::type>(n));        \
-	}                                                                                                   \
 
 
 	//----------------------------------------------------------------------------------------------
@@ -94,9 +57,7 @@ namespace tnl{
 	void ToWChara(wchar_t* wstrDest, const char* strSrc, int length);
 	void ToWChara(wchar_t* wstrDest, uint32_t wstr_lenght, const std::string& src);
 	wchar_t ToOnceWChara(const char* strSrc);
-	// Sjis UTF8 相互変換
-	std::string UTF8toSjis(const std::string& srcUTF8);
-	std::string SjistoUTF8(const std::string& srcSjis);
+
 
 	//----------------------------------------------------------------------------------------------
 	// デバッグコンソールへの出力

@@ -5,32 +5,6 @@
 namespace dxe {
 
 	//----------------------------------------------------------------------------------------
-	Mesh* Mesh::createClone() {
-		Mesh* clone_mesh = new Mesh();
-		if( mv_hdl_ ) clone_mesh->mv_hdl_ = MV1CreateCloneModel(mv_hdl_) ;
-		clone_mesh->vbo_ = vbo_;
-		clone_mesh->mesh_format_ = mesh_format_;
-		clone_mesh->setTexture(tex_diffuse_);
-		clone_mesh->setRenderParam(render_param_);
-		clone_mesh->tex_ambient_ = tex_ambient_;
-		clone_mesh->tex_diffuse_ = tex_diffuse_;
-		clone_mesh->tex_specular_ = tex_specular_;
-		clone_mesh->tex_bump_ = tex_bump_;
-
-		if (!idxs_.empty()) {
-			clone_mesh->idxs_.resize(idxs_.size());
-			memcpy(clone_mesh->idxs_.data(), idxs_.data(), sizeof(uint32_t) * idxs_.size());
-		}
-		if (!vtxs_.empty()){
-			clone_mesh->vtxs_.resize(vtxs_.size());
-			memcpy(clone_mesh->vtxs_.data(), vtxs_.data(), sizeof(VERTEX3D) * vtxs_.size());
-		}
-		clone_mesh->bd_sphere_radius_ = bd_sphere_radius_;
-		clone_mesh->bd_box_size_ = bd_box_size_;
-		return clone_mesh;
-	}
-
-	//----------------------------------------------------------------------------------------
 	void Mesh::createPlaneIndex( const int div_w, const int div_h, const bool is_left_cycle) {
 		int index_num = div_w * div_h * 6;
 		idxs_.resize(index_num);
@@ -71,11 +45,10 @@ namespace dxe {
 
 	//----------------------------------------------------------------------------------------
 	void Mesh::createVBO() {
-		vbo_ = std::make_shared<MeshVbo>();
-		vbo_->vb_hdl_ = CreateVertexBuffer((int)vtxs_.size(), DX_VERTEX_TYPE_NORMAL_3D);
-		vbo_->ib_hdl_ = CreateIndexBuffer((int)idxs_.size(), DX_INDEX_TYPE_32BIT);
-		SetVertexBufferData(0, vtxs_.data(), (int)vtxs_.size(), vbo_->vb_hdl_);
-		SetIndexBufferData(0, idxs_.data(), (int)idxs_.size(), vbo_->ib_hdl_);
+		vb_hdl_ = CreateVertexBuffer((int)vtxs_.size(), DX_VERTEX_TYPE_NORMAL_3D);
+		ib_hdl_ = CreateIndexBuffer((int)idxs_.size(), DX_INDEX_TYPE_32BIT);
+		SetVertexBufferData(0, vtxs_.data(), (int)vtxs_.size(), vb_hdl_);
+		SetIndexBufferData(0, idxs_.data(), (int)idxs_.size(), ib_hdl_);
 	}
 
 	//----------------------------------------------------------------------------------------
@@ -202,36 +175,6 @@ namespace dxe {
 		return true;
 	}
 
-	//----------------------------------------------------------------------------------------
-	std::vector<tnl::Vector3> Mesh::createWorldVertexs() {
-
-		std::vector<tnl::Vector3> verts;
-		tnl::Matrix tm = tnl::Matrix::Translation(pos_);
-		tnl::Matrix rm = rot_q_.getMatrix();
-		tnl::Matrix sm = tnl::Matrix::Scaling(scl_);
-		tnl::Matrix wm = sm * rm * tm;
-
-		verts.resize(idxs_.size() * 3);
-		for (int i = 0; i < idxs_.size(); i += 3) {
-			VERTEX3D v1 = vtxs_[idxs_[i + 0]];
-			VERTEX3D v2 = vtxs_[idxs_[i + 1]];
-			VERTEX3D v3 = vtxs_[idxs_[i + 2]];
-			tnl::Vector3 p1 = { v1.pos.x, v1.pos.y, v1.pos.z };
-			tnl::Vector3 p2 = { v2.pos.x, v2.pos.y, v2.pos.z };
-			tnl::Vector3 p3 = { v3.pos.x, v3.pos.y, v3.pos.z };
-			tnl::Matrix wm1 = tnl::Matrix::Translation(p1) * wm;
-			tnl::Matrix wm2 = tnl::Matrix::Translation(p2) * wm;
-			tnl::Matrix wm3 = tnl::Matrix::Translation(p3) * wm;
-			p1 = { wm1._41, wm1._42, wm1._43 };
-			p2 = { wm2._41, wm2._42, wm2._43 };
-			p3 = { wm3._41, wm3._42, wm3._43 };
-			verts[i + 0] = p1;
-			verts[i + 1] = p2;
-			verts[i + 2] = p3;
-		}
-		return verts;
-	}
-
 
 	//----------------------------------------------------------------------------------------
 	Mesh* Mesh::CreateFromFileMV(const std::string& file_path, const float scl)
@@ -294,7 +237,7 @@ namespace dxe {
 			SetUseBackCulling(render_param_.dxlib_culling_mode_);
 			SetDrawBlendMode(render_param_.dxlib_blend_mode_, i_alpha);
 			//DrawPrimitiveIndexed3D(vtxs_.data(), vtxs_.size(), idxs_.data(), idxs_.size(), DX_PRIMTYPE_TRIANGLELIST, tex_diffuse_hdl_, false);
-			DrawPrimitiveIndexed3D_UseVertexBuffer(vbo_->vb_hdl_, vbo_->ib_hdl_, DX_PRIMTYPE_TRIANGLELIST, tex_diffuse_->getGraphHandle(), true);
+			DrawPrimitiveIndexed3D_UseVertexBuffer(vb_hdl_, ib_hdl_, DX_PRIMTYPE_TRIANGLELIST, tex_diffuse_->getGraphHandle(), true);
 		}
 		else {
 			MATRIX dxim;
@@ -340,13 +283,9 @@ namespace dxe {
 	Mesh* Mesh::CreateConvertMV(Mesh* mesh) {
 		Mesh* new_mesh;
 		mesh->exportForFileFormatX("temp.x");
-		new_mesh = CreateFromFileMV("temp.x");
-		new_mesh->idxs_.resize( mesh->idxs_.size() );
-		new_mesh->vtxs_.resize( mesh->vtxs_.size() );
-		memcpy(new_mesh->idxs_.data(), mesh->idxs_.data(), sizeof(uint32_t) * mesh->idxs_.size());
-		memcpy(new_mesh->vtxs_.data(), mesh->vtxs_.data(), sizeof(VERTEX3D) * mesh->vtxs_.size());
-		DeleteFileA("temp.x");
 		delete mesh;
+		new_mesh = CreateFromFileMV("temp.x");
+		DeleteFileA("temp.x");
 		return new_mesh;
 	}
 

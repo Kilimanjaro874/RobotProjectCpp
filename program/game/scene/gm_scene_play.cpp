@@ -2,189 +2,109 @@
 #include "../gm_camera.h"
 #include "gm_scene_play.h"
 #include "gm_scene_result.h"
-#include "../../dxlib_ext/dxlib_ext.h"
 
+tnl::Quaternion	fix_rot;
 
 ScenePlay::~ScenePlay() {
-	delete _camera;
-	delete _robo;
-	delete _controller;
-	delete _background;
-	delete _aim_pos;
-	delete _hit_manager;
-	for( auto tar : _target_obj_v) { delete tar; }
+	delete camera_;
+	delete co_mgr_;
+	for (auto m : mod_) delete m;
 }
 
 
 void ScenePlay::initialzie() {
-	// ----- DxLib設定 ----- //
-	GameManager* mgr = GameManager::GetInstance();
-	_hit_manager = new HitManager();
-	SetMouseDispFlag(false);			// マウス表示を消去
-	SetMousePoint(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2);		// TPSでマウス位置を画面中央に固定
-	// ----- ステージ生成 ----- //
-	_floor_obj_li.resize(1);
-	_floor_obj_li[0]= dxe::Mesh::CreatePlane({ 1500, 1500, 0 });
-	_floor_obj_li[0]->setTexture(dxe::Texture::CreateFromFile("graphics/gray.bmp"));
-	_floor_obj_li[0]->rot_q_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(90));
-	_floor_obj_li[0]->pos_ += {0, -1, 0};
-	// 背景
-	_background = new Parts();
-	_background->mesh_ = dxe::Mesh::CreateSphere(800);
-	_background->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue2.bmp"));
-																	
-	// ----- 自作クラス設定 ----- //
-	_camera = new GmCamera();
-	_camera->pos_ = { 0, 150, -300 };
+	camera_ = new GmCamera();
+	camera_->pos_ = { 0, 150, -300 };
+	co_mgr_ = new CoordinateMgr();
+	mod_.resize(500);
+	coord_.resize(500);
+	for (int i = 0; i < 500; i++) {
+		float delta = 50.0 * (float)i;
+		mod_[i] = new Module();
+		mod_[i]->setCoordinate(
+			i,
+			"coord[" + std::to_string(i) + "]",
+			{ delta, 0, 0 },
+			{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
+			{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
+			tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0)
+		);
+		Parts* p = new Parts();
+		p->mesh_ = dxe::Mesh::CreateSphere(5.3);
+		p->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
+		mod_[i]->setParts(p);
 
-	//------------------------------------------------------------------
-	//
-	// Test
-	//
-	// 操作ロボット生成
-	_robo = Robot::Create({ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
-	_robo->partsUpdateTree(_robo, 0);
-	_controller = new RobotCont(_robo, mgr->_soundMgr);
-	// Target 
-	_aim_pos = new Parts();
-	_aim_pos->mesh_ = dxe::Mesh::CreateSphere(25);
-	_aim_pos->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue.bmp"));
+		if (i == 0) {
+			co_mgr_->registrateOrigine(mod_[i], CoordinateMgr::com_normal); 
+		}
+		else {
+			co_mgr_->registrateCoordinate(i - 1, "", mod_[i], CoordinateMgr::com_normal);
+		}
 
-	// BGM
-	mgr->_soundMgr->playSound(mgr->_soundMgr->bgm, 2, "", mgr->_soundMgr->loop);
+	/*	if (i > 0) {
+			mod_[i - 1]->setChildAndDKInit(mod_[i], Coordinate::absolute);
+		}
+		
+		coord_[i] = mod_[i];*/
+		printf("");
+	}
 
-	// TargetObjects
-	setTargets();
-	
-
-	// sight
-	_sight_UI_gh = LoadGraph("graphics/sight.png");
 }
 
 void ScenePlay::update(float delta_time)
 {
 	GameManager* mgr = GameManager::GetInstance();
-	_controller->update(delta_time, _camera);
-	// 右武器の当たり判定
-	_hit_manager->CheckBulletTargetHit(_controller->_r_weapon->_bullets, _target_obj_v, mgr->_soundMgr);
-	// 左武器の当たり判定
-	_hit_manager->CheckBulletTargetHit(_controller->_l_weapon->_bullets, _target_obj_v, mgr->_soundMgr);
+	//------------------------------------------------------------------
+	//
+	// カメラ制御
+	//
+	tnl::Vector3 rot[4] = {
+		{ 0, tnl::ToRadian(1.0f), 0 },
+		{ 0, -tnl::ToRadian(1.0f), 0 },
+		{ tnl::ToRadian(1.0f), 0, 0 },
+		{ -tnl::ToRadian(1.0f), 0, 0 } };
+	tnl::Input::RunIndexKeyDown([&](uint32_t idx) {
+		camera_->free_look_angle_xy_ += rot[idx];
+		}, eKeys::KB_A, eKeys::KB_D, eKeys::KB_W, eKeys::KB_S);
 
-
-	// ターゲットとの当たり判定
-	for(int i = 0; i < _target_obj_v.size(); i++) {
-		_target_obj_v[i]->partsUpdate(delta_time);
-		_target_obj_v[i]->move(delta_time);
-		if (_target_obj_v[i]->_hp == 0) {
-			delete _target_obj_v[i];
-			_target_obj_v.erase(std::cbegin(_target_obj_v) + i);
-		}
+	if (tnl::Input::IsKeyDown(eKeys::KB_Z)) {
+		camera_->target_distance_ += 1.0f;
 	}
-	if (_target_obj_v.size() == 0) {
-		_is_clear = true; 
-		mgr->_clear_time = _clear_time;
+	if (tnl::Input::IsKeyDown(eKeys::KB_X)) {
+		camera_->target_distance_ -= 1.0f;
+	}
+	camera_->target_ = mod_[0]->getPos();
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
 		mgr->chengeScene(new SceneResult());
 	}
 
-	
-	// sightDXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT
-	if (!_is_clear) { _clear_time += delta_time; }	
+	co_mgr_->update(delta_time);
+
+	//for (int i = 0; i < 10; i++) {
+	//	float tmp = 0;
+	//	tmp = tnl::ToRadian(1);
+	//	coord_[i]->directKinematics(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tmp));
+	//	coord_[i]->update(delta_time);
+	//	//mod_[i]->directKinematics(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tmp));
+	//	//mod_[i]->update(delta_time);
+	//}
+
 }
+	
 
 void ScenePlay::render()
 {
-	_camera->update();
-	
-	//------------------------------------------------------------------
-	//
-	// Test
-	//
-	_robo->partsRenderTree(_robo, _camera);
-	_background->mesh_->render(_camera);
+	camera_->update();
+	DrawGridGround(camera_, 50, 20);
 
-	for (auto floor : _floor_obj_li) {
-		floor->render(_camera);
-	}
+	/*for (int i = 0; i < 10; i++) {
+		coord_[i]->render(camera_);
+	}*/
 
-	//_target_obj_v[0]->partsRender(_camera);
-	for (auto tar : _target_obj_v) {
-		tar->partsRender(_camera);
-	}
-	DrawGridGround(_camera, 5, 300);
-	DrawRotaGraph(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2, 0.01, 0, _sight_UI_gh, true, false);
-	DrawStringEx(50, 50, 1, "target Num = %d", _target_obj_v.size());
-	DrawStringEx(50, 70, 1, "time = %5.2f", _clear_time);
+	co_mgr_->render(camera_);
 
-}
-
-void ScenePlay::setTargets() {
-	// ----- フィールドに出現するターゲットの初期化 ----- //
-	// * CSVデータから読み取れるよう後に変更する
-	// 1
-	std::vector<tnl::Vector3> points1;
-	points1.push_back({ -50, 10, 500 });
-	points1.push_back({ 50, 10, 500 });
-	_target_obj_v.push_back(ShotTarget::init(points1, 2.5));
-	// 2
-	std::vector<tnl::Vector3> points2;
-	points2.push_back({ 0, 150, 500 });
-	points2.push_back({ 0, 50, 500 });
-	_target_obj_v.push_back( ShotTarget::init(points2, 2.5));
-	// 3
-	std::vector<tnl::Vector3> points3;
-	points3.push_back({ -100, 100, 500 });
-	points3.push_back({ 100, 100, 500 });
-	_target_obj_v.push_back(ShotTarget::init(points3, 2.5));
-	// 4 
-	std::vector<tnl::Vector3> points4;
-	points4.push_back({ -500, 300, 0 });
-	points4.push_back({ -500, 244, 144 });
-	points4.push_back({ -500, 200, 200 });
-	points4.push_back({ -500, 144, 144 });
-	points4.push_back({ -500, 100, 0 });
-	points4.push_back({ -500, 144, -144 });
-	points4.push_back({ -500, 200, -200 });
-	points4.push_back({ -500, 244, -144 });
-	_target_obj_v.push_back(ShotTarget::init(points4, 3.0));
-	// 5
-	std::vector<tnl::Vector3> points5;
-	points5.push_back({ 300, 300, 0 });
-	points5.push_back({ 300, 50, 0 });
-	points5.push_back({ 300, 50, 100 });
-	points5.push_back({ 300, 50, -100 });
-	points5.push_back({ 300, 200, 0 });
-	points5.push_back({ 300, 200, 100 });
-	points5.push_back({ 300, 200, -100 });
-	points5.push_back({ 300, 200, 0 });
-	_target_obj_v.push_back(ShotTarget::init(points5, 3.0));
-	// 6
-	std::vector<tnl::Vector3> points6;
-	points6.push_back({ -300, 50, -300 });
-	points6.push_back({ -300, 50, 300 });
-	points6.push_back({ 300, 50, 300 });
-	points6.push_back({ 300, 50, -300 });
-	_target_obj_v.push_back(ShotTarget::init(points6, 5.0));
-	
-	// 7
-	std::vector<tnl::Vector3> points7;
-	points7.push_back({ 0, 60, -100 });
-	points7.push_back({ 0, 10, -150 });
-	points7.push_back({ 50, 60, -100 });
-	points7.push_back({ 50, 10, -150 });
-	_target_obj_v.push_back(ShotTarget::init(points7, 2.0));
-	// 8
-	std::vector<tnl::Vector3> points8;
-	points8.push_back({ 50, 60, -100 });
-	points8.push_back({ 50, 10, -150 });
-	points8.push_back({ 100, 60, -100 });
-	points8.push_back({ 100, 10, -150 });
-	_target_obj_v.push_back(ShotTarget::init(points8, 2.0));
-	// 9+
-	std::vector<tnl::Vector3> points9;
-	points9.push_back({ -50, 60, -100 });
-	points9.push_back({ -50, 10, -150 });
-	points9.push_back({ 0, 60, -100 });
-	points9.push_back({ 0, 10, -150 });
-	_target_obj_v.push_back(ShotTarget::init(points9, 2.0));
-
+	DrawStringEx(50, 50, -1, "scene play");
+	DrawStringEx(50, 70, -1, "camera [ ← : A ] [ ↑ : W ] [ → : D ] [ ↓ : S ]");
+	DrawStringEx(50, 90, -1, "camera [ 遠 : Z ] [ 近 : X ] ");
+	DrawStringEx(50, 120, -1, "character [ 左 : ← ] [ 奥 : ↑ ] [ 右 : → ] [ 手前 : ↓ ] ");
 }

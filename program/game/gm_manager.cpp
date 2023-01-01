@@ -11,11 +11,6 @@ GameManager::GameManager() {
 	scene_now_->initialzie();
 	img_black_ = LoadGraph("graphics/black.bmp");
 	SetBackgroundColor(32, 32, 32);
-	// ---- Ž©ìƒNƒ‰ƒX ---- //
-	_soundMgr = new BGM_SE_Mgr();
-	_soundMgr->setBaseVolume(_soundMgr->bgm, 100);
-	_soundMgr->setSoundsBGMInit("RP_BGM_List01.csv");
-	_soundMgr->setSoundsSEInit("RP_SE_List01.csv");
 }
 
 //-----------------------------------------------------------------------------------------
@@ -23,7 +18,6 @@ GameManager::GameManager() {
 GameManager::~GameManager() {
 	if (scene_now_) delete scene_now_;
 	if (scene_next_) delete scene_next_;
-	delete _soundMgr;
 }
 
 
@@ -48,8 +42,6 @@ void GameManager::Destroy() {
 
 //-----------------------------------------------------------------------------------------
 void GameManager::chengeScene(SceneBase* next) {
-	// ---- SE•‰¹Šy’âŽ~ ---- //
-	_soundMgr->stopSoundAll();
 	scene_next_ = next;
 	sequence_.change(&GameManager::seqSceneOutTransition);
 }

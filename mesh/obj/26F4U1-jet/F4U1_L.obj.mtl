@@ -1,0 +1,157 @@
+# File produced by Open Asset Import Library (http://www.assimp.sf.net)
+# (assimp v3.1.187496374)
+
+newmtl F4U1FUSD
+Kd 0.305882 0.364706 0.494118
+Ka 0 0 0
+Ks 1 1 1
+Ke 0 0 0
+d 1
+Ns 40
+illum 2
+map_Kd F4U1FURT.JPG
+
+newmtl JoinedMaterial_#6
+Kd 0.305882 0.364706 0.494118
+Ka 0 0 0
+Ks 1 1 1
+Ke 0 0 0
+d 1
+Ns 40
+illum 2
+
+newmtl F4U1BLDE
+Kd 0.101961 0.101961 0.101961
+Ka 0 0 0
+Ks 1 1 1
+Ke 0 0 0
+d 1
+Ns 40
+illum 2
+map_Kd F4U1BLET.JPG
+
+newmtl F4U1ENG
+Kd 0.101961 0.101961 0.101961
+Ka 0 0 0
+Ks 1 1 1
+Ke 0 0 0
+d 1
+Ns 1
+illum 2
+
+newmtl F4U1CON
+Kd 0.356863 0.415686 0.478431
+Ka 0 0 0
+Ks 1 1 1
+Ke 0 0 0
+d 1
+Ns 20
+illum 2
+
+newmtl F4U1CHR
+Kd 0.223529 0.227451 0.235294
+Ka 0 0 0
+Ks 1 1 1
+Ke 0 0 0
+d 1
+Ns 20
+illum 2
+
+newmtl F4U1GLS
+Kd 0 0.337255 0.192157
+Ka 0 0 0
+Ks 1 1 1
+Ke 0 0 0
+d 0.2
+Ns 100
+illum 2
+
+newmtl F4U1INT
+Kd 0.4 0.458824 0.168627
+Ka 0 0 0
+Ks 1 1 1
+Ke 0 0 0
+d 1
+Ns 1
+illum 2
+
+newmtl F4U1WHNT
+Kd 0.952941 0.898039 0.847059
+Ka 0 0 0
+Ks 1 1 1
+Ke 0 0 0
+d 1
+Ns 40
+illum 2
+map_Kd F4U1WHNT.JPG
+
+newmtl JoinedMaterial_#13
+Kd 0.952941 0.898039 0.847059
+Ka 0 0 0
+Ks 1 1 1
+Ke 0 0 0
+d 1
+Ns 40
+illum 2
+
+newmtl JoinedMaterial_#15
+Kd 0.305882 0.364706 0.494118
+Ka 0 0 0
+Ks 1 1 1
+Ke 0 0 0
+d 1
+Ns 40
+illum 2
+map_Kd F4U1WTLT.JPG
+
+newmtl F4U1BLK1
+Kd 0.101961 0.101961 0.101961
+Ka 0 0 0
+Ks 0.898039 0.898039 0.898039
+Ke 0 0 0
+d 1
+Ns 40
+illum 2
+
+newmtl F4U1BLU
+Kd 0.305882 0.364706 0.494118
+Ka 0 0 0
+Ks 1 1 1
+Ke 0 0 0
+d 1
+Ns 40
+illum 2
+bump F4U1TLB.JPG
+map_bump F4U1TLB.JPG
+
+newmtl F4U1WHT
+Kd 0.952941 0.898039 0.847059
+Ka 0 0 0
+Ks 1 1 1
+Ke 0 0 0
+d 1
+Ns 40
+illum 2
+bump F4U1TLB.JPG
+map_bump F4U1TLB.JPG
+
+newmtl F4U1TLRT
+Kd 0.305882 0.364706 0.494118
+Ka 0 0 0
+Ks 1 1 1
+Ke 0 0 0
+d 1
+Ns 40
+illum 2
+map_Kd F4U1TLRT.JPG
+
+newmtl F4U1TLLT
+Kd 0.305882 0.364706 0.494118
+Ka 0 0 0
+Ks 1 1 1
+Ke 0 0 0
+d 1
+Ns 40
+illum 2
+map_Kd F4U1TLLT.JPG
+
