@@ -10,7 +10,9 @@ ScenePlay::~ScenePlay() {
 	delete co_mgr_;
 	for (auto m : mod_) delete m;
 	delete object_;
+	delete object2_;
 	delete target_;
+	delete target2_;
 }
 
 
@@ -19,7 +21,7 @@ void ScenePlay::initialzie() {
 	camera_->pos_ = { 0, 150, -300 };
 	co_mgr_ = new CoordinateMgr();
 	mod_.resize(3);
-	
+
 	for (int i = 0; i < 3; i++) {
 		float delta = 50.0 * (float)i;
 		mod_[i] = new Module();
@@ -38,7 +40,7 @@ void ScenePlay::initialzie() {
 		mod_[i]->setParts(p);
 
 		if (i == 0) {
-			co_mgr_->registrateOrigine(mod_[i], CoordinateMgr::co_type::normal); 
+			co_mgr_->registrateOrigine(mod_[i], CoordinateMgr::co_type::normal);
 		}
 		else {
 			co_mgr_->registrateCoordinate(i - 1, "", mod_[i], CoordinateMgr::co_type::normal);
@@ -49,15 +51,53 @@ void ScenePlay::initialzie() {
 	target_ = new Coordinate();
 	target_->setCoordinate(
 		1, "target[1]",
-		{ 50, 0, -50 },
+		{ 0, 0, 0 },
 		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
 		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
 		tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0)
-		);
+	);
 	target_->setViewCoorinate(1, 10);
-	co_mgr_->registrateCoordinate(0, "", target_, CoordinateMgr::co_type::target);
+	co_mgr_->registrateOrigine(target_, CoordinateMgr::co_type::target);
+
+	target2_ = new Coordinate();
+	target2_->setCoordinate(
+		1, "target[2]",
+		{ 40, 0, -40 },
+		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
+		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
+		tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0)
+	);
+	target2_->setViewCoorinate(1, 10);
+	co_mgr_->registrateCoordinate(1, "", target2_, CoordinateMgr::co_type::target);
 
 
+
+
+	// object origine
+	object_ = new Coordinate();
+	object_->setCoordinate(
+		1, "object[1]",
+		{ 100, 0, 0 },
+		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
+		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
+		tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0)
+	);
+	object_->setViewCoorinate(1, 10);
+
+	co_mgr_->registrateOrigine(object_, CoordinateMgr::co_type::object);
+	auto tmp_attach_coord = co_mgr_->getRegistratedCoordinate(2, "", CoordinateMgr::co_type::normal);
+	tmp_attach_coord->setChildAndDKInit(object_, Coordinate::attach_type::absolute);
+	// object mover
+
+
+
+
+	// set IK setting
+	std::vector<CoordinateMgr::coord_id_name_ik_st_> c_ik_st;
+	c_ik_st.push_back({ 0, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.2} });
+	c_ik_st.push_back({ 1, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.2} });
+	c_ik_st.push_back({ 2, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.2} });
+	co_mgr_->registrateIKCoordinate(&c_ik_st);
 
 }
 
@@ -112,7 +152,9 @@ void ScenePlay::render()
 	}*/
 
 	co_mgr_->render(camera_);
-	co_mgr_->viewCoordinateState(CoordinateMgr::co_type::normal, CoordinateMgr::view_param::pos);
+	//co_mgr_->viewCoordinateState(CoordinateMgr::co_type::normal, CoordinateMgr::view_param::pos);
+	//co_mgr_->viewCoordinateState(CoordinateMgr::co_type::target, CoordinateMgr::view_param::pos);
+	co_mgr_->viewCoordinateState(CoordinateMgr::co_type::object, CoordinateMgr::view_param::pos);
 
 	/*DrawStringEx(50, 50, -1, "scene play");
 	DrawStringEx(50, 70, -1, "camera [ Å© : A ] [ Å™ : W ] [ Å® : D ] [ Å´ : S ]");

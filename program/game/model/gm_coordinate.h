@@ -18,7 +18,7 @@ public:
 		as_it_was,
 	};
 
-private:
+protected:
 	// ----- General ----- //
 	int id_;
 	std::string name_;
@@ -90,6 +90,7 @@ public:
 		pos_from_parent_ = pos;  
 		rot_from_parent_ = rot;
 	}
+	void setIK_st(const ik_st_* ik) { ik_settings_.push_back(*ik); }
 	int getId() { return id_; }
 	std::string getName() { return name_; }
 	void setTreeLocateInfo(int type, int col, int row);

@@ -59,6 +59,17 @@ bool CoordinateMgr::registrateCoordinate(int parent_id, std::string parent_name,
 	return false;
 }
 
+bool CoordinateMgr::registrateIKCoordinate(const std::vector<coord_id_name_ik_st_>* c_ik_v) {
+
+	for (auto c_ik : *c_ik_v) {
+		if (!attachIK_st(&c_ik)) {
+			DrawStringEx(500, 10, -1, "Error: registrateIKCoordinate");
+			return false;
+		}
+	}
+	return true;
+}
+
 void CoordinateMgr::viewCoordinateState(co_type type, view_param param) {
 	int count = 0;
 	int col = 10;
@@ -84,4 +95,33 @@ void CoordinateMgr::viewCoordinateState(co_type type, view_param param) {
 	default:
 		break;
 	}
+}
+
+Coordinate* CoordinateMgr::getRegistratedCoordinate(int id, std::string name, co_type type) {
+	auto tmp = hierarchy_v_[static_cast<int>(type)];
+	for (int c = 0; c < tmp.size(); c++) {
+		auto itr = std::find_if(tmp[c].begin(), tmp[c].end(), [&](auto& c) {
+			return (c->getId() == id || c->getName() == name);
+			});
+		if (itr != tmp[c].end()) {
+			int itr_index = std::distance(tmp[c].begin(), itr);
+			return tmp[c][itr_index];
+		}
+	}
+	return nullptr;
+}
+
+bool CoordinateMgr::attachIK_st(const coord_id_name_ik_st_* c_ik_v) {
+	auto tmp = hierarchy_v_[static_cast<int>(co_type::normal)];
+	for (int c = 0; c < tmp.size(); c++) {
+		auto itr = std::find_if(tmp[c].begin(), tmp[c].end(), [&](auto& c) {
+			return (c->getId() == c_ik_v->id_ || c->getName() == c_ik_v->name_);
+			});
+		if (itr != tmp[c].end()) {
+			int itr_index = std::distance(tmp[c].begin(), itr);
+			tmp[c][itr_index]->setIK_st(&c_ik_v->attachi_ik_st);
+			return true;
+		}
+	}
+	return false;
 }

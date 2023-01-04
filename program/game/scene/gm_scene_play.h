@@ -4,7 +4,6 @@
 #include "../model/gm_coordinate_mgr.h"
 
 class GmCamera;
-class AnimSprite3D;
 class ScenePlay : public SceneBase {
 public :
 	ScenePlay() {};
@@ -16,7 +15,9 @@ public :
 
 	std::vector<Module* > mod_;
 	Coordinate* object_;
+	Coordinate* object2_;
 	Coordinate* target_;
+	Coordinate* target2_;
 	
 	void initialzie() override;
 	void update(float delta_time) override;
