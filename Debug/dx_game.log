@@ -1,13 +1,16 @@
-﻿  gm_coordinate.cpp
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\model\gm_coordinate.cpp(143,37): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
-  gm_scene_play.cpp
+﻿  gm_scene_play.cpp
 C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(26,15): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(97,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(98,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(99,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(100,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(101,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(102,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(103,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-  コードを生成中...
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(97,89): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(102,89): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(106,89): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(110,89): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(115,92): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(116,92): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(117,92): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(119,92): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(120,92): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(121,92): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(123,92): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(124,92): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(125,92): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
   dx_game.vcxproj -> C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\Debug\dx_game.exe

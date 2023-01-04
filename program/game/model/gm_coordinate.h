@@ -15,6 +15,9 @@ public:
 	enum class ik_type {
 		// object - target //
 		pos_to_pos,
+		dirx_as_dirx,
+		diry_as_diry,
+		dirz_as_dirz,
 		as_it_was,
 	};
 
@@ -50,6 +53,9 @@ protected:
 		Coordinate* coord_;
 		tnl::Vector3 dir_;
 		float length_;
+		tnl::Quaternion ik_rot_sum_;
+		tnl::Vector3 dir_upd_;
+
 	};
 	std::vector<dk_st_> children_;
 
@@ -98,4 +104,7 @@ public:
 	tnl::Vector3 getPos() { return pos_; }
 	tnl::Quaternion getRot() { return oc_rot_upd_; }
 	tree_st_ getTreeLocateInfo() { return tree_st_data_; }
+	tnl::Vector3 getDirX() { return oc_vec_upd_v_[static_cast<int>(coordinate::x)]; }
+	tnl::Vector3 getDirY() { return oc_vec_upd_v_[static_cast<int>(coordinate::y)]; }
+	tnl::Vector3 getDirZ() { return oc_vec_upd_v_[static_cast<int>(coordinate::z)]; }
 };

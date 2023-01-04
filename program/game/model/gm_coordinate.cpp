@@ -65,12 +65,14 @@ void Coordinate::setChildAndDKInit(Coordinate* child, attach_type type) {
 }
 
 void Coordinate::directKinematics(tnl::Quaternion rot, float delta_time, bool is_do_ik) {
-
+	if (name_ == "object[1]") {
+		printf("deb");
+	}
 	// ----- Update self coordinate ----- //
 	pos_ = pos_from_parent_;
 	rot_from_parent_ *= rot;
 	oc_rot_upd_ *= rot_from_parent_;
-	
+
 	for (int i = 0; i < static_cast<int>(coordinate::end); i++) {
 		oc_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_vec_v_[i], oc_rot_upd_);
 		oc_rot_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_rot_vec_v_[i], oc_rot_upd_);
@@ -78,12 +80,12 @@ void Coordinate::directKinematics(tnl::Quaternion rot, float delta_time, bool is
 	}
 	// ----- effect of IK ----- //
 	tnl::Quaternion tmp_rot;
-	if (is_do_ik) {	tmp_rot = inverseKinematics(delta_time); }
+	if (is_do_ik) { tmp_rot = inverseKinematics(delta_time); }
 	rot_from_parent_ *= tmp_rot;
 	oc_rot_upd_ *= tmp_rot;
 	for (int i = 0; i < static_cast<int>(coordinate::end); i++) {
-		oc_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_vec_v_[i], tmp_rot);
-		oc_rot_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_rot_vec_v_[i], tmp_rot);
+		oc_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_vec_v_[i], oc_rot_upd_);
+		oc_rot_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_rot_vec_v_[i], oc_rot_upd_);
 
 	}
 
@@ -114,6 +116,11 @@ void Coordinate::setIKObjectTargetInit(Coordinate* object, Coordinate* target, i
 }
 
 tnl::Quaternion Coordinate::inverseKinematics(float delta_time) {
+
+	if (id_ == 6) {
+		printf("deb");
+	}
+
 	tnl::Quaternion tmp_rot = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
 	if (ik_settings_.size() == 0) {
 		return tmp_rot;		// return non rot
@@ -133,6 +140,18 @@ tnl::Quaternion Coordinate::inverseKinematics(float delta_time) {
 				pe = ik.object_->getPos() - pos_;
 				pr = ik.target_->getPos() - pos_;
 				break;
+			case(ik_type::dirx_as_dirx):
+				pe = ik.object_->getDirX();
+				pr = ik.target_->getDirX();
+				break;
+			case(ik_type::diry_as_diry):
+				pe = ik.object_->getDirY();
+				pr = ik.target_->getDirY();
+				break;
+			case(ik_type::dirz_as_dirz):
+				pe = ik.object_->getDirZ();
+				pr = ik.target_->getDirZ();
+				break;
 			default:
 
 				break;
@@ -145,8 +164,8 @@ tnl::Quaternion Coordinate::inverseKinematics(float delta_time) {
 				(float)-1, (float)1
 			));
 			if (!isfinite(dth)) { dth = 0; }	// avoid singularity : when object or target exist on the rotation axis.
-			if (dth > tnl::PI / 180) {			// limitter
-				dth = tnl::PI / 180;
+			if (dth > tnl::PI / 24) {			// limitter
+				dth = tnl::PI / 24;
 			}
 			tnl::Vector3 axis = x.cross(y) / x.length() / y.length();	// determine rotate direction.
 			dth *= oc_rot_vec_upd_v_[i].dot(axis) >= 0 ? 1 : -1;
