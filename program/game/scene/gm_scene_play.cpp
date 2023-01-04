@@ -20,9 +20,9 @@ void ScenePlay::initialzie() {
 	camera_ = new GmCamera();
 	camera_->pos_ = { 0, 150, -300 };
 	co_mgr_ = new CoordinateMgr();
-	mod_.resize(3);
+	mod_.resize(7);
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 7; i++) {
 		float delta = 50.0 * (float)i;
 		mod_[i] = new Module();
 		mod_[i]->setCoordinate(
@@ -77,7 +77,7 @@ void ScenePlay::initialzie() {
 	object_ = new Coordinate();
 	object_->setCoordinate(
 		1, "object[1]",
-		{ 100, 0, 0 },
+		{ 0, 0, 0 },
 		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
 		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
 		tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0)
@@ -85,8 +85,8 @@ void ScenePlay::initialzie() {
 	object_->setViewCoorinate(1, 10);
 
 	co_mgr_->registrateOrigine(object_, CoordinateMgr::co_type::object);
-	auto tmp_attach_coord = co_mgr_->getRegistratedCoordinate(2, "", CoordinateMgr::co_type::normal);
-	tmp_attach_coord->setChildAndDKInit(object_, Coordinate::attach_type::absolute);
+	auto tmp_attach_coord = co_mgr_->getRegistratedCoordinate(6, "", CoordinateMgr::co_type::normal);
+	tmp_attach_coord->setChildAndDKInit(object_, Coordinate::attach_type::relative);
 	// object mover
 
 
@@ -97,6 +97,10 @@ void ScenePlay::initialzie() {
 	c_ik_st.push_back({ 0, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.2} });
 	c_ik_st.push_back({ 1, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.2} });
 	c_ik_st.push_back({ 2, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.2} });
+	c_ik_st.push_back({ 3, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.2} });
+	c_ik_st.push_back({ 4, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.2} });
+	c_ik_st.push_back({ 5, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.2} });
+	c_ik_st.push_back({ 6, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.2} });
 	co_mgr_->registrateIKCoordinate(&c_ik_st);
 
 }

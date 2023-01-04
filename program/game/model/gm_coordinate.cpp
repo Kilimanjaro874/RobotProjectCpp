@@ -74,12 +74,19 @@ void Coordinate::directKinematics(tnl::Quaternion rot, float delta_time, bool is
 	for (int i = 0; i < static_cast<int>(coordinate::end); i++) {
 		oc_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_vec_v_[i], oc_rot_upd_);
 		oc_rot_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_rot_vec_v_[i], oc_rot_upd_);
+
 	}
 	// ----- effect of IK ----- //
-	if (is_do_ik) {
-		tnl::Quaternion tmp_rot = inverseKinematics(delta_time);
-		rot_from_parent_ *= tmp_rot;
+	tnl::Quaternion tmp_rot;
+	if (is_do_ik) {	tmp_rot = inverseKinematics(delta_time); }
+	rot_from_parent_ *= tmp_rot;
+	oc_rot_upd_ *= tmp_rot;
+	for (int i = 0; i < static_cast<int>(coordinate::end); i++) {
+		oc_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_vec_v_[i], tmp_rot);
+		oc_rot_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_rot_vec_v_[i], tmp_rot);
+
 	}
+
 	tnl::Vector3 tmp_dir;
 	tnl::Vector3 tmp_pos;
 	for (auto c : children_) {
@@ -112,6 +119,9 @@ tnl::Quaternion Coordinate::inverseKinematics(float delta_time) {
 		return tmp_rot;		// return non rot
 	}
 	float dth = 0;
+	if (id_ == 0 || id_ == 1 || id_ == 2) {
+		printf("deb");
+	}
 	tnl::Vector3 pe, pr, x, y, rot_axis;
 	for (auto ik : ik_settings_) {
 		for (int i = 0; i < static_cast<int>(coordinate::end); i++) {
@@ -135,8 +145,8 @@ tnl::Quaternion Coordinate::inverseKinematics(float delta_time) {
 				(float)-1, (float)1
 			));
 			if (!isfinite(dth)) { dth = 0; }	// avoid singularity : when object or target exist on the rotation axis.
-			if (dth > tnl::PI / 24) {			// limitter
-				dth = tnl::PI / 24;
+			if (dth > tnl::PI / 180) {			// limitter
+				dth = tnl::PI / 180;
 			}
 			tnl::Vector3 axis = x.cross(y) / x.length() / y.length();	// determine rotate direction.
 			dth *= oc_rot_vec_upd_v_[i].dot(axis) >= 0 ? 1 : -1;
