@@ -3,12 +3,10 @@
 
 
 class RobotMgr : public CoordinateMgr {
-private:
-
 public:
+	RobotMgr() { init(); };
+	~RobotMgr() {};
 	void init() override;
-	void update(float delta_time) override;
+	//void update(float delta_time) override;
 	
-	
-
 };

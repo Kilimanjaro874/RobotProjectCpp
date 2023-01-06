@@ -1,7 +1,9 @@
+#pragma once
 #include "gm_scene_base.h"
 #include "../model/gm_coordinate.h"
 #include "../model/gm_module.h"
 #include "../model/gm_coordinate_mgr.h"
+#include "../model/gm_robot_mgr.h"
 
 class GmCamera;
 class ScenePlay : public SceneBase {
@@ -12,6 +14,7 @@ public :
 	GmCamera* camera_ = nullptr;
 
 	CoordinateMgr* co_mgr_;
+	RobotMgr* ro_mgr_;
 
 	std::vector<Module* > mod_;
 	Coordinate* object_;

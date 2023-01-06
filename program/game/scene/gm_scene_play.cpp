@@ -8,6 +8,7 @@ tnl::Quaternion	fix_rot;
 ScenePlay::~ScenePlay() {
 	delete camera_;
 	delete co_mgr_;
+	delete ro_mgr_;
 	for (auto m : mod_) delete m;
 	delete object_;
 	delete object2_;
@@ -20,6 +21,7 @@ void ScenePlay::initialzie() {
 	camera_ = new GmCamera();
 	camera_->pos_ = { 0, 150, -300 };
 	co_mgr_ = new CoordinateMgr();
+	ro_mgr_ = new RobotMgr();
 	mod_.resize(7);
 
 	// attach Modules to Coordinate Mgr
@@ -164,16 +166,18 @@ void ScenePlay::update(float delta_time)
 	tmp_attach_coord->constraintAdd(tmp_attach_target, Coordinate::const_condition::rot_as_rot);
 	// update all regstrated coordinate
 	co_mgr_->update(delta_time);
+	ro_mgr_->update(delta_time);
 }
 	
 
 void ScenePlay::render()
 {
 	camera_->update();
-	DrawGridGround(camera_, 50, 20);
+	DrawGridGround(camera_, 5, 200);
 
 	// renda all regstrated coordinate
-	co_mgr_->render(camera_);
+	//co_mgr_->render(camera_);
+	ro_mgr_->render(camera_);
 	co_mgr_->viewCoordinateState(CoordinateMgr::co_type::normal, CoordinateMgr::view_param::pos);
 	
 }

@@ -1,5 +1,7 @@
 #include "gm_coordinate_mgr.h"
 #include <algorithm>
+#include <fstream>
+#include <sstream>
 
 void CoordinateMgr::init() {
 	hierarchy_v_.resize(static_cast<int>(co_type::end));
@@ -113,8 +115,79 @@ Coordinate* CoordinateMgr::getRegistratedCoordinate(int id, std::string name, co
 	return nullptr;
 }
 
+/// <summary>
+/// Read coordinates from CSV data & define DK (FK) construction 
+/// (set parent-child relationship of coordinates)
+/// CSV data -> limit[col:103, row:27]
+/// </summary>
+/// <param name="csv_path"> CSV for DK settings </param> 
 void CoordinateMgr::getCoordinateDataCSV(std::string csv_path) {
+	std::string str_buf;
+	std::string str_conma_buf;
+	static std::string str[103][32];
 
+	// open the csv
+	int i = 0, j = 0;
+	std::ifstream ifs(csv_path);
+	if (!ifs) {
+		printf("error! File can't opened");
+	}
+	while (std::getline(ifs, str_buf)) {
+		std::string tmp = "";
+		std::istringstream stream(str_buf);
+
+		while (std::getline(stream, tmp, ','))
+		{
+			str[i][j] = tmp;
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+
+	for (int i = 3; i < 103; i++) {		// ignore headers
+		if (str[i][0] == "") { continue; }
+		auto c = str[i];
+		// general
+		int id = stoi(c[0]);
+		std::string name = c[1];
+		int parent_id = (c[2] != "")?  stoi(c[2]) : -1 ;					// -1 : origine flag
+		std::string parent_name = (c[3] != "")? c[3] : "this_is_origine";	
+		float deg = stof(c[10]);
+		bool is_show_coordinate = (c[29] == "on") ? true : false;
+		float size = 0, length = 0;
+		if (is_show_coordinate) {
+			size = stof(c[30]);
+			length = stof(c[31]);
+		}
+		// vector
+		auto vec = [](std::string x, std::string y, std::string z)-> tnl::Vector3 {
+			return {stof(x), stof(y), stof(z)};
+		};
+		tnl::Vector3 pos, rotAxis;
+		tnl::Vector3 vdr[6];
+		pos = vec(c[4], c[5], c[6]);
+		rotAxis = vec(c[7], c[8], c[9]);
+		for (int k = 0; k < 6; k++) {
+			int row = 11;
+			int tmp = 3 * k;
+			vdr[k] = vec(c[row + tmp], c[row + tmp + 1], c[row + tmp + 2]);
+		}
+		// create coordinate
+		Coordinate* cod = new Coordinate();
+		cod->setCoordinate(id, name,
+			pos, vdr[0], vdr[1], vdr[2], vdr[3], vdr[4], vdr[5],
+			tnl::Quaternion::RotationAxis(rotAxis, tnl::ToRadian(deg))
+			);
+		if (is_show_coordinate) { cod->setViewCoorinate(length, size); }
+		// registrate coordinates
+		if (parent_id == -1) {
+			registrateOrigine(cod, CoordinateMgr::co_type::normal);
+		}
+		else {
+			registrateCoordinate(parent_id, parent_name, cod, co_type::normal);
+		}
+	}
 }
 
 bool CoordinateMgr::attachIK_st(const coord_id_name_ik_st_* c_ik_v) {
