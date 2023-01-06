@@ -18,7 +18,6 @@ public :
 
 	std::vector<Module* > mod_;
 	Coordinate* object_;
-	Coordinate* object2_;
 	Coordinate* target_;
 	Coordinate* target2_;
 	

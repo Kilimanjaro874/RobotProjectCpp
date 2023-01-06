@@ -1,15 +1,18 @@
-﻿  gm_coordinate_mgr.cpp
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\model\gm_coordinate_mgr.cpp(8,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\model\gm_coordinate_mgr.cpp(14,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\model\gm_coordinate_mgr.cpp(15,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\model\gm_coordinate_mgr.cpp(16,22): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\model\gm_coordinate_mgr.cpp(25,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\model\gm_coordinate_mgr.cpp(26,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\model\gm_coordinate_mgr.cpp(27,22): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\model\gm_coordinate_mgr.cpp(46,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\model\gm_coordinate_mgr.cpp(56,42): warning C4018: '<=': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\model\gm_coordinate_mgr.cpp(86,21): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\model\gm_coordinate_mgr.cpp(87,22): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\model\gm_coordinate_mgr.cpp(106,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\model\gm_coordinate_mgr.cpp(195,20): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+﻿  gm_scene_play.cpp
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(29,15): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(39,38): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(41,42): warning C4305: '引数': 'double' から 'const float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(64,36): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(75,38): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(87,36): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(99,89): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(104,89): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(108,89): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(112,89): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(116,89): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(120,89): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(126,92): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(127,92): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+  gm_scene_title.cpp
+  コードを生成中...
   dx_game.vcxproj -> C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\Debug\dx_game.exe

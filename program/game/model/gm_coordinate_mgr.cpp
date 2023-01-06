@@ -179,7 +179,7 @@ void CoordinateMgr::getCoordinateDataCSV(std::string csv_path) {
 			pos, vdr[0], vdr[1], vdr[2], vdr[3], vdr[4], vdr[5],
 			tnl::Quaternion::RotationAxis(rotAxis, tnl::ToRadian(deg))
 			);
-		if (is_show_coordinate) { cod->setViewCoorinate(length, size); }
+		if (is_show_coordinate) { cod->setViewCoorinate(size, length); }
 		// registrate coordinates
 		if (parent_id == -1) {
 			registrateOrigine(cod, CoordinateMgr::co_type::normal);

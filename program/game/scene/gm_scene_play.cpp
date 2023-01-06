@@ -11,7 +11,6 @@ ScenePlay::~ScenePlay() {
 	delete ro_mgr_;
 	for (auto m : mod_) delete m;
 	delete object_;
-	delete object2_;
 	delete target_;
 	delete target2_;
 }
@@ -26,7 +25,7 @@ void ScenePlay::initialzie() {
 
 	// attach Modules to Coordinate Mgr
 	for (int i = 0; i < 7; i++) {
-		float delta = 50.0 * (float)i;
+		float delta = 5.0 * (float)i;
 		mod_[i] = new Module();
 		mod_[i]->setCoordinate(
 			i,
@@ -36,9 +35,9 @@ void ScenePlay::initialzie() {
 			{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
 			tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(0))
 		);
-		mod_[i]->setViewCoorinate(1, 10);
+		mod_[i]->setViewCoorinate(0.05, 0.5);
 		Parts* p = new Parts();
-		p->mesh_ = dxe::Mesh::CreateSphere(1);
+		p->mesh_ = dxe::Mesh::CreateSphere(0.01);
 		p->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/test.jpg"));
 		mod_[i]->setParts(p);
 
@@ -61,7 +60,7 @@ void ScenePlay::initialzie() {
 		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
 		tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0)
 	);
-	target_->setViewCoorinate(1, 10);
+	target_->setViewCoorinate(0.1, 0.5);
 	co_mgr_->registrateOrigine(target_, CoordinateMgr::co_type::target);
 
 	target2_ = new Coordinate();
@@ -72,7 +71,7 @@ void ScenePlay::initialzie() {
 		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
 		tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0)
 	);
-	target2_->setViewCoorinate(1, 10);
+	target2_->setViewCoorinate(0.1, 0.55);
 	co_mgr_->registrateCoordinate(1, "", target2_, CoordinateMgr::co_type::target);
 
 	// object
@@ -84,7 +83,7 @@ void ScenePlay::initialzie() {
 		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
 		tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0)
 	);
-	object_->setViewCoorinate(1.5, 20);
+	object_->setViewCoorinate(0.1, 0.5);
 	co_mgr_->registrateOrigine(object_, CoordinateMgr::co_type::object);
 
 	// attach object to Robot Arm End Effector 
@@ -96,7 +95,7 @@ void ScenePlay::initialzie() {
 
 	// --- init IK setting --- //
 	std::vector<CoordinateMgr::coord_id_name_ik_st_> c_ik_st;
-	c_ik_st.push_back({ 0, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.15} });
+	c_ik_st.push_back({ 0, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.45} });
 	//c_ik_st.push_back({ 0, "", {object_, target2_, Coordinate::ik_type::dirx_as_dirx, 0.05} });
 	//c_ik_st.push_back({ 0, "", {object_, target2_, Coordinate::ik_type::diry_as_diry, 0.05} });
 	//c_ik_st.push_back({ 0, "", {object_, target2_, Coordinate::ik_type::dirz_as_dirz, 0.05} });
@@ -105,11 +104,11 @@ void ScenePlay::initialzie() {
 	//c_ik_st.push_back({ 1, "", {object_, target2_, Coordinate::ik_type::dirx_as_dirx, 0.05} });
 	//c_ik_st.push_back({ 1, "", {object_, target2_, Coordinate::ik_type::diry_as_diry, 0.05} });
 	//c_ik_st.push_back({ 1, "", {object_, target2_, Coordinate::ik_type::dirz_as_dirz, 0.05} });
-	c_ik_st.push_back({ 2, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.15} });
+	c_ik_st.push_back({ 2, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.10} });
 	//c_ik_st.push_back({ 2, "", {object_, target2_, Coordinate::ik_type::dirx_as_dirx, 0.05} });
 	//c_ik_st.push_back({ 2, "", {object_, target2_, Coordinate::ik_type::diry_as_diry, 0.05} });
 	//c_ik_st.push_back({ 2, "", {object_, target2_, Coordinate::ik_type::dirz_as_dirz, 0.05} });
-	c_ik_st.push_back({ 3, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.25} });
+	c_ik_st.push_back({ 3, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.10} });
 	//c_ik_st.push_back({ 3, "", {object_, target2_, Coordinate::ik_type::dirx_as_dirx, 0.01} });
 	//c_ik_st.push_back({ 3, "", {object_, target2_, Coordinate::ik_type::diry_as_diry, 0.001} });
 	//c_ik_st.push_back({ 3, "", {object_, target2_, Coordinate::ik_type::dirz_as_dirz, 0.001} });
@@ -157,7 +156,7 @@ void ScenePlay::update(float delta_time)
 
 	
 	// --- Move Target --- //
-	tnl::Vector3 move = { 75 * sin(count_time_), 70, 75 * cos(count_time_) };
+	tnl::Vector3 move = { 10 * sin(count_time_), 10, 10 * cos(count_time_) };
 	// get target coordinate
 	auto tmp_attach_target = co_mgr_->getRegistratedCoordinate(2, "", CoordinateMgr::co_type::target);
 	tmp_attach_target->setTranslate(move, Coordinate::attach_type::absolute);
@@ -176,8 +175,9 @@ void ScenePlay::render()
 	DrawGridGround(camera_, 5, 200);
 
 	// renda all regstrated coordinate
-	//co_mgr_->render(camera_);
+	co_mgr_->render(camera_);
 	ro_mgr_->render(camera_);
-	co_mgr_->viewCoordinateState(CoordinateMgr::co_type::normal, CoordinateMgr::view_param::pos);
+	ro_mgr_->viewCoordinateState(CoordinateMgr::co_type::normal, CoordinateMgr::view_param::pos);
+	//co_mgr_->viewCoordinateState(CoordinateMgr::co_type::normal, CoordinateMgr::view_param::pos);
 	
 }
