@@ -51,7 +51,9 @@ bool CoordinateMgr::registrateCoordinate(int parent_id, std::string parent_name,
 		if (itr != hierarchy_v_[type_no][c].end()) {
 			col = c;
 			int itr_index = std::distance (hierarchy_v_[type_no][c].begin(), itr);
-			hierarchy_v_[type_no][col][itr_index]->setChildAndDKInit(coord, a_type);
+			auto parent = hierarchy_v_[type_no][col][itr_index];
+			parent->setChildAndDKInit(coord, a_type);
+			coord->setParent(parent);
 			if (hierarchy_v_[type_no][col].size() <= (col + 1)) { hierarchy_v_[type_no].resize(col + 2); }
 			hierarchy_v_[type_no][col + 1].push_back(coord);
 

@@ -15,16 +15,27 @@ public:
 	enum class ik_type {
 		// object - target //
 		pos_to_pos,
-		dirx_as_dirx,
-		diry_as_diry,
-		dirz_as_dirz,
+		dirx_as_dirx, dirx_as_diry,	dirx_as_dirz,
+		diry_as_diry, diry_as_dirx,	diry_as_dirz,
+		dirz_as_dirz, dirz_as_dirx,	dirz_as_diry,
+		dirx_look_pos,
+		diry_look_pos,
+		dirz_look_pos,
 		as_it_was,
 	};
+
+	struct dk_st_delta_ {
+		bool is_update = false;
+		tnl::Vector3 dir_;
+		float length_;
+	};
+	dk_st_delta_ dk_st_upd_delta_;
 
 protected:
 	// ----- General ----- //
 	int id_;
 	std::string name_;
+	Coordinate* parent_;
 	struct tree_st_ {
 		int com_type;
 		int com_col;
@@ -53,9 +64,6 @@ protected:
 		Coordinate* coord_;
 		tnl::Vector3 dir_;
 		float length_;
-		tnl::Quaternion ik_rot_sum_;
-		tnl::Vector3 dir_upd_;
-
 	};
 	std::vector<dk_st_> children_;
 
@@ -97,10 +105,11 @@ public:
 		rot_from_parent_ = rot;
 	}
 	void setIK_st(const ik_st_* ik) { ik_settings_.push_back(*ik); }
+	void setTranslate(tnl::Vector3 move, attach_type type = attach_type::relative);
 	int getId() { return id_; }
 	std::string getName() { return name_; }
-	void setTreeLocateInfo(int type, int col, int row);
 	void setViewCoorinate(float length, float radius);
+	void setParent(Coordinate* parent) { parent_ = parent; }
 	tnl::Vector3 getPos() { return pos_; }
 	tnl::Quaternion getRot() { return oc_rot_upd_; }
 	tree_st_ getTreeLocateInfo() { return tree_st_data_; }
