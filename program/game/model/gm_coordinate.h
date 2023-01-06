@@ -24,6 +24,11 @@ public:
 		as_it_was,
 	};
 
+	enum class const_condition {
+		// object - target //
+		rot_as_rot,
+	};
+
 	struct dk_st_delta_ {
 		bool is_update = false;
 		tnl::Vector3 dir_;
@@ -99,6 +104,7 @@ public:
 	void setIKObjectTargetInit(Coordinate* object, Coordinate* target, ik_type type, float kp,
 		bool is_rot_axis_x = true, bool is_rot_axis_y = true, bool is_rot_axis_z = true);
 	tnl::Quaternion inverseKinematics(float delta_time);
+	void constraintAdd(Coordinate* target, const_condition constraint);
 	// ----- setter, getter ----- //
 	void setParentParams(tnl::Vector3 pos,tnl::Quaternion rot) {
 		pos_from_parent_ = pos;  
@@ -116,4 +122,7 @@ public:
 	tnl::Vector3 getDirX() { return oc_vec_upd_v_[static_cast<int>(coordinate::x)]; }
 	tnl::Vector3 getDirY() { return oc_vec_upd_v_[static_cast<int>(coordinate::y)]; }
 	tnl::Vector3 getDirZ() { return oc_vec_upd_v_[static_cast<int>(coordinate::z)]; }
+	tnl::Vector3 getRotX() { return oc_rot_vec_upd_v_[static_cast<int>(coordinate::x)]; }
+	tnl::Vector3 getRotY() { return oc_rot_vec_upd_v_[static_cast<int>(coordinate::y)]; }
+	tnl::Vector3 getRotZ() { return oc_rot_vec_upd_v_[static_cast<int>(coordinate::z)]; }
 };

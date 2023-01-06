@@ -225,7 +225,21 @@ tnl::Quaternion Coordinate::inverseKinematics(float delta_time) {
 	return tmp_rot;
 }
 
-
+void Coordinate::constraintAdd(Coordinate* target, const_condition constraint) {
+	if (const_condition::rot_as_rot == constraint) {
+		int x = static_cast<int>(coordinate::x);
+		int y = static_cast<int>(coordinate::y);
+		int z = static_cast<int>(coordinate::z);
+		oc_vec_v_[x] = target->getDirX();
+		oc_vec_v_[y] = target->getDirY();
+		oc_vec_v_[z] = target->getDirZ();
+		oc_rot_vec_v_[x] = target->getRotX();
+		oc_rot_vec_v_[y] = target->getRotY();
+		oc_rot_vec_v_[z] = target->getRotZ();
+		oc_rot_ = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
+		oc_rot_upd_ = oc_rot_;
+	}
+}
 
 
 

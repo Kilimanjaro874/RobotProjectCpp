@@ -13,9 +13,6 @@ void CoordinateMgr::update(float delta_time) {
 		for (int c = 0; c < hierarchy_v_[i].size(); c++) {
 			for (int r = 0; r < hierarchy_v_[i][c].size(); r++) {
 				if (hierarchy_v_[i][c][r] == nullptr) { continue; }
-				if (hierarchy_v_[i][c][r]->getName() == "coord[6]") {
-					printf("deb");
-				}
 				hierarchy_v_[i][c][r]->update(delta_time);
 			}
 		}

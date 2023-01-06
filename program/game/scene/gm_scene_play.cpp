@@ -62,7 +62,7 @@ void ScenePlay::initialzie() {
 	target2_ = new Coordinate();
 	target2_->setCoordinate(
 		2, "target[2]",
-		{ 100, 0, 50 },
+		{ 100, 0, 0 },
 		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
 		{ 1, 0, 0 }, { 0, 1, 0 }, { 0, 0, 1 },
 		tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0)
@@ -94,35 +94,35 @@ void ScenePlay::initialzie() {
 
 	// set IK setting
 	std::vector<CoordinateMgr::coord_id_name_ik_st_> c_ik_st;
-	c_ik_st.push_back({ 0, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.25} });
+	c_ik_st.push_back({ 0, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.15} });
 	//c_ik_st.push_back({ 0, "", {object_, target2_, Coordinate::ik_type::dirx_as_dirx, 0.05} });
 	//c_ik_st.push_back({ 0, "", {object_, target2_, Coordinate::ik_type::diry_as_diry, 0.05} });
 	//c_ik_st.push_back({ 0, "", {object_, target2_, Coordinate::ik_type::dirz_as_dirz, 0.05} });
 	
-	c_ik_st.push_back({ 1, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.25} });
+	c_ik_st.push_back({ 1, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.15} });
 	//c_ik_st.push_back({ 1, "", {object_, target2_, Coordinate::ik_type::dirx_as_dirx, 0.05} });
 	//c_ik_st.push_back({ 1, "", {object_, target2_, Coordinate::ik_type::diry_as_diry, 0.05} });
 	//c_ik_st.push_back({ 1, "", {object_, target2_, Coordinate::ik_type::dirz_as_dirz, 0.05} });
-	c_ik_st.push_back({ 2, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.25} });
+	c_ik_st.push_back({ 2, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.15} });
 	//c_ik_st.push_back({ 2, "", {object_, target2_, Coordinate::ik_type::dirx_as_dirx, 0.05} });
 	//c_ik_st.push_back({ 2, "", {object_, target2_, Coordinate::ik_type::diry_as_diry, 0.05} });
 	//c_ik_st.push_back({ 2, "", {object_, target2_, Coordinate::ik_type::dirz_as_dirz, 0.05} });
-	//c_ik_st.push_back({ 3, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.25} });
+	c_ik_st.push_back({ 3, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.25} });
 	//c_ik_st.push_back({ 3, "", {object_, target2_, Coordinate::ik_type::dirx_as_dirx, 0.01} });
-	c_ik_st.push_back({ 3, "", {object_, target2_, Coordinate::ik_type::diry_as_diry, 0.001} });
-	c_ik_st.push_back({ 3, "", {object_, target2_, Coordinate::ik_type::dirz_as_dirz, 0.001} });
-	//c_ik_st.push_back({ 4, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.05} });
+	//c_ik_st.push_back({ 3, "", {object_, target2_, Coordinate::ik_type::diry_as_diry, 0.001} });
+	//c_ik_st.push_back({ 3, "", {object_, target2_, Coordinate::ik_type::dirz_as_dirz, 0.001} });
+	c_ik_st.push_back({ 4, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.05} });
 	//c_ik_st.push_back({ 4, "", {object_, target2_, Coordinate::ik_type::dirz_look_pos, 0.001} });
-	c_ik_st.push_back({ 4, "", {object_, target2_, Coordinate::ik_type::diry_as_diry, 0.001} });
-	c_ik_st.push_back({ 4, "", {object_, target2_, Coordinate::ik_type::dirz_as_dirz, 0.001} });
-	//c_ik_st.push_back({ 5, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.01} });
+	//c_ik_st.push_back({ 4, "", {object_, target2_, Coordinate::ik_type::diry_as_diry, 0.001} });
+	//c_ik_st.push_back({ 4, "", {object_, target2_, Coordinate::ik_type::dirz_as_dirz, 0.001} });
+	c_ik_st.push_back({ 5, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.01} });
 	//c_ik_st.push_back({ 5, "", {object_, target2_, Coordinate::ik_type::dirz_look_pos, 0.001} });
-	c_ik_st.push_back({ 5, "", {object_, target2_, Coordinate::ik_type::diry_as_diry, 0.01} });
-	c_ik_st.push_back({ 5, "", {object_, target2_, Coordinate::ik_type::dirz_as_dirz, 0.01} });
+	//c_ik_st.push_back({ 5, "", {object_, target2_, Coordinate::ik_type::diry_as_diry, 0.001} });
+	//c_ik_st.push_back({ 5, "", {object_, target2_, Coordinate::ik_type::dirz_as_dirz, 0.001} });
 	//c_ik_st.push_back({ 6, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.01} });
 	//c_ik_st.push_back({ 6, "", {object_, target2_, Coordinate::ik_type::dirz_look_pos, 0.001} });
-	c_ik_st.push_back({ 6, "", {object_, target2_, Coordinate::ik_type::diry_as_diry, 0.01} });
-	c_ik_st.push_back({ 6, "", {object_, target2_, Coordinate::ik_type::dirz_as_dirz, 0.01} });
+	c_ik_st.push_back({ 6, "", {object_, target2_, Coordinate::ik_type::diry_as_diry, 0.001} });
+	c_ik_st.push_back({ 6, "", {object_, target2_, Coordinate::ik_type::dirz_as_dirz, 0.001} });
 	co_mgr_->registrateIKCoordinate(&c_ik_st);
 
 }
@@ -166,10 +166,15 @@ void ScenePlay::update(float delta_time)
 	//	//mod_[i]->update(delta_time);
 	//}
 
-	auto tmp_attach_coord = co_mgr_->getRegistratedCoordinate(1, "", CoordinateMgr::co_type::object);
+
+	
+
 	auto tmp_attach_target = co_mgr_->getRegistratedCoordinate(2, "", CoordinateMgr::co_type::target);
-	tnl::Vector3 delta = { 0, 0.01, 0 };
+	tnl::Vector3 delta = { 0, 0.1, 0 };
 	tmp_attach_target->setTranslate(delta);
+
+	auto tmp_attach_coord = co_mgr_->getRegistratedCoordinate(1, "", CoordinateMgr::co_type::object);
+	tmp_attach_coord->constraintAdd(tmp_attach_target, Coordinate::const_condition::rot_as_rot);
 
 	co_mgr_->update(delta_time);
 }
