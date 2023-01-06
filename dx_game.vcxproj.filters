@@ -157,7 +157,7 @@
     <ClCompile Include="program\game\gm_camera.cpp">
       <Filter>program\game</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_robot.cpp">
+    <ClCompile Include="program\game\model\gm_robot_mgr.cpp">
       <Filter>program\game\model\Robot</Filter>
     </ClCompile>
     <ClCompile Include="program\game\model\gm_module.cpp">
@@ -273,7 +273,7 @@
     <ClInclude Include="program\game\gm_camera.h">
       <Filter>program\game</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_robot.h">
+    <ClInclude Include="program\game\model\gm_robot_mgr.h">
       <Filter>program\game\model\Robot</Filter>
     </ClInclude>
     <ClInclude Include="program\game\model\gm_module.h">

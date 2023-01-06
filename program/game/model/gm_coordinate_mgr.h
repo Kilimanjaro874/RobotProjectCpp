@@ -30,6 +30,8 @@ public:
 	bool registrateIKCoordinate(const std::vector<coord_id_name_ik_st_>* c_ik_v);
 	void viewCoordinateState(co_type type, view_param param);
 	Coordinate* getRegistratedCoordinate(int id, std::string name, co_type type);
+	void getCoordinateDataCSV(std::string csv_path);
+	void getIKandConstDataCSV(std::string csv_path);
 private:
 	bool attachIK_st(const coord_id_name_ik_st_* c_ik_v);
 };

@@ -113,6 +113,10 @@ Coordinate* CoordinateMgr::getRegistratedCoordinate(int id, std::string name, co
 	return nullptr;
 }
 
+void CoordinateMgr::getCoordinateDataCSV(std::string csv_path) {
+
+}
+
 bool CoordinateMgr::attachIK_st(const coord_id_name_ik_st_* c_ik_v) {
 	auto tmp = hierarchy_v_[static_cast<int>(co_type::normal)];
 	for (int c = 0; c < tmp.size(); c++) {

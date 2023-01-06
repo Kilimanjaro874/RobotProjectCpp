@@ -68,9 +68,6 @@ void Coordinate::setChildAndDKInit(Coordinate* child, attach_type type) {
 }
 
 void Coordinate::directKinematics(tnl::Quaternion rot, float delta_time, bool is_do_ik) {
-	if (name_ == "object[1]") {
-		printf("deb");
-	}
 	// ----- Update self coordinate ----- //
 	pos_ = pos_from_parent_;
 	rot_from_parent_ *= rot;
@@ -125,11 +122,6 @@ void Coordinate::setIKObjectTargetInit(Coordinate* object, Coordinate* target, i
 }
 
 tnl::Quaternion Coordinate::inverseKinematics(float delta_time) {
-
-	if (id_ == 6) {
-		printf("deb");
-	}
-
 	tnl::Quaternion tmp_rot = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
 	if (ik_settings_.size() == 0) {
 		return tmp_rot;		// return non rot
