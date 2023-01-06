@@ -75,7 +75,7 @@ void Coordinate::directKinematics(tnl::Quaternion rot, float delta_time, bool is
 	pos_ = pos_from_parent_;
 	rot_from_parent_ *= rot;
 	oc_rot_upd_ *= rot_from_parent_;
-
+	
 	for (int i = 0; i < static_cast<int>(coordinate::end); i++) {
 		oc_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_vec_v_[i], oc_rot_upd_);
 		oc_rot_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_rot_vec_v_[i], oc_rot_upd_);

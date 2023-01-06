@@ -19,6 +19,8 @@ public :
 	Coordinate* target_;
 	Coordinate* target2_;
 	
+	float count_time_ = 0;
+
 	void initialzie() override;
 	void update(float delta_time) override;
 	void render() override;

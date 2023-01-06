@@ -22,6 +22,7 @@ void ScenePlay::initialzie() {
 	co_mgr_ = new CoordinateMgr();
 	mod_.resize(7);
 
+	// attach Modules to Coordinate Mgr
 	for (int i = 0; i < 7; i++) {
 		float delta = 50.0 * (float)i;
 		mod_[i] = new Module();
@@ -47,7 +48,9 @@ void ScenePlay::initialzie() {
 		}
 
 	}
-	// set object target
+
+	// --- set object target (for IK) --- //
+	// target
 	target_ = new Coordinate();
 	target_->setCoordinate(
 		1, "target[1]",
@@ -70,10 +73,7 @@ void ScenePlay::initialzie() {
 	target2_->setViewCoorinate(1, 10);
 	co_mgr_->registrateCoordinate(1, "", target2_, CoordinateMgr::co_type::target);
 
-
-
-
-	// object origine
+	// object
 	object_ = new Coordinate();
 	object_->setCoordinate(
 		1, "object[1]",
@@ -83,16 +83,16 @@ void ScenePlay::initialzie() {
 		tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0)
 	);
 	object_->setViewCoorinate(1.5, 20);
-
 	co_mgr_->registrateOrigine(object_, CoordinateMgr::co_type::object);
+
+	// attach object to Robot Arm End Effector 
 	auto tmp_attach_coord = co_mgr_->getRegistratedCoordinate(6, "", CoordinateMgr::co_type::normal);
 	tmp_attach_coord->setChildAndDKInit(object_, Coordinate::attach_type::relative);
-	// object mover
 
 
 
 
-	// set IK setting
+	// --- init IK setting --- //
 	std::vector<CoordinateMgr::coord_id_name_ik_st_> c_ik_st;
 	c_ik_st.push_back({ 0, "", {object_, target2_, Coordinate::ik_type::pos_to_pos, 0.15} });
 	//c_ik_st.push_back({ 0, "", {object_, target2_, Coordinate::ik_type::dirx_as_dirx, 0.05} });
@@ -123,17 +123,16 @@ void ScenePlay::initialzie() {
 	//c_ik_st.push_back({ 6, "", {object_, target2_, Coordinate::ik_type::dirz_look_pos, 0.001} });
 	c_ik_st.push_back({ 6, "", {object_, target2_, Coordinate::ik_type::diry_as_diry, 0.001} });
 	c_ik_st.push_back({ 6, "", {object_, target2_, Coordinate::ik_type::dirz_as_dirz, 0.001} });
-	co_mgr_->registrateIKCoordinate(&c_ik_st);
+	co_mgr_->registrateIKCoordinate(&c_ik_st);	
 
 }
 
 void ScenePlay::update(float delta_time)
 {
+	count_time_ += delta_time;
 	GameManager* mgr = GameManager::GetInstance();
-	//------------------------------------------------------------------
-	//
-	// ƒJƒƒ‰§Œä
-	//
+
+	// --- Camera Control --- //
 	tnl::Vector3 rot[4] = {
 		{ 0, tnl::ToRadian(1.0f), 0 },
 		{ 0, -tnl::ToRadian(1.0f), 0 },
@@ -155,27 +154,15 @@ void ScenePlay::update(float delta_time)
 	}
 
 	
-	
-
-	//for (int i = 0; i < 10; i++) {
-	//	float tmp = 0;
-	//	tmp = tnl::ToRadian(1);
-	//	coord_[i]->directKinematics(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tmp));
-	//	coord_[i]->update(delta_time);
-	//	//mod_[i]->directKinematics(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tmp));
-	//	//mod_[i]->update(delta_time);
-	//}
-
-
-	
-
+	// --- Move Target --- //
+	tnl::Vector3 move = { 75 * sin(count_time_), 70, 75 * cos(count_time_) };
+	// get target coordinate
 	auto tmp_attach_target = co_mgr_->getRegistratedCoordinate(2, "", CoordinateMgr::co_type::target);
-	tnl::Vector3 delta = { 0, 0.1, 0 };
-	tmp_attach_target->setTranslate(delta);
-
+	tmp_attach_target->setTranslate(move, Coordinate::attach_type::absolute);
+	// set construction 
 	auto tmp_attach_coord = co_mgr_->getRegistratedCoordinate(1, "", CoordinateMgr::co_type::object);
 	tmp_attach_coord->constraintAdd(tmp_attach_target, Coordinate::const_condition::rot_as_rot);
-
+	// update all regstrated coordinate
 	co_mgr_->update(delta_time);
 }
 	
@@ -185,17 +172,8 @@ void ScenePlay::render()
 	camera_->update();
 	DrawGridGround(camera_, 50, 20);
 
-	/*for (int i = 0; i < 10; i++) {
-		coord_[i]->render(camera_);
-	}*/
-
+	// renda all regstrated coordinate
 	co_mgr_->render(camera_);
 	co_mgr_->viewCoordinateState(CoordinateMgr::co_type::normal, CoordinateMgr::view_param::pos);
-	//co_mgr_->viewCoordinateState(CoordinateMgr::co_type::target, CoordinateMgr::view_param::pos);
-	//co_mgr_->viewCoordinateState(CoordinateMgr::co_type::object, CoordinateMgr::view_param::pos);
-
-	/*DrawStringEx(50, 50, -1, "scene play");
-	DrawStringEx(50, 70, -1, "camera [ © : A ] [ ª : W ] [ ¨ : D ] [ « : S ]");
-	DrawStringEx(50, 90, -1, "camera [ ‰“ : Z ] [ ‹ß : X ] ");
-	DrawStringEx(50, 120, -1, "character [ ¶ : © ] [ ‰œ : ª ] [ ‰E : ¨ ] [ è‘O : « ] ");*/
+	
 }

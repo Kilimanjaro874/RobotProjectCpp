@@ -40,7 +40,7 @@ protected:
 	// ----- General ----- //
 	int id_;
 	std::string name_;
-	Coordinate* parent_;
+	Coordinate* parent_ = nullptr;
 	struct tree_st_ {
 		int com_type;
 		int com_col;
@@ -59,6 +59,7 @@ protected:
 	tnl::Quaternion
 		oc_rot_,
 		oc_rot_upd_;
+
 	// ----- Render ----- //
 	std::vector<Parts*> coordinate_parts_;
 
@@ -66,7 +67,7 @@ protected:
 	tnl::Vector3 pos_from_parent_;
 	tnl::Quaternion rot_from_parent_;
 	struct dk_st_ {
-		Coordinate* coord_;
+		Coordinate* coord_ = nullptr;
 		tnl::Vector3 dir_;
 		float length_;
 	};
@@ -74,8 +75,8 @@ protected:
 
 	// ----- Inverse Kinematics ----- //
 	struct ik_st_ {
-		Coordinate* object_;
-		Coordinate* target_;
+		Coordinate* object_ = nullptr;
+		Coordinate* target_ = nullptr;
 		ik_type ik_type_;
 		float kp_;
 		bool is_rot_[static_cast<int>(coordinate::end)] = { true, true, true };
