@@ -157,16 +157,13 @@
     <ClCompile Include="program\game\gm_camera.cpp">
       <Filter>program\game</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_robot_mgr.cpp">
-      <Filter>program\game\model\Robot</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\model\gm_module.cpp">
+    <ClCompile Include="program\game\model\gm_object.cpp">
       <Filter>program\game\model\Robot</Filter>
     </ClCompile>
     <ClCompile Include="program\game\model\gm_coordinate.cpp">
       <Filter>program\game\model\Robot</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_coordinate_mgr.cpp">
+    <ClCompile Include="program\game\model\gm_object_mgr.cpp">
       <Filter>program\game\model\Robot</Filter>
     </ClCompile>
   </ItemGroup>
@@ -273,16 +270,13 @@
     <ClInclude Include="program\game\gm_camera.h">
       <Filter>program\game</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_robot_mgr.h">
-      <Filter>program\game\model\Robot</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\model\gm_module.h">
+    <ClInclude Include="program\game\model\gm_object.h">
       <Filter>program\game\model\Robot</Filter>
     </ClInclude>
     <ClInclude Include="program\game\model\gm_coordinate.h">
       <Filter>program\game\model\Robot</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_coordinate_mgr.h">
+    <ClInclude Include="program\game\model\gm_object_mgr.h">
       <Filter>program\game\model\Robot</Filter>
     </ClInclude>
   </ItemGroup>
