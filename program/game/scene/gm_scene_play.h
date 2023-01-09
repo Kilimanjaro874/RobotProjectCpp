@@ -1,7 +1,8 @@
+#pragma once
 #include "gm_scene_base.h"
+#include "../model/gm_object.h"
 #include "../model/gm_coordinate.h"
-#include "../model/gm_module.h"
-#include "../model/gm_coordinate_mgr.h"
+#include "../model/gm_object_mgr.h"
 
 class GmCamera;
 class ScenePlay : public SceneBase {
@@ -11,14 +12,16 @@ public :
 
 	GmCamera* camera_ = nullptr;
 
-	CoordinateMgr* co_mgr_;
+	ObjectMgr* co_mgr_;
+	ObjectMgr* ro_mgr_;
 
-	std::vector<Module* > mod_;
+	std::vector<Object* > obj_;
 	Coordinate* object_;
-	Coordinate* object2_;
 	Coordinate* target_;
 	Coordinate* target2_;
 	
+	float count_time_ = 0;
+
 	void initialzie() override;
 	void update(float delta_time) override;
 	void render() override;

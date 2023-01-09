@@ -38,10 +38,9 @@
     <ClCompile Include="program\game\gm_main.cpp" />
     <ClCompile Include="program\game\gm_manager.cpp" />
     <ClCompile Include="program\game\model\gm_coordinate.cpp" />
-    <ClCompile Include="program\game\model\gm_coordinate_mgr.cpp" />
-    <ClCompile Include="program\game\model\gm_module.cpp" />
+    <ClCompile Include="program\game\model\gm_object_mgr.cpp" />
+    <ClCompile Include="program\game\model\gm_object.cpp" />
     <ClCompile Include="program\game\model\gm_parts.cpp" />
-    <ClCompile Include="program\game\model\gm_robot.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_play.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_result.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_title.cpp" />
@@ -67,11 +66,10 @@
     <ClInclude Include="program\game\gm_camera.h" />
     <ClInclude Include="program\game\gm_main.h" />
     <ClInclude Include="program\game\gm_manager.h" />
-    <ClInclude Include="program\game\model\gm_coordinate_mgr.h" />
+    <ClInclude Include="program\game\model\gm_object_mgr.h" />
     <ClInclude Include="program\game\model\gm_coordinate.h" />
-    <ClInclude Include="program\game\model\gm_module.h" />
+    <ClInclude Include="program\game\model\gm_object.h" />
     <ClInclude Include="program\game\model\gm_parts.h" />
-    <ClInclude Include="program\game\model\gm_robot.h" />
     <ClInclude Include="program\game\scene\gm_scene_base.h" />
     <ClInclude Include="program\game\scene\gm_scene_play.h" />
     <ClInclude Include="program\game\scene\gm_scene_result.h" />

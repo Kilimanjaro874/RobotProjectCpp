@@ -159,7 +159,7 @@ void gameMain(float deltatime) {
 			seqCommonDescription();
 			T v = static_cast<T>(complete_ - start_) ;
 			float t = sequence_.getProgressTime() / complete_time_ ;
-			float s = sin( toRadian(t * 180.0f) ) ;
+			float s = sin( ToRadian(t * 180.0f) ) ;
 			float trigonometric = powf(s,trigonometric_power_) ;
 			*origin_ = start_ + v * trigonometric ;
 			return false;
@@ -170,7 +170,7 @@ void gameMain(float deltatime) {
 			seqCommonDescription();
 			T v = static_cast<T>(complete_ - start_);
 			float t = sequence_.getProgressTime() / complete_time_;
-			float c = cos(toRadian(t * 180.0f));
+			float c = cos(ToRadian(t * 180.0f));
 			float trigonometric = powf(c, trigonometric_power_);
 			*origin_ = start_ + v * trigonometric;
 			return false;

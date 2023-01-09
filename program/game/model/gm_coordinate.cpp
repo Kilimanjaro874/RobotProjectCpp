@@ -3,6 +3,9 @@
 void Coordinate::init() {}
 
 void Coordinate::update(float delta_time) {
+	if (name_ == "target[1]") {
+		printf("deb");
+	}
 	directKinematics(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0.00), delta_time);
 	for (auto cod : coordinate_parts_) {
 		cod->mesh_->pos_ = getPos() + tnl::Vector3::TransformCoord(cod->ofs_pos_, getRot());
@@ -60,12 +63,11 @@ void Coordinate::setChildAndDKInit(Coordinate* child, attach_type type) {
 	if (attach_type::relative == type) { delta = child->getPos(); }
 	float length = delta.length();
 	delta.normalize();
-	dk_st_ tmp = { child, delta, length };
+	dk_st_ tmp = {child, delta, length };
 	children_.push_back(tmp);
 }
 
 void Coordinate::directKinematics(tnl::Quaternion rot, float delta_time, bool is_do_ik) {
-
 	// ----- Update self coordinate ----- //
 	pos_ = pos_from_parent_;
 	rot_from_parent_ *= rot;
@@ -78,18 +80,24 @@ void Coordinate::directKinematics(tnl::Quaternion rot, float delta_time, bool is
 	}
 	// ----- effect of IK ----- //
 	tnl::Quaternion tmp_rot;
-	if (is_do_ik) {	tmp_rot = inverseKinematics(delta_time); }
+	if (is_do_ik) { tmp_rot = inverseKinematics(delta_time); }
 	rot_from_parent_ *= tmp_rot;
 	oc_rot_upd_ *= tmp_rot;
 	for (int i = 0; i < static_cast<int>(coordinate::end); i++) {
-		oc_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_vec_v_[i], tmp_rot);
-		oc_rot_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_rot_vec_v_[i], tmp_rot);
+		oc_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_vec_v_[i], oc_rot_upd_);
+		oc_rot_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_rot_vec_v_[i], oc_rot_upd_);
 
 	}
 
 	tnl::Vector3 tmp_dir;
 	tnl::Vector3 tmp_pos;
 	for (auto c : children_) {
+		if (c.coord_->dk_st_upd_delta_.is_update) {
+			auto child_move = c.coord_->dk_st_upd_delta_;
+			c.dir_ = child_move.dir_;
+			c.length_ = child_move.length_;
+			child_move.is_update = false;
+		}
 		tmp_dir = tnl::Vector3::TransformCoord(c.dir_, oc_rot_upd_);
 		tmp_pos = pos_ + tmp_dir * c.length_;
 		c.coord_->setParentParams(tmp_pos, rot_from_parent_);
@@ -133,6 +141,59 @@ tnl::Quaternion Coordinate::inverseKinematics(float delta_time) {
 				pe = ik.object_->getPos() - pos_;
 				pr = ik.target_->getPos() - pos_;
 				break;
+
+			case(ik_type::dirx_as_dirx):
+				pe = ik.object_->getDirX();
+				pr = ik.target_->getDirX();
+				break;
+			case(ik_type::dirx_as_diry):
+				pe = ik.object_->getDirX();
+				pr = ik.target_->getDirY();
+				break;
+			case(ik_type::dirx_as_dirz):
+				pe = ik.object_->getDirX();
+				pr = ik.target_->getDirZ();
+				break;
+
+			case(ik_type::diry_as_diry):
+				pe = ik.object_->getDirY();
+				pr = ik.target_->getDirY();
+				break;
+			case(ik_type::diry_as_dirx):
+				pe = ik.object_->getDirY();
+				pr = ik.target_->getDirX();
+				break;
+			case(ik_type::diry_as_dirz):
+				pe = ik.object_->getDirY();
+				pr = ik.target_->getDirZ();
+				break;
+
+			case(ik_type::dirz_as_dirz):
+				pe = ik.object_->getDirZ();
+				pr = ik.target_->getDirZ();
+				break;
+			case(ik_type::dirz_as_dirx):
+				pe = ik.object_->getDirZ();
+				pr = ik.target_->getDirX();
+				break;
+			case(ik_type::dirz_as_diry):
+				pe = ik.object_->getDirZ();
+				pr = ik.target_->getDirY();
+				break;
+
+			case(ik_type::dirx_look_pos):
+				pe = ik.object_->getDirX();
+				pr = ik.target_->getPos() - pos_;
+				break;
+			case(ik_type::diry_look_pos):
+				pe = ik.object_->getDirY();
+				pr = ik.target_->getPos() - pos_;
+				break;
+			case(ik_type::dirz_look_pos):
+				pe = ik.object_->getDirZ();
+				pr = ik.target_->getPos() - pos_;
+				break;
+
 			default:
 
 				break;
@@ -145,8 +206,8 @@ tnl::Quaternion Coordinate::inverseKinematics(float delta_time) {
 				(float)-1, (float)1
 			));
 			if (!isfinite(dth)) { dth = 0; }	// avoid singularity : when object or target exist on the rotation axis.
-			if (dth > tnl::PI / 180) {			// limitter
-				dth = tnl::PI / 180;
+			if (dth > tnl::PI / 24) {			// limitter
+				dth = tnl::PI / 24;
 			}
 			tnl::Vector3 axis = x.cross(y) / x.length() / y.length();	// determine rotate direction.
 			dth *= oc_rot_vec_upd_v_[i].dot(axis) >= 0 ? 1 : -1;
@@ -156,13 +217,25 @@ tnl::Quaternion Coordinate::inverseKinematics(float delta_time) {
 	return tmp_rot;
 }
 
-// ----- setter, getter ----- //
-void Coordinate::setTreeLocateInfo(int type, int col, int row) {
-	tree_st_data_.com_type = type;
-	tree_st_data_.com_col = col;
-	tree_st_data_.com_row = row;
+void Coordinate::constraintAdd(Coordinate* target, const_condition constraint) {
+	if (const_condition::rot_as_rot == constraint) {
+		int x = static_cast<int>(coordinate::x);
+		int y = static_cast<int>(coordinate::y);
+		int z = static_cast<int>(coordinate::z);
+		oc_vec_v_[x] = target->getDirX();
+		oc_vec_v_[y] = target->getDirY();
+		oc_vec_v_[z] = target->getDirZ();
+		oc_rot_vec_v_[x] = target->getRotX();
+		oc_rot_vec_v_[y] = target->getRotY();
+		oc_rot_vec_v_[z] = target->getRotZ();
+		oc_rot_ = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
+		oc_rot_upd_ = oc_rot_;
+	}
 }
 
+
+
+// ----- setter, getter ----- //
 void Coordinate::setViewCoorinate(float radius, float length) {
 	Parts* x = new Parts();
 	x->mesh_ = dxe::Mesh::CreateCylinder(radius, length);
@@ -182,5 +255,14 @@ void Coordinate::setViewCoorinate(float radius, float length) {
 	z->ofs_pos_ = oc_vec_upd_v_[static_cast<int>(coordinate::z)] * length / 2;
 	z->ofs_rot_ = oc_rot_ * tnl::Quaternion::RotationAxis(oc_rot_vec_upd_v_[static_cast<int>(coordinate::x)], tnl::ToRadian(90));
 	coordinate_parts_.push_back(z);
+}
+
+void Coordinate::setTranslate(tnl::Vector3 move, attach_type type) {
+	if (attach_type::absolute == type) { pos_ = move; }
+	if (attach_type::relative == type) { pos_ += move; }
+	tnl::Vector3 dir = pos_ - parent_->getPos();
+	float delta_length = dir.length();
+	dir.normalize();
+	dk_st_upd_delta_ = { true, dir, delta_length };
 }
 

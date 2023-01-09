@@ -1,14 +1,23 @@
-﻿  gm_coordinate.cpp
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate.cpp(143,37): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+﻿  dxlib_ext_mesh_barrel.cpp
+  dxlib_ext_mesh.cpp
+  gm_robot_mgr.cpp
   gm_scene_play.cpp
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\scene\gm_scene_play.cpp(26,15): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\scene\gm_scene_play.cpp(97,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\scene\gm_scene_play.cpp(98,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\scene\gm_scene_play.cpp(99,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\scene\gm_scene_play.cpp(100,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\scene\gm_scene_play.cpp(101,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\scene\gm_scene_play.cpp(102,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\scene\gm_scene_play.cpp(103,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\GitManagiment\RobotProjectRenew\program\game\scene\gm_scene_play.cpp(30,15): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\waltz\Documents\GitManagiment\RobotProjectRenew\program\game\scene\gm_scene_play.cpp(40,38): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\GitManagiment\RobotProjectRenew\program\game\scene\gm_scene_play.cpp(42,42): warning C4305: '引数': 'double' から 'const float' へ切り詰めます。
+C:\Users\waltz\Documents\GitManagiment\RobotProjectRenew\program\game\scene\gm_scene_play.cpp(65,36): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\GitManagiment\RobotProjectRenew\program\game\scene\gm_scene_play.cpp(76,38): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\GitManagiment\RobotProjectRenew\program\game\scene\gm_scene_play.cpp(88,36): warning C4305: '引数': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\GitManagiment\RobotProjectRenew\program\game\scene\gm_scene_play.cpp(100,89): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\GitManagiment\RobotProjectRenew\program\game\scene\gm_scene_play.cpp(105,89): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\GitManagiment\RobotProjectRenew\program\game\scene\gm_scene_play.cpp(109,89): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\GitManagiment\RobotProjectRenew\program\game\scene\gm_scene_play.cpp(113,89): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\GitManagiment\RobotProjectRenew\program\game\scene\gm_scene_play.cpp(117,90): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\GitManagiment\RobotProjectRenew\program\game\scene\gm_scene_play.cpp(121,90): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\GitManagiment\RobotProjectRenew\program\game\scene\gm_scene_play.cpp(127,92): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\GitManagiment\RobotProjectRenew\program\game\scene\gm_scene_play.cpp(128,92): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+  gm_scene_result.cpp
+  gm_scene_title.cpp
+  sys_main.cpp
   コードを生成中...
-  LINK : 前回のインクリメンタル リンクで C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\Debug\dx_game.exe が見つからなかったか、ビルドされませんでした。フル リンクを行います。
-  dx_game.vcxproj -> C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\Debug\dx_game.exe
+  dx_game.vcxproj -> C:\Users\waltz\Documents\GitManagiment\RobotProjectRenew\Debug\dx_game.exe

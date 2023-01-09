@@ -362,6 +362,8 @@ namespace dxe {
 		void drawVtxNormal();
 		static Mesh* CreateConvertMV(Mesh* mesh);
 
+		// ----- add : array of function pointer
+
 	} ;
 
 
