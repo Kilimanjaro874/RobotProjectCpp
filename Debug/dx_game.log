@@ -1,13 +1,14 @@
 ﻿  gm_coordinate.cpp
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\model\gm_coordinate.cpp(143,37): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\model\gm_coordinate.cpp(143,37): warning C4244: '=': 'double' から 'float' への変換です。データが失われる可能性があります。
   gm_scene_play.cpp
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(26,15): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(97,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(98,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(99,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(100,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(101,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(102,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
-C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\program\game\scene\gm_scene_play.cpp(103,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\scene\gm_scene_play.cpp(26,15): warning C4244: '初期化中': 'double' から 'float' への変換です。データが失われる可能性があります。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\scene\gm_scene_play.cpp(97,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\scene\gm_scene_play.cpp(98,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\scene\gm_scene_play.cpp(99,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\scene\gm_scene_play.cpp(100,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\scene\gm_scene_play.cpp(101,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\scene\gm_scene_play.cpp(102,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
+C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\program\game\scene\gm_scene_play.cpp(103,88): warning C4305: '初期化中': 'double' から 'float' へ切り詰めます。
   コードを生成中...
-  dx_game.vcxproj -> C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotReNew_0104\Debug\dx_game.exe
+  LINK : 前回のインクリメンタル リンクで C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\Debug\dx_game.exe が見つからなかったか、ビルドされませんでした。フル リンクを行います。
+  dx_game.vcxproj -> C:\Users\waltz\Documents\CppProjects\GitManagements\QuantumCoreRobotRenew\Debug\dx_game.exe
