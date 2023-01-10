@@ -151,6 +151,15 @@
     <ClCompile Include="program\game\gm_camera.cpp">
       <Filter>program\game</Filter>
     </ClCompile>
+    <ClCompile Include="program\game\gm_assemble.cpp">
+      <Filter>program\game\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_assemble_repository.cpp">
+      <Filter>program\game\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\model\gm_coordinate.cpp">
+      <Filter>program\game\actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="program\library\picojson.h">
@@ -251,6 +260,15 @@
     </ClInclude>
     <ClInclude Include="program\game\gm_camera.h">
       <Filter>program\game</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_assemble.h">
+      <Filter>program\game\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_assemble_repository.h">
+      <Filter>program\game\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\model\gm_coordinate.h">
+      <Filter>program\game\actor</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
