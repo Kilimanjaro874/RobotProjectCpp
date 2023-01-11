@@ -8,7 +8,8 @@
 ScenePlay::~ScenePlay() {
 	delete camera_;
 	delete assem_repo_;
-	delete test_;
+	delete actor_;
+	//delete test_;
 }
 
 
@@ -19,14 +20,15 @@ void ScenePlay::initialzie() {
 	camera_ = new GmCamera();
 	camera_->pos_ = { 0, 150, -300 };
 	assem_repo_ = tol::AssemRepo::Create();
-	test_ = assem_repo_->getAssemble(200);
+	actor_ = tol::Actor::Create(assem_repo_);
+	//test_ = assem_repo_->getAssemble(200);
 	
 }
 
 void ScenePlay::update(float delta_time)
 {
 	GameManager* mgr = GameManager::GetInstance();
-	
+	actor_->update(delta_time);
 	
 }
 
@@ -34,6 +36,5 @@ void ScenePlay::render()
 {
 	camera_->update();
 	DrawGridGround(camera_, 5, 300);
-	test_->render(camera_);
-	
+	actor_->render(camera_);
 }

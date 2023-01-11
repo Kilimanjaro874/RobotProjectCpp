@@ -34,7 +34,7 @@ namespace tol {
 		void setIsRender(bool is_render) { is_render_ = is_render; }
 		void setOffset_pos(const tnl::Vector3& offset_pos) { offset_pos_ = offset_pos; }
 		void setRot(const tnl::Quaternion& rot) { rot_ = rot; }
-		void setScale(const tnl::Vector3& scale);
+		void setScale(float scale);
 		// ---- getter ----- //
 
 	};

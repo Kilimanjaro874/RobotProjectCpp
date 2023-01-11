@@ -48,9 +48,12 @@
 /// <param name="is_resize"> Assemble class resize flag </param>
 /// <param name="size"> Assemble class resize param : size of (x, y, z) </param>
 /// <returns></returns>
-tol::Assemble* tol::AssemRepo::getAssemble(const int& id, const std::string name, bool is_resize, const tnl::Vector3& size) {
+tol::Assemble* tol::AssemRepo::getAssemble(const int& id, const std::string name, bool is_resize, float size) {
 	for (auto a : assem_st_) {
 		if (a->id_ == id || a->name_ == name) {
+			if (is_resize) {
+				a->assem_->setScale(size);
+			}
 			return a->assem_;
 		}
 	}

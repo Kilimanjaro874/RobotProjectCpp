@@ -157,7 +157,13 @@
     <ClCompile Include="program\game\gm_assemble_repository.cpp">
       <Filter>program\game\actor</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_coordinate.cpp">
+    <ClCompile Include="program\game\gm_object.cpp">
+      <Filter>program\game\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_coordinate.cpp">
+      <Filter>program\game\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_actor.cpp">
       <Filter>program\game\actor</Filter>
     </ClCompile>
   </ItemGroup>
@@ -267,7 +273,13 @@
     <ClInclude Include="program\game\gm_assemble_repository.h">
       <Filter>program\game\actor</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_coordinate.h">
+    <ClInclude Include="program\game\gm_object.h">
+      <Filter>program\game\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_coordinate.h">
+      <Filter>program\game\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_actor.h">
       <Filter>program\game\actor</Filter>
     </ClInclude>
   </ItemGroup>

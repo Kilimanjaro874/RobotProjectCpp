@@ -29,7 +29,7 @@ namespace tol {
 		static AssemRepo* Create();
 		// ---- setter ---- //
 		// ---- getter ---- //
-		Assemble* getAssemble(const int& id, const std::string name = "", bool is_resize = false, const tnl::Vector3& size = {1, 1, 1});
+		Assemble* getAssemble(const int& id, const std::string name = "", bool is_resize = false, float size = 1.0);
 	private:
 
 	};

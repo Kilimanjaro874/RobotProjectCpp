@@ -15,8 +15,9 @@ void tol::Assemble::render(dxe::Camera* camera) {
 	}
 }
 
-void tol::Assemble::setScale(const tnl::Vector3& scale) {
+void tol::Assemble::setScale(float scale) {
 	for (auto m : mesh_v_) {
 		m->scl_ = scale;
+		m->pos_ *= scale;
 	}
 }
