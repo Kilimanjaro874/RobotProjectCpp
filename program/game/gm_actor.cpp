@@ -16,6 +16,13 @@ std::shared_ptr<tol::Actor> tol::Actor::Create(std::shared_ptr<AssemRepo> assem_
 	act->coordinate_.setCoordinate();
 	act->assemble_ = assem_repo->getAssemble(200, "", true, 1.0);
 	act->getObjectDataCSV(assem_repo, csv_path);
+	// -- kinematics setting (test) -- //
+	//act->kinematics_ = std::make_shared<Kinematics>(Kinematics());
+	int obj1_id = 1;
+	std::string obj1_name = "";
+	auto obj1 = act->getObjectTree(obj1_id, obj1_name);
+	obj1->kinematics_ = std::make_unique<Kinematics > (Kinematics());
+	obj1->kinematics_->initDKSetting(obj1);
 
 	return act;
 }
@@ -74,7 +81,7 @@ void tol::Actor::getObjectDataCSV(std::shared_ptr<AssemRepo> assem_repo, std::st
 		float a_deg = stof(c[28]);
 		float a_size = stof(c[29]);
 		// -- create objects -- //
-		std::shared_ptr<Object> obj = std::make_shared<Object>(Object(id, name));
+		std::shared_ptr<Object> obj = std::make_unique<Object>(Object(id, name));
 		obj->coordinate_.setCoordinate(
 			pos,
 			tnl::Quaternion::RotationAxis(axis, tnl::ToRadian(deg)),
@@ -84,7 +91,7 @@ void tol::Actor::getObjectDataCSV(std::shared_ptr<AssemRepo> assem_repo, std::st
 		obj->assemble_->setOffset_pos(a_offset_pos);
 		obj->assemble_->setRot(tnl::Quaternion::RotationAxis(a_rot_axis, tnl::ToRadian(a_deg)));
 		// -- register Actor class -- //
-		std::shared_ptr<Object> parent = this->getParentTree(parent_id, parent_name);
+		std::shared_ptr<Object> parent = this->getObjectTree(parent_id, parent_name);
 		if (parent != nullptr) {
 			parent->setChild(obj);
 			obj->setParent(parent);

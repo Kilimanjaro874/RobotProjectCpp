@@ -1,10 +1,11 @@
 #pragma once
 #include <memory>
 #include "../dxlib_ext/dxlib_ext.h"
-#include "gm_object.h";
-#include "gm_coordinate.h"
+#include "gm_object.h"
 
 namespace tol {
+	class Object;
+
 	class Kinematics {
 	public:
 		Kinematics() {}
@@ -12,6 +13,7 @@ namespace tol {
 
 		// ---- Direct Kinematics ---- //
 		bool is_do_dk_ = true;
+		tnl::Vector3 pos_from_parent_;
 		/*enum class dk_attach_type {
 			absolute, relative
 		};*/
@@ -47,8 +49,8 @@ namespace tol {
 			bool is_can_rot_axis[static_cast<int>(Coordinate::coordinate::end)] = { true, true, true };
 		};
 		std::vector<ik_data_st> ik_data_st_;
-		virtual void init(const Object& obj);
+		virtual void init(const std::shared_ptr<Object> obj);
 		virtual void update(float delta_time);
-		void initDKSetting(const Object& obj);
+		void initDKSetting(std::shared_ptr<Object> obj);
 	};
 }

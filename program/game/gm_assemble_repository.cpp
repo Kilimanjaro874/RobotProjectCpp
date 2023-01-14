@@ -21,7 +21,7 @@
 	// 200:
 	/*std::shared_ptr<assem_st> sh200 = std::make_shared<assem_st>({200, "", std::make_unique<Assemble>(Assemble())});
 	*/
-	auto sh200 = std::make_shared<assem_st>();
+	auto sh200 = std::make_unique<assem_st>();
 	sh200->id_ = 200;
 	sh200->name_ = "";
 	sh200->assem_ = std::make_unique<Assemble>(Assemble());
@@ -40,7 +40,7 @@
 		sh200->assem_->setParts(jo);
 	}
 	// registrate 
-	asr->assem_st_.push_back(sh200);
+	asr->assem_st_.push_back(std::move(sh200));
 
 	return asr;
 	

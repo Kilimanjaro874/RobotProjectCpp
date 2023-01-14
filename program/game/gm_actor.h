@@ -18,6 +18,7 @@ namespace tol {
 		static std::shared_ptr<Actor> Create(std::shared_ptr<AssemRepo> assem_repo, std::string csv_path);
 	private:
 		void getObjectDataCSV(std::shared_ptr<AssemRepo> assem_repo, std::string csv_path);
+		void getKinematicsSettingDataCSV(std::string csv_path);
 	};
 
 }

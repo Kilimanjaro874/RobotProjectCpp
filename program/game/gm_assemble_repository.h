@@ -17,12 +17,12 @@ namespace tol {
 
 	private:
 		struct assem_st {
-			int id_;
-			std::string name_;
-			std::shared_ptr<Assemble> assem_;
+			int id_ = -1;
+			std::string name_ = "";
+			std::shared_ptr<Assemble> assem_ = nullptr;
 
 		};
-		std::vector<std::shared_ptr<assem_st>> assem_st_;
+		std::vector<std::unique_ptr<assem_st>> assem_st_;
 	public:
 		static std::shared_ptr<AssemRepo> Create();
 		// ---- setter ---- //

@@ -33,13 +33,13 @@ void tol::Object::renderTree(dxe::Camera* camera) {
 }
 
 
-std::shared_ptr<tol::Object> tol::Object::getParentTree(int& id, std::string& name) {
+std::shared_ptr<tol::Object> tol::Object::getObjectTree(int& id, std::string& name) {
 	if(id_ == id || name_ == name){
 		return shared_from_this();
 	}
 	for (auto itr = children_.begin(); itr != children_.end(); itr++) {
 		auto child = *itr;
-		std::shared_ptr<tol::Object> obj = child->getParentTree(id, name);
+		std::shared_ptr<tol::Object> obj = child->getObjectTree(id, name);
 		if (obj == nullptr) {
 			continue; 
 		}

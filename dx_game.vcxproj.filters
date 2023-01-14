@@ -169,6 +169,9 @@
     <ClCompile Include="program\game\gm_parts.cpp">
       <Filter>program\game\actor</Filter>
     </ClCompile>
+    <ClCompile Include="program\game\gm_kinematics.cpp">
+      <Filter>program\game\actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="program\library\picojson.h">
