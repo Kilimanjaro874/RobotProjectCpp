@@ -288,5 +288,8 @@
     <ClInclude Include="program\game\gm_parts.h">
       <Filter>program\game\actor</Filter>
     </ClInclude>
+    <ClInclude Include="program\game\gm_kinematics.h">
+      <Filter>program\game\actor</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -22,9 +22,11 @@ namespace tol {
 		// ---- General ---- //
 		int id_;
 		std::string name_;
-		// ---- class ---- //
+		// ---- class (required) ---- //
 		Coordinate coordinate_;								// have a
 		std::shared_ptr<Assemble> assemble_ = nullptr;		// have a (get from AssemRepo)
+		// ---- class (option) ---- //
+		
 	protected:
 		// ---- Tree struct ---- //
 		std::weak_ptr<Object> parent_;

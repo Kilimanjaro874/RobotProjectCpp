@@ -15,14 +15,14 @@ namespace tol {
 				delete m;
 			}
 		}
-
+		enum class coordinate {
+			x, y, z, end
+		};
 	private:
 		// ---- General ---- //
 		tnl::Vector3 pos_;			// origine pos.
 		tnl::Quaternion rot_;		// rotate 
-		enum class coordinate {
-			x, y, z, end
-		};
+		
 		std::vector<tnl::Vector3>
 			oc_vec_v_,				// orthonormal basis(initial value)
 			oc_vec_upd_v_;			// (update value)
