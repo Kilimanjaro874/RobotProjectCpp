@@ -1,10 +1,11 @@
 #include "gm_assemble_repository.h"
+#include "gm_assemble.h"
 
 /// <summary>
 /// Create AssemRepo classes.
 /// Å¶ Generates Assem classes here and stores in assem_st_;
 /// </summary>
- tol::AssemRepo* tol::AssemRepo::Create() {
+ std::shared_ptr<tol::AssemRepo> tol::AssemRepo::Create() {
 	
 	// ---- default params ---- //
 	const std::string  normal_tex = "graphics/test.jpg";
@@ -12,25 +13,31 @@
 	const tnl::Vector3 zero_vec = { 0, 0, 0 };
 	const tnl::Quaternion zero_rot = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
 	// ---- get instance ---- //
-	AssemRepo* asr = new AssemRepo();
+	auto asr = std::make_shared<AssemRepo>(AssemRepo());
 	// ---- make Assembles ---- //
 	
 
 	// --- Shoulder: 2XX --- //
 	// 200:
-	assem_st* sh200 = new assem_st({ 200, "sh200" });
-	sh200->assem_ = new Assemble();
+	/*std::shared_ptr<assem_st> sh200 = std::make_shared<assem_st>({200, "", std::make_unique<Assemble>(Assemble())});
+	*/
+	auto sh200 = std::make_shared<assem_st>();
+	sh200->id_ = 200;
+	sh200->name_ = "";
+	sh200->assem_ = std::make_unique<Assemble>(Assemble());
 	{
-		dxe::Mesh* sp = dxe::Mesh::CreateSphere(0.3);
-		sp->setTexture(dxe::Texture::CreateFromFile(normal_tex));
-		sp->pos_ = zero_vec;
-		sp->rot_q_ = zero_rot;
-		sh200->assem_->setMesh(sp);
-		dxe::Mesh* jo = dxe::Mesh::CreateCylinder(0.2, 2.5);
-		jo->setTexture(dxe::Texture::CreateFromFile(normal_tex));
-		jo->pos_ = { 0, -1.0, 0 };
-		jo->rot_q_ = zero_rot;
-		sh200->assem_->setMesh(jo);
+		auto sp = std::make_shared<Parts>(Parts());
+		sp->mesh_ = dxe::Mesh::CreateSphere(0.2);
+		sp->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		sp->ofs_pos_ = zero_vec;
+		sp->ofs_rot_ = zero_rot;
+		sh200->assem_->setParts(sp);
+		auto jo = std::make_shared<Parts>(Parts());
+		jo->mesh_ = dxe::Mesh::CreateCylinder(0.1, 1.0);
+		jo->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		jo->ofs_pos_ = { 0, 0.5, 0 };
+		jo->ofs_rot_ = zero_rot;
+		sh200->assem_->setParts(jo);
 	}
 	// registrate 
 	asr->assem_st_.push_back(sh200);
@@ -40,7 +47,7 @@
 }
 
 /// <summary>
-/// get Assemble class pointer
+/// get new Assemble class pointer(retun :Assembled class (copy of) stacked in this class)
 /// Å¶ Excecute Create() in advance.
 /// </summary>
 /// <param name="id"> Assemble class id </param>
@@ -48,13 +55,21 @@
 /// <param name="is_resize"> Assemble class resize flag </param>
 /// <param name="size"> Assemble class resize param : size of (x, y, z) </param>
 /// <returns></returns>
-tol::Assemble* tol::AssemRepo::getAssemble(const int& id, const std::string name, bool is_resize, float size) {
-	for (auto a : assem_st_) {
-		if (a->id_ == id || a->name_ == name) {
-			if (is_resize) {
-				a->assem_->setScale(size);
+std::shared_ptr<tol::Assemble> tol::AssemRepo::getAssemble(const int& id, const std::string name, bool is_resize, float size) {
+	for (int i = 0; i < assem_st_.size(); i++) {
+		if (assem_st_[i]->id_ == id || assem_st_[i]->name_ == name) {
+			auto target = assem_st_[i]->assem_;
+			auto tmp = std::make_shared<tol::Assemble>(Assemble());
+			tmp->setIsUpdate(target->getIsUpdate());
+			tmp->setIsRender(target->getIsRender());
+			std::vector<std::shared_ptr<Parts>> parts = target->CreateCopyParts();
+			for (int i = 0; i < parts.size(); i++) {
+				tmp->setParts(parts[i]);
 			}
-			return a->assem_;
+			if (is_resize) {
+				tmp->setScale(size);
+			}
+			return tmp;
 		}
 	}
 	return nullptr;

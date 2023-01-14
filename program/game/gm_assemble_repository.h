@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include "gm_assemble.h"
 
 namespace tol {
@@ -12,24 +13,22 @@ namespace tol {
 	/// </summary>
 	public:
 		AssemRepo() {}
-		virtual ~AssemRepo() {
-			for (auto a : assem_st_) {
-				delete a;
-			}
-		}
+		virtual ~AssemRepo() {}
 
 	private:
 		struct assem_st {
 			int id_;
 			std::string name_;
-			Assemble* assem_;
+			std::shared_ptr<Assemble> assem_;
+
 		};
-		std::vector<assem_st*> assem_st_;
+		std::vector<std::shared_ptr<assem_st>> assem_st_;
 	public:
-		static AssemRepo* Create();
+		static std::shared_ptr<AssemRepo> Create();
 		// ---- setter ---- //
 		// ---- getter ---- //
-		Assemble* getAssemble(const int& id, const std::string name = "", bool is_resize = false, float size = 1.0);
+		std::shared_ptr<Assemble> getAssemble(const int& id, const std::string name = "", bool is_resize = false, float size = 1.0);
+		std::shared_ptr<Assemble> CopyRepoAssemble(const int& id, const std::string name = "", bool is_resize = false, float size = 1.0);
 	private:
 
 	};
