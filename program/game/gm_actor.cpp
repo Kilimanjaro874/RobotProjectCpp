@@ -3,12 +3,11 @@
 #include "gm_actor.h"
 
 void tol::Actor::update(float delta_time) {
-	coordinate_.update(delta_time);
-	assemble_->update(delta_time, coordinate_.getPos(), coordinate_.getRot());
+	Object::update(delta_time);
 }
 
 void tol::Actor::render(dxe::Camera* camera) {
-	assemble_->render(camera);
+	Object::render(camera);
 }
 
 std::shared_ptr<tol::Actor> tol::Actor::Create(std::shared_ptr<AssemRepo> assem_repo, std::string csv_path) {
@@ -17,13 +16,8 @@ std::shared_ptr<tol::Actor> tol::Actor::Create(std::shared_ptr<AssemRepo> assem_
 	act->assemble_ = assem_repo->getAssemble(200, "", true, 1.0);
 	act->getObjectDataCSV(assem_repo, csv_path);
 	// -- kinematics setting (test) -- //
-	//act->kinematics_ = std::make_shared<Kinematics>(Kinematics());
-	int obj1_id = 1;
-	std::string obj1_name = "";
-	auto obj1 = act->getObjectTree(obj1_id, obj1_name);
-	obj1->kinematics_ = std::make_unique<Kinematics > (Kinematics());
-	obj1->kinematics_->initDKSetting(obj1);
-
+	act->kinematics_ = std::make_unique<Kinematics>(Kinematics());
+	act->kinematics_->init(act);
 	return act;
 }
 
@@ -87,6 +81,7 @@ void tol::Actor::getObjectDataCSV(std::shared_ptr<AssemRepo> assem_repo, std::st
 			tnl::Quaternion::RotationAxis(axis, tnl::ToRadian(deg)),
 			dirx, diry, dirz
 			);
+		obj->coordinate_.setViewCoordinate(1.1, 0.02);
 		obj->assemble_ = assem_repo->getAssemble(assem_id, assem_name, true, a_size);
 		obj->assemble_->setOffset_pos(a_offset_pos);
 		obj->assemble_->setRot(tnl::Quaternion::RotationAxis(a_rot_axis, tnl::ToRadian(a_deg)));
@@ -96,6 +91,9 @@ void tol::Actor::getObjectDataCSV(std::shared_ptr<AssemRepo> assem_repo, std::st
 			parent->setChild(obj);
 			obj->setParent(parent);
 		}
+		// -- create kinematics -- //
+		obj->kinematics_ = std::make_unique<Kinematics >(Kinematics());
+		obj->kinematics_->init(obj);
 	}
-
 }
+

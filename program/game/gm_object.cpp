@@ -3,10 +3,12 @@
 
 void tol::Object::update(float delta_time) {
 	coordinate_.update(delta_time);
+	kinematics_->update(delta_time, shared_from_this());
 	assemble_->update(delta_time, coordinate_.getPos(), coordinate_.getRot());
 }
 
 void tol::Object::render(dxe::Camera* camera) {
+	coordinate_.render(camera);
 	assemble_->render(camera);
 }
 

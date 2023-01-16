@@ -22,7 +22,7 @@ namespace tol {
 			std::shared_ptr<Assemble> assem_ = nullptr;
 
 		};
-		std::vector<std::unique_ptr<assem_st>> assem_st_;
+		std::vector<std::shared_ptr<assem_st>> assem_st_;
 	public:
 		static std::shared_ptr<AssemRepo> Create();
 		// ---- setter ---- //

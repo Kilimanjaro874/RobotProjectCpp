@@ -2,7 +2,7 @@
 
 void tol::Coordinate::update(float delta_time) {
 	for (auto m : mesh_v_) {
-		m->pos_ = pos_ + tnl::Vector3::TransformCoord(m->pos_, rot_);
+		m->pos_ = pos_ +tnl::Vector3::TransformCoord(m->pos_, rot_);
 		m->rot_q_ = m->rot_q_ * rot_;
 	}
 }
@@ -61,4 +61,15 @@ void tol::Coordinate::setViewCoordinate(float length, float radius) {
 	z->pos_ = oc_vec_upd_v_[static_cast<int>(coordinate::z)] * length / 2;
 	z->rot_q_ = rot_ * tnl::Quaternion::RotationAxis(oc_vec_upd_v_[static_cast<int>(coordinate::x)], tnl::ToRadian(90));
 	mesh_v_.push_back(z);
+}
+
+/// <summary>
+/// Update Coordinate by rot(Quaternion : additional rot)
+/// </summary>
+/// <param name="rot"> additional Quaternion </param>
+void tol::Coordinate::setAddRot(tnl::Quaternion rot) {
+	rot_ *= rot;
+	for (int i = 0; i < static_cast<int>(coordinate::end); i++) {
+		oc_vec_upd_v_[i] = tnl::Vector3::TransformCoord(oc_vec_v_[i], rot_);
+	}
 }

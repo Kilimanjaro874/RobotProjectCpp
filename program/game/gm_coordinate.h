@@ -43,7 +43,8 @@ namespace tol {
 		);
 		void setViewCoordinate(float length, float radius);
 		// ---- setter ---- //
-
+		void setPos(tnl::Vector3 pos) { pos_ = pos; }
+		void setAddRot(tnl::Quaternion rot);
 		// ---- getter ---- //
 		tnl::Vector3 getPos() { return pos_; }
 		tnl::Quaternion getRot() { return rot_; }

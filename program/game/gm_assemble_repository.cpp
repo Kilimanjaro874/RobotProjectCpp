@@ -21,7 +21,7 @@
 	// 200:
 	/*std::shared_ptr<assem_st> sh200 = std::make_shared<assem_st>({200, "", std::make_unique<Assemble>(Assemble())});
 	*/
-	auto sh200 = std::make_unique<assem_st>();
+	auto sh200 = std::make_shared<assem_st>();
 	sh200->id_ = 200;
 	sh200->name_ = "";
 	sh200->assem_ = std::make_unique<Assemble>(Assemble());

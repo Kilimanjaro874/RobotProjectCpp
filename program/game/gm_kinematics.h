@@ -10,10 +10,11 @@ namespace tol {
 	public:
 		Kinematics() {}
 		~Kinematics() {}
-
+	private:
 		// ---- Direct Kinematics ---- //
 		bool is_do_dk_ = true;
-		tnl::Vector3 pos_from_parent_;
+		bool is_upd_dk_data_st_ = false;
+		tnl::Quaternion rot_from_world_;
 		/*enum class dk_attach_type {
 			absolute, relative
 		};*/
@@ -49,8 +50,19 @@ namespace tol {
 			bool is_can_rot_axis[static_cast<int>(Coordinate::coordinate::end)] = { true, true, true };
 		};
 		std::vector<ik_data_st> ik_data_st_;
+	public:
 		virtual void init(const std::shared_ptr<Object> obj);
-		virtual void update(float delta_time);
+		virtual void update(float delta_time, std::shared_ptr<Object> obj);
 		void initDKSetting(std::shared_ptr<Object> obj);
+	private:
+		void directKinematics(float delta_time, std::shared_ptr<Object> parent);
+		void updateCoordinate(std::shared_ptr<Object> obj);
+		// ---- setter ---- //
+		void setCoordinateDiffInfo(const tnl::Quaternion& rot);
+		void setAddRotToRFW(const tnl::Quaternion& rot) { rot_from_world_ *= rot; }
+		void setRotFromWorld(tnl::Quaternion rot) { rot_from_world_ = rot; }
+		// ---- getter ---- //
+		dk_data_st getCoordinateDiffInfo() { return dk_data_st_; };
+		tnl::Quaternion getRotFromWorld() { return rot_from_world_; }
 	};
 }
