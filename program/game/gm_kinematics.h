@@ -5,28 +5,20 @@
 
 namespace tol {
 	class Object;
-
 	class Kinematics {
 	public:
 		Kinematics() {}
-		~Kinematics() {}
+		virtual ~Kinematics() {}
+
+	//// ---- Member variables ---- ////
 	private:
-		// ---- Direct Kinematics ---- //
-		bool is_do_dk_ = true;
-		bool is_upd_dk_data_st_ = false;
-		tnl::Quaternion rot_from_world_;
-		/*enum class dk_attach_type {
-			absolute, relative
-		};*/
-		struct dk_data_st {
-			// store coordinate difference info. (parent - this(child)) 
-			tnl::Vector3 dir_p_to_c_;
-			float len_p_to_c_;
+		struct dk_data_st {		// store coordinate difference info. (this - parent)
+			tnl::Vector3 dir_c_p_;
+			float len_c_p_;
 		};
 		dk_data_st dk_data_st_ = { {0, 0, 0}, 1.0 };
-
-		// ---- Inverse Kinematics ---- //
-		bool is_do_ik_ = true;
+		bool is_dk_init = false;
+	//// ---- Member functions ---- ////
 		enum class ik_type {
 			// object - target //
 			pos_to_pos,
@@ -38,31 +30,24 @@ namespace tol {
 			dirz_look_pos,
 			as_it_was,
 		};
-		enum class ik_construction {
+		enum class ik_const {
 			// object - target //
-			rot_as_rot,
+			rot_as_rot
 		};
-		struct ik_data_st {
-			std::weak_ptr<Object> ik_target_;
-			std::weak_ptr<Object> ik_object_;
-			ik_type type_;
-			float kp;
-			bool is_can_rot_axis[static_cast<int>(Coordinate::coordinate::end)] = { true, true, true };
-		};
-		std::vector<ik_data_st> ik_data_st_;
+
 	public:
-		virtual void init(const std::shared_ptr<Object> obj);
+		virtual void init(const std::shared_ptr<Object> parent, const std::shared_ptr<Object> child);
 		virtual void update(float delta_time, std::shared_ptr<Object> obj);
-		void initDKSetting(std::shared_ptr<Object> obj);
+
 	private:
-		void directKinematics(float delta_time, std::shared_ptr<Object> parent);
-		void updateCoordinate(std::shared_ptr<Object> obj);
+		void initDKSetting(const std::shared_ptr<Object> parent, const std::shared_ptr<Object> child);
+	public:
 		// ---- setter ---- //
-		void setCoordinateDiffInfo(const tnl::Quaternion& rot);
-		void setAddRotToRFW(const tnl::Quaternion& rot) { rot_from_world_ *= rot; }
-		void setRotFromWorld(tnl::Quaternion rot) { rot_from_world_ = rot; }
+		void setDkData(const tnl::Vector3& dir, float length) {
+			dk_data_st_.dir_c_p_ = dir;
+			dk_data_st_.len_c_p_ = length;
+		}
 		// ---- getter ---- //
-		dk_data_st getCoordinateDiffInfo() { return dk_data_st_; };
-		tnl::Quaternion getRotFromWorld() { return rot_from_world_; }
+
 	};
 }

@@ -1,27 +1,31 @@
+#include "gm_actor.h"
 #include <fstream>
 #include <sstream>
-#include "gm_actor.h"
+#include "gm_coordinate.h"
+#include "gm_assemble.h"
+#include "gm_kinematics.h"
+
+void tol::Actor::init() {
+	__super::init();
+}
 
 void tol::Actor::update(float delta_time) {
-	Object::update(delta_time);
+	__super::update(delta_time);
 }
 
 void tol::Actor::render(dxe::Camera* camera) {
-	Object::render(camera);
+	__super::render(camera);
 }
 
-std::shared_ptr<tol::Actor> tol::Actor::Create(std::shared_ptr<AssemRepo> assem_repo, std::string csv_path) {
+std::shared_ptr<tol::Actor> tol::Actor::Create(std::shared_ptr<AssemRepo> a_repo, std::string csv_path) {
 	std::shared_ptr<Actor> act = std::make_unique<Actor>(Actor(0, "root"));
-	act->coordinate_.setCoordinate();
-	act->assemble_ = assem_repo->getAssemble(200, "", true, 1.0);
-	act->getObjectDataCSV(assem_repo, csv_path);
-	// -- kinematics setting (test) -- //
-	act->kinematics_ = std::make_unique<Kinematics>(Kinematics());
-	act->kinematics_->init(act);
+	act->init();	// generate empty classes 
+	act->assemble_ = a_repo->CopyAssemble(200, "", true, 1.0);
+	act->getObjectDataCSV(a_repo, csv_path);
 	return act;
 }
 
-void tol::Actor::getObjectDataCSV(std::shared_ptr<AssemRepo> assem_repo, std::string csv_path) {
+void tol::Actor::getObjectDataCSV(std::shared_ptr<AssemRepo> a_repo, std::string csv_path) {
 	std::string str_buf;
 	std::string str_conma_buf;
 	static std::string str[103][30];
@@ -46,17 +50,17 @@ void tol::Actor::getObjectDataCSV(std::shared_ptr<AssemRepo> assem_repo, std::st
 	}
 	for (int i = 3; i < 103; i++) {		// ignore headers
 		if (str[i][0] == "") {
-			continue; 
+			continue;
 		}
 		auto c = str[i];
 		// -- general -- //
-		int id				= stoi(c[0]);
-		std::string name	= c[1];
-		int parent_id		= stoi(c[2]);
+		int id = stoi(c[0]);
+		std::string name = c[1];
+		int parent_id = stoi(c[2]);
 		std::string parent_name = c[3];
-		int assem_id		= stoi(c[20]);
-		std::string assem_name	= c[21];
-		
+		int assem_id = stoi(c[20]);
+		std::string assem_name = c[21];
+
 		// -- vector, quaternion -- //
 		// make : return vector func.
 		auto vec = [](std::string x, std::string y, std::string z)-> tnl::Vector3 {
@@ -76,24 +80,31 @@ void tol::Actor::getObjectDataCSV(std::shared_ptr<AssemRepo> assem_repo, std::st
 		float a_size = stof(c[29]);
 		// -- create objects -- //
 		std::shared_ptr<Object> obj = std::make_unique<Object>(Object(id, name));
-		obj->coordinate_.setCoordinate(
-			pos,
-			tnl::Quaternion::RotationAxis(axis, tnl::ToRadian(deg)),
-			dirx, diry, dirz
-			);
-		obj->coordinate_.setViewCoordinate(1.1, 0.02);
-		obj->assemble_ = assem_repo->getAssemble(assem_id, assem_name, true, a_size);
-		obj->assemble_->setOffset_pos(a_offset_pos);
-		obj->assemble_->setRot(tnl::Quaternion::RotationAxis(a_rot_axis, tnl::ToRadian(a_deg)));
-		// -- register Actor class -- //
+		// - set parent - //
 		std::shared_ptr<Object> parent = this->getObjectTree(parent_id, parent_name);
 		if (parent != nullptr) {
 			parent->setChild(obj);
 			obj->setParent(parent);
 		}
-		// -- create kinematics -- //
-		obj->kinematics_ = std::make_unique<Kinematics >(Kinematics());
-		obj->kinematics_->init(obj);
+		// - create classes - //
+		std::shared_ptr<Coordinate> cod = std::make_unique<Coordinate>(Coordinate());
+		cod->init(
+			pos,
+			tnl::Quaternion::RotationAxis(axis, tnl::ToRadian(deg)),
+			dirx,
+			diry,
+			dirz
+		);
+		std::shared_ptr<Assemble> assem = std::make_unique<Assemble>(Assemble());
+		assem = a_repo->CopyAssemble(assem_id, assem_name, true, a_size);
+		assem->setOffsetPos(a_offset_pos);
+		assem->setOffsetRot(tnl::Quaternion::RotationAxis(a_rot_axis, tnl::ToRadian(a_deg)));
+		std::shared_ptr<Kinematics> kinematics = std::make_unique<Kinematics>(Kinematics());
+		if (parent) {
+			kinematics->init(parent, obj);
+		}
+		// - attach classes - //
+		obj->init(cod, assem, kinematics);
+		// -- for root object process -- //
 	}
 }
-
