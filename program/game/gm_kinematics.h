@@ -54,6 +54,7 @@ namespace tol {
 			dk_data_upd_st_.dir_c_p_ = tnl::Vector3::TransformCoord(dk_data_st_.dir_c_p_, rot);
 		}
 		void setRotOneFlame(tnl::Quaternion rot) { rot_one_flame_ = rot; }
+		void setAddRotOneFlame(tnl::Quaternion rot) { rot_one_flame_ *= rot; }
 		// ---- getter ---- //
 		tnl::Quaternion getRotOneFlame(){ return rot_one_flame_; }
 

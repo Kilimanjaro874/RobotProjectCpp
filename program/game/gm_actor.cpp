@@ -103,7 +103,7 @@ void tol::Actor::getObjectDataCSV(std::shared_ptr<AssemRepo> a_repo, std::string
 		assem = a_repo->CopyAssemble(assem_id, assem_name, true, a_size);
 		assem->setOffsetPos(a_offset_pos);
 		assem->setOffsetRot(tnl::Quaternion::RotationAxis(a_rot_axis, tnl::ToRadian(a_deg)));
-		assem->setCoordinateView(obj, 1.5, 0.05);
+		assem->setCoordinateView(obj, 1.5f, 0.05f);
 		std::shared_ptr<Kinematics> kinematics = std::make_unique<Kinematics>(Kinematics());
 		obj->setKinematics(kinematics);
 		if (parent) {

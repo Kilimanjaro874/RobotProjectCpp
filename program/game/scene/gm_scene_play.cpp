@@ -54,5 +54,6 @@ void ScenePlay::render()
 {
 	camera_->update();
 	DrawGridGround(camera_, 5, 300);
+
 	actor_->renderTree(camera_);
 }
