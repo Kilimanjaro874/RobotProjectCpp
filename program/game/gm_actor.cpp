@@ -22,7 +22,7 @@ std::shared_ptr<tol::Actor> tol::Actor::Create(std::shared_ptr<AssemRepo> a_repo
 	std::shared_ptr<Actor> act = std::make_unique<Actor>(Actor(0, "root"));
 
 	act->init();	// generate empty classes 
-	act->assemble_ = a_repo->CopyAssemble(200, "", true, 1.0);
+	//act->assemble_ = a_repo->CopyAssemble(200, "", true, 1.0);
 	act->getObjectDataCSV(a_repo, csv_path);
 	return act;
 }
@@ -103,6 +103,7 @@ void tol::Actor::getObjectDataCSV(std::shared_ptr<AssemRepo> a_repo, std::string
 		assem = a_repo->CopyAssemble(assem_id, assem_name, true, a_size);
 		assem->setOffsetPos(a_offset_pos);
 		assem->setOffsetRot(tnl::Quaternion::RotationAxis(a_rot_axis, tnl::ToRadian(a_deg)));
+		assem->setCoordinateView(obj, 1.5, 0.05);
 		std::shared_ptr<Kinematics> kinematics = std::make_unique<Kinematics>(Kinematics());
 		obj->setKinematics(kinematics);
 		if (parent) {

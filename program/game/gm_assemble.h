@@ -10,10 +10,12 @@ namespace tol {
 		Assemble() {}
 		virtual ~Assemble() {}
 	private:
-		bool is_render = true;
+		bool is_render_ = true;
+		bool is_coordinate_render_ = false;
 		tnl::Vector3 ofs_pos_;
 		tnl::Quaternion ofs_rot_;
 		std::vector<std::shared_ptr<Parts>> parts_;
+		std::vector<std::shared_ptr<Parts>> coordinate_;
 	public:
 		virtual void update(float delta_time, std::shared_ptr<Object> obj);
 		virtual void render(dxe::Camera* camera);
@@ -23,6 +25,7 @@ namespace tol {
 		void setPartsScale(float scale);
 		void setOffsetPos(const tnl::Vector3& ofs_pos) { ofs_pos_ = ofs_pos; }
 		void setOffsetRot(const tnl::Quaternion& ofs_rot) { ofs_rot_ = ofs_rot; }
+		void setCoordinateView(std::shared_ptr<Object> obj, float length, float radius);
 		// ---- getter ---- //
 	};
 }
