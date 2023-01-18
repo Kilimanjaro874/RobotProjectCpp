@@ -18,7 +18,9 @@ void tol::Actor::render(dxe::Camera* camera) {
 }
 
 std::shared_ptr<tol::Actor> tol::Actor::Create(std::shared_ptr<AssemRepo> a_repo, std::string csv_path) {
+	// --- Actor init --- //
 	std::shared_ptr<Actor> act = std::make_unique<Actor>(Actor(0, "root"));
+
 	act->init();	// generate empty classes 
 	act->assemble_ = a_repo->CopyAssemble(200, "", true, 1.0);
 	act->getObjectDataCSV(a_repo, csv_path);
@@ -88,6 +90,7 @@ void tol::Actor::getObjectDataCSV(std::shared_ptr<AssemRepo> a_repo, std::string
 		}
 		// - create classes - //
 		std::shared_ptr<Coordinate> cod = std::make_unique<Coordinate>(Coordinate());
+		obj->setCoordinate(cod);
 		cod->init(
 			pos,
 			tnl::Quaternion::RotationAxis(axis, tnl::ToRadian(deg)),
@@ -96,15 +99,15 @@ void tol::Actor::getObjectDataCSV(std::shared_ptr<AssemRepo> a_repo, std::string
 			dirz
 		);
 		std::shared_ptr<Assemble> assem = std::make_unique<Assemble>(Assemble());
+		obj->setAssemble(assem);
 		assem = a_repo->CopyAssemble(assem_id, assem_name, true, a_size);
 		assem->setOffsetPos(a_offset_pos);
 		assem->setOffsetRot(tnl::Quaternion::RotationAxis(a_rot_axis, tnl::ToRadian(a_deg)));
 		std::shared_ptr<Kinematics> kinematics = std::make_unique<Kinematics>(Kinematics());
+		obj->setKinematics(kinematics);
 		if (parent) {
 			kinematics->init(parent, obj);
 		}
-		// - attach classes - //
 		obj->init(cod, assem, kinematics);
-		// -- for root object process -- //
 	}
 }

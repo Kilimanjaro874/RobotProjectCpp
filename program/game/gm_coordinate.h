@@ -31,6 +31,7 @@ namespace tol {
 		void setAddRot(const tnl::Quaternion& rot);
 		// ---- getter ---- //
 		tnl::Vector3 getPos() { return pos_; }
+		tnl::Quaternion getRot() { return rot_; }
 		
 	};
 }

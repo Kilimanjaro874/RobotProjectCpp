@@ -15,15 +15,9 @@ void tol::Kinematics::update(float delta_time, std::shared_ptr<Object> obj) {
 /// <param name="obj"> Object class (owner) </param>
 void tol::Kinematics::initDKSetting(const std::shared_ptr<Object> parent, const std::shared_ptr<Object> child) {
 	tnl::Vector3 diff;
-	if (!parent) {
-
-		diff = { 0, 0, 0 };	
-	}
-	else {
-		auto parent_coord = parent->getCoordinate();
-		auto child_coord = child->getCoordinate();
-		diff = child_coord->getPos() - parent_coord->getPos();
-	}
+	auto parent_coord = parent->getCoordinate();
+	auto child_coord = child->getCoordinate();
+	diff = child_coord->getPos() - parent_coord->getPos();
 	// --- set data --- //
 	float length = diff.length();
 	diff.normalize();

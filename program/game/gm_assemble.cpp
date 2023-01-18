@@ -1,7 +1,14 @@
 #include "gm_assemble.h"
+#include "gm_object.h"
+#include "gm_coordinate.h"
 
-void tol::Assemble::update(float delta_time, std::shared_ptr<Object> obj) {
-
+void tol::Assemble::update(float delta_time, std::shared_ptr<tol::Object> obj) {
+	 auto cod = obj->getCoordinate();
+	 tnl::Quaternion rot = cod->getRot() * ofs_rot_;
+	 tnl::Vector3 pos = cod->getPos() + tnl::Vector3::TransformCoord(ofs_pos_, rot);
+	 for (auto p : parts_) {
+		 p->mesh_->pos_ = pos + tnl::Vector3::TransformCoord(p->ofs_pos_, rot * p->ofs_rot_);
+	 }
 }
 
 void tol::Assemble::render(dxe::Camera* camera) {
