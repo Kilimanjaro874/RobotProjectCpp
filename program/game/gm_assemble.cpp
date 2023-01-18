@@ -4,8 +4,10 @@
 
 void tol::Assemble::update(float delta_time, std::shared_ptr<tol::Object> obj) {
 	 auto cod = obj->getCoordinate();
-	 tnl::Quaternion rot =  ofs_rot_ * cod->getRot();
-	 tnl::Vector3 pos = cod->getPos() + tnl::Vector3::TransformCoord(ofs_pos_, rot);
+	 //tnl::Quaternion rot = ofs_rot_ *  cod->getRot();
+	 tnl::Quaternion rot = cod->getRot();
+	 //tnl::Vector3 pos = cod->getPos() + tnl::Vector3::TransformCoord(ofs_pos_, rot);
+	 tnl::Vector3 pos = cod->getPos();
 	 if (is_render_) {
 		 for (auto p : parts_) {
 			 p->mesh_->pos_ = pos + tnl::Vector3::TransformCoord(p->ofs_pos_, rot);

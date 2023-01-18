@@ -42,7 +42,7 @@ void tol::Kinematics::directKinematics(float delta_time, std::shared_ptr<Object>
 		return;		// do not kinematics.
 	}
 	// test rotate
-	tnl::Quaternion rot = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(0.01)) * parent_kinematics->getRotOneFlame();
+	tnl::Quaternion rot = parent_kinematics->getRotOneFlame() * tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(1));
 	kinematics->setRotOneFlame(rot);
 	// --- update coordinate --- //
 	coordinate->setAddRot(rot);
