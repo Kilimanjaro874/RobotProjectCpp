@@ -2,9 +2,11 @@
 #include <memory>
 #include "../dxlib_ext/dxlib_ext.h"
 #include "gm_object.h"
+#include "gm_inverse_kinematics.h"
 
 namespace tol {
 	class Object;
+	class InvKinematics;
 	class Kinematics {
 	public:
 		Kinematics() {}
@@ -12,32 +14,19 @@ namespace tol {
 
 	//// ---- Member variables ---- ////
 	private:
+		// --- for DK package --- //
 		struct dk_data_st {		// store coordinate difference info. (this - parent)
 			tnl::Vector3 dir_c_p_;
 			float len_c_p_;
 			tnl::Quaternion rot_;
 		};
 		dk_data_st dk_data_st_ = { {0, 0, 0}, 1.0 , tnl::Quaternion::RotationAxis({0, 1, 0}, 0) };
-		tnl::Vector3 dk_pos_parent_to_this_ = { 0, 0, 0 };
-		bool is_dk_init = false;
-		tnl::Quaternion rot_one_flame_;		// rotation of 1 flame.
+		tnl::Vector3 dk_pos_parent_to_this_ = { 0, 0, 0 };		 
+		bool is_dk_init = false;								// dk_data_st_ init flag
+		tnl::Quaternion rot_one_flame_;							// rotation of 1 flame.
+		// --- If you need Inverse Kinematics(IK) : attach IKclass --- //
+		std::shared_ptr<InvKinematics> inv_kinematics_ = nullptr;
 	//// ---- Member functions ---- ////
-		enum class ik_type {
-			// object - target //
-			pos_to_pos,
-			dirx_as_dirx, dirx_as_diry, dirx_as_dirz,
-			diry_as_diry, diry_as_dirx, diry_as_dirz,
-			dirz_as_dirz, dirz_as_dirx, dirz_as_diry,
-			dirx_look_pos,
-			diry_look_pos,
-			dirz_look_pos,
-			as_it_was,
-		};
-		enum class ik_const {
-			// object - target //
-			rot_as_rot
-		};
-
 	public:
 		virtual void init(const std::shared_ptr<Object> parent, const std::shared_ptr<Object> child);
 		virtual void update(float delta_time, std::shared_ptr<Object> obj);
