@@ -15,9 +15,10 @@ namespace tol {
 		struct dk_data_st {		// store coordinate difference info. (this - parent)
 			tnl::Vector3 dir_c_p_;
 			float len_c_p_;
+			tnl::Quaternion rot_;
 		};
-		dk_data_st dk_data_st_ = { {0, 0, 0}, 1.0 };
-		dk_data_st dk_data_upd_st_ = { {0, 0, 0}, 1.0 };
+		dk_data_st dk_data_st_ = { {0, 0, 0}, 1.0 , tnl::Quaternion::RotationAxis({0, 1, 0}, 0) };
+		tnl::Vector3 dk_pos_parent_to_this_ = { 0, 0, 0 };
 		bool is_dk_init = false;
 		tnl::Quaternion rot_one_flame_;		// rotation of 1 flame.
 	//// ---- Member functions ---- ////
@@ -51,7 +52,8 @@ namespace tol {
 			dk_data_st_.len_c_p_ = length;
 		}
 		void setRotDkData(const tnl::Quaternion rot) {
-			dk_data_upd_st_.dir_c_p_ = tnl::Vector3::TransformCoord(dk_data_st_.dir_c_p_, rot);
+			dk_data_st_.rot_ *= rot;
+			dk_pos_parent_to_this_ = tnl::Vector3::TransformCoord(dk_data_st_.dir_c_p_ * dk_data_st_.len_c_p_, dk_data_st_.rot_);
 		}
 		void setRotOneFlame(tnl::Quaternion rot) { rot_one_flame_ = rot; }
 		void setAddRotOneFlame(tnl::Quaternion rot) { rot_one_flame_ *= rot; }

@@ -23,7 +23,6 @@ void tol::Kinematics::initDKSetting(const std::shared_ptr<Object> parent, const 
 	diff.normalize();
 	dk_data_st_.dir_c_p_ = diff;
 	dk_data_st_.len_c_p_ = length;
-	dk_data_upd_st_ = dk_data_st_;
 }
 
 void tol::Kinematics::directKinematics(float delta_time, std::shared_ptr<Object> obj) {
@@ -46,15 +45,14 @@ void tol::Kinematics::directKinematics(float delta_time, std::shared_ptr<Object>
 	// --- update coordinate --- //
 	// --  pos -- //
 	kinematics->setRotOneFlame(rot_one_flame);
-	kinematics->setRotDkData(parent_coordinate->getRot());
+	//kinematics->setRotDkData(parent_coordinate->getRot());
 	kinematics->setRotDkData(rot_one_flame);
-	tnl::Vector3 pos = parent_coordinate->getPos() + 
-		kinematics->dk_data_upd_st_.dir_c_p_ * kinematics->dk_data_upd_st_.len_c_p_;
+	tnl::Vector3 pos = parent_coordinate->getPos() + kinematics->dk_pos_parent_to_this_;
 	coordinate->setPos(pos);
 	// -- rot -- //
 	coordinate->setAddRot(rot_one_flame);
 	// --- ik --- //
-	tnl::Quaternion rot_ik_one_flame = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(15));
+	tnl::Quaternion rot_ik_one_flame = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(1));
 	// --- reupdate coordinate --- //
 	kinematics->setAddRotOneFlame(rot_ik_one_flame);
 	coordinate->setAddRot(rot_ik_one_flame);
