@@ -10,6 +10,7 @@ void tol::InvKinematics::init(const std::shared_ptr<Object> target, const std::s
 	tmp.target_ = target;
 	tmp.object_ = object;
 	tmp.ik_type_ = type;
+	tmp.kp_ = kp;
 	tmp.is_rot_[static_cast<int>(Coordinate::coordinate::x)] = is_x_rot;
 	tmp.is_rot_[static_cast<int>(Coordinate::coordinate::y)] = is_y_rot;
 	tmp.is_rot_[static_cast<int>(Coordinate::coordinate::z)] = is_z_rot;

@@ -18,7 +18,7 @@ void ScenePlay::initialzie() {
 	camera_ = new GmCamera();
 	camera_->pos_ = { 0, 150, -300 };
 	assem_repo_ =  tol::AssemRepo::Create();
-	actor_ = tol::Actor::Create(assem_repo_, robot_actor_);
+	actor_ = tol::Actor::Create(assem_repo_, robot_actor_, robot_ik_csv_);
 	//test_ = assem_repo_->getAssemble(200);
 	
 }

@@ -18,6 +18,7 @@ public:
 	//tol::Assemble* test_ = nullptr;
 	// ---- actor data : csv ---- //
 	const std::string robot_actor_ = "Actor_RobotObj_01.csv";
+	const std::string robot_ik_csv_ = "Actor_RobotObj_01_Ksetting.csv";
 	//// ----- member functions ----- ////
 	void initialzie() override;
 	void update(float delta_time) override;

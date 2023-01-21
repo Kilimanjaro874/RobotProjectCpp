@@ -36,6 +36,7 @@ namespace tol {
 		void doKinematics(float delta_time, std::shared_ptr<Object> obj);
 	public:
 		// ---- setter ---- //
+		void setInvKinematics(std::shared_ptr<InvKinematics> ik) { inv_kinematics_ = ik; }
 		void setDkData(const tnl::Vector3& dir, float length) {
 			dk_data_st_.dir_c_p_ = dir;
 			dk_data_st_.len_c_p_ = length;
@@ -47,6 +48,7 @@ namespace tol {
 		void setRotOneFlame(tnl::Quaternion rot) { rot_one_flame_ = rot; }
 		void setAddRotOneFlame(tnl::Quaternion rot) { rot_one_flame_ *= rot; }
 		// ---- getter ---- //
+		std::shared_ptr<InvKinematics> getInvKinematics() { return inv_kinematics_; }
 		tnl::Quaternion getRotOneFlame(){ return rot_one_flame_; }
 
 	};

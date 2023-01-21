@@ -4,6 +4,7 @@
 #include "gm_coordinate.h"
 #include "gm_assemble.h"
 #include "gm_kinematics.h"
+#include "gm_inverse_kinematics.h"
 
 void tol::Actor::init() {
 	__super::init();
@@ -17,13 +18,17 @@ void tol::Actor::render(dxe::Camera* camera) {
 	__super::render(camera);
 }
 
-std::shared_ptr<tol::Actor> tol::Actor::Create(std::shared_ptr<AssemRepo> a_repo, std::string csv_path) {
+std::shared_ptr<tol::Actor> tol::Actor::Create(std::shared_ptr<AssemRepo> a_repo, std::string csv_path, std::string ik_csv_path) {
 	// --- Actor init --- //
 	std::shared_ptr<Actor> act = std::make_unique<Actor>(Actor(0, "root"));
 
 	act->init();	// generate empty classes 
 	//act->assemble_ = a_repo->CopyAssemble(200, "", true, 1.0);
 	act->getObjectDataCSV(a_repo, csv_path);
+	if (ik_csv_path != "") {
+		act->getIKsettingDataCSV(ik_csv_path);
+	}
+	//act->getIKsettingDataCSV()
 	return act;
 }
 
@@ -110,5 +115,68 @@ void tol::Actor::getObjectDataCSV(std::shared_ptr<AssemRepo> a_repo, std::string
 			kinematics->init(parent, obj);
 		}
 		obj->init(cod, assem, kinematics);
+	}
+}
+
+void tol::Actor::getIKsettingDataCSV(std::string csv_path) {
+	std::string str_buf;
+	std::string str_conma_buf;
+	static std::string str[103][13];
+	// --- open csv --- //
+	int i = 0, j = 0;
+	std::ifstream ifs(csv_path);
+	if (!ifs) {
+		printf("error! File can't opened");
+		return;
+	}
+	while (std::getline(ifs, str_buf)) {
+		std::string tmp = "";
+		std::istringstream stream(str_buf);
+
+		while (std::getline(stream, tmp, ','))
+		{
+			str[i][j] = tmp;
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+	for (int i = 3; i < 103; i++) {
+		if (str[i][0] == "") {
+			continue;
+		}
+		auto c = str[i];
+		// --- get data --- // 
+		int ik_id = stoi(c[0]);
+		std::string ik_name = c[1];
+		int set_obj_id = stoi(c[2]);
+		std::string set_obj_name = c[3];
+		int ik_obj_id = stoi(c[4]);
+		std::string ik_obj_name = c[5];
+		int ik_tar_id = stoi(c[6]);
+		std::string ik_tar_name = c[7];
+		int ik_type = stoi(c[8]);
+		float kp = stof(c[9]);
+		bool is_rotatable_axis[static_cast<int>(Coordinate::coordinate::end)];
+		auto isrot = [](std::string s)-> bool {
+			if (s == "on") { return true; }
+			return false;
+		};
+		is_rotatable_axis[static_cast<int>(Coordinate::coordinate::x)] = isrot(c[10]);
+		is_rotatable_axis[static_cast<int>(Coordinate::coordinate::y)] = isrot(c[11]);
+		is_rotatable_axis[static_cast<int>(Coordinate::coordinate::z)] = isrot(c[12]);
+		// --- create InvKinametics Class --- //
+		std::shared_ptr<Object> ik_obj = this->getObjectTree(ik_obj_id, ik_obj_name);
+		std::shared_ptr<Object> ik_tar = this->getObjectTree(ik_tar_id, ik_tar_name);
+		std::shared_ptr<InvKinematics> ik_tmp = std::make_unique<InvKinematics>(InvKinematics());
+		ik_tmp->init(ik_tar, ik_obj, 
+			ik_id, ik_name, static_cast<tol::InvKinematics::ik_type>(ik_type), kp,
+			is_rotatable_axis[static_cast<int>(Coordinate::coordinate::x)],
+			is_rotatable_axis[static_cast<int>(Coordinate::coordinate::y)],
+			is_rotatable_axis[static_cast<int>(Coordinate::coordinate::z)]
+			);
+		std::shared_ptr<Object> attach_obj = this->getObjectTree(set_obj_id, set_obj_name);
+		std::shared_ptr<Kinematics> attach_kinematics = attach_obj->getKinematics();
+		attach_kinematics->setInvKinematics(ik_tmp);
 	}
 }
