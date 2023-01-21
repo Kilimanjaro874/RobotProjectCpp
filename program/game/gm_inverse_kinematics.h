@@ -37,18 +37,17 @@ namespace tol {
 			std::weak_ptr<Object> object_;
 			ik_type ik_type_;
 			float kp_;
-			bool is_rot[static_cast<int>(Coordinate::coordinate::end)] = { true, true, true };
+			bool is_rot_[static_cast<int>(Coordinate::coordinate::end)] = { true, true, true };
 		};
 		std::vector<ik_data_st> ik_data_st_;
+		bool is_ik_init_ = false;
 		//// ---- Member functions ---- ////
 	public:
 		virtual void init(const std::shared_ptr<Object> target, const std::shared_ptr<Object> object,
 			int ik_id, std::string ik_name,
 			ik_type type, float kp, bool is_x_rot, bool is_y_rot, bool is_z_rot);
-		virtual void update(float delta_time, std::shared_ptr<Object> obj);
+		virtual tnl::Quaternion update(float delta_time, std::shared_ptr<Object> obj);
 	private:
-		void initIKSetting(const std::shared_ptr<Object> target, const std::shared_ptr<Object> object,
-			ik_type type, float kp, bool is_x_rot, bool is_y_rot, bool is_z_rot);
-		void inverseKinematics(float delta_time);
+		tnl::Quaternion inverseKinematics(float delta_time, std::shared_ptr<Object> obj);
 	};
 }

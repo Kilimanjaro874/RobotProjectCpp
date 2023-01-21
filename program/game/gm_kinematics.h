@@ -22,7 +22,7 @@ namespace tol {
 		};
 		dk_data_st dk_data_st_ = { {0, 0, 0}, 1.0 , tnl::Quaternion::RotationAxis({0, 1, 0}, 0) };
 		tnl::Vector3 dk_pos_parent_to_this_ = { 0, 0, 0 };		 
-		bool is_dk_init = false;								// dk_data_st_ init flag
+		bool is_dk_init_ = false;								// dk_data_st_ init flag
 		tnl::Quaternion rot_one_flame_;							// rotation of 1 flame.
 		// --- If you need Inverse Kinematics(IK) : attach IKclass --- //
 		std::shared_ptr<InvKinematics> inv_kinematics_ = nullptr;
@@ -33,7 +33,7 @@ namespace tol {
 
 	private:
 		void initDKSetting(const std::shared_ptr<Object> parent, const std::shared_ptr<Object> child);
-		void directKinematics(float delta_time, std::shared_ptr<Object> obj);
+		void doKinematics(float delta_time, std::shared_ptr<Object> obj);
 	public:
 		// ---- setter ---- //
 		void setDkData(const tnl::Vector3& dir, float length) {
