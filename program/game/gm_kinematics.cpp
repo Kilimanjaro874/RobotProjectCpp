@@ -23,6 +23,7 @@ void tol::Kinematics::initDKSetting(const std::shared_ptr<Object> parent, const 
 	diff.normalize();
 	dk_data_st_.dir_c_p_ = diff;
 	dk_data_st_.len_c_p_ = length;
+	dk_data_st_.rot_ = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0);
 	is_dk_init_ = true;			// set flag
 }
 

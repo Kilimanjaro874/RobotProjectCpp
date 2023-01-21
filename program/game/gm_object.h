@@ -26,6 +26,9 @@ namespace tol {
 		virtual ~Object() {}
 
 		//// ---- Member variables ---- ////
+		enum class move_type{
+			absolute, relative
+		};
 	protected:
 		// ---- General ---- //
 		int id_;
@@ -49,6 +52,13 @@ namespace tol {
 		virtual void render(dxe::Camera* camera);
 		virtual void renderTree(dxe::Camera* camera);
 		virtual void init();
+		// ---- for user functions ---- //
+		void Transform(tnl::Vector3 move, move_type type = move_type::absolute);
+		void Rotation(tnl::Quaternion, move_type type = move_type::absolute);
+		tnl::Vector3 getRight();
+		tnl::Vector3 getUp();
+		tnl::Vector3 getForward();
+		void setRenderScale(float size);
 		// ---- for Tree structure ---- //
 		std::shared_ptr<Object> getObjectTree(const int id, const std::string& name);
 		// ---- setter ---- //
