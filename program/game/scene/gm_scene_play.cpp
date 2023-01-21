@@ -5,7 +5,7 @@
 #include "../../dxlib_ext/dxlib_ext.h"
 #include "../gm_object.h"
 
-static float  dth = 0;
+//static float  dth = 0;
 ScenePlay::~ScenePlay() {
 	delete camera_;
 }
@@ -26,13 +26,13 @@ void ScenePlay::update(float delta_time)
 	
 	GameManager* mgr = GameManager::GetInstance();
 	
-	dth += delta_time * 5;
+	/*dth += delta_time * 5;
 	auto target = actor_->getObjectTree(200, "");
 	tnl::Vector3 dir = { 3, 3, 3 };
 	tnl::Quaternion rot_tmp = tnl::Quaternion::RotationAxis({ 0, 1, 0 }, (float)dth);
 	dir = tnl::Vector3::TransformCoord(dir, rot_tmp);
 	target->Transform(dir);
-	actor_->Transform({ 0, 0.0, 0 }, tol::Object::move_type::relative);
+	actor_->Transform({ 0, 0.0, 0 }, tol::Object::move_type::relative);*/
 
 	actor_->updateTree(delta_time);
 	//------------------------------------------------------------------

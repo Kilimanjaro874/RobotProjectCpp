@@ -14,9 +14,273 @@ std::shared_ptr<tol::AssemRepo> tol::AssemRepo::Create() {
 	auto asr = std::make_unique<AssemRepo>(AssemRepo());
 
 	// ---- Generate & store Assemble cllasses ---- //
+	auto non = std::make_shared<assem_st>();
+	non->id_ = 0;
+	non->name = "non";
+	non->assem_ = std::make_shared<Assemble>(Assemble());
+	asr->assem_st_.push_back(std::move(non));
 
+	// --- Lower Back : 1XX ---- //
+	// 100
+	auto lb100 = std::make_shared<assem_st>();
+	lb100->id_ = 100;
+	lb100->name = "lb100";
+	lb100->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto jo1 = std::make_shared<Parts>(Parts());
+		jo1->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2);
+		jo1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		lb100->assem_->setParts(jo1);
 
-	// --- Shoulder : 2XX ---- //
+		auto jo2 = std::make_shared<Parts>(Parts());
+		jo2->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2.5);
+		jo2->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		jo2->ofs_pos_ += {0, -1, 0};
+		jo2->ofs_rot_ = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(90));
+		lb100->assem_->setParts(jo2);
+	}
+	asr->assem_st_.push_back(std::move(lb100));
+	// 101
+
+	// --- Body : 2XX --- //
+	// 200
+	auto bd200 = std::make_shared<assem_st>();
+	bd200->id_ = 200;
+	bd200->name = "bd200";
+	bd200->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto sp1 = std::make_shared<Parts>(Parts());
+		sp1->mesh_ = dxe::Mesh::CreateSphere(0.3);
+		sp1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		bd200->assem_->setParts(sp1);
+
+		auto jo1 = std::make_shared<Parts>(Parts());
+		jo1->mesh_ = dxe::Mesh::CreateCylinder(0.2, 0.5);
+		jo1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		jo1->ofs_pos_ += {0, 0.25, 0};
+		bd200->assem_->setParts(jo1);
+
+		auto jo2 = std::make_shared<Parts>(Parts());
+		jo2->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2.1213);
+		jo2->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		jo2->ofs_rot_ = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(45));
+		jo2->ofs_pos_ += {-0.75, 1.25, 0};
+		bd200->assem_->setParts(jo2);
+
+		auto jo3 = std::make_shared<Parts>(Parts());
+		jo3->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2.1213);
+		jo3->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		jo3->ofs_rot_ = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(-45));
+		jo3->ofs_pos_ += {0.75, 1.25, 0};
+		bd200->assem_->setParts(jo3);
+
+		auto jo4 = std::make_shared<Parts>(Parts());
+		jo4->mesh_ = dxe::Mesh::CreateCylinder(0.2, 4.0);
+		jo4->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		jo4->ofs_rot_ = tnl::Quaternion::RotationAxis({ 0, 0, 1 }, tnl::ToRadian(90));
+		jo4->ofs_pos_ += {0, 2.0, 0};
+		bd200->assem_->setParts(jo4);
+
+		auto sp2 = std::make_shared<Parts>(Parts());
+		sp2->mesh_ = dxe::Mesh::CreateSphere(0.75);
+		sp2->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		sp2->ofs_pos_ += {0, 1.2, 0};
+		bd200->assem_->setParts(sp2);
+	}
+	asr->assem_st_.push_back(std::move(bd200));
+
+	// --- Right Arm : 3XX --- //
+	// 300
+	auto ra300 = std::make_shared<assem_st>();
+	ra300->id_ = 300;
+	ra300->name = "ra300";
+	ra300->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto sp1 = std::make_shared<Parts>(Parts());
+		sp1->mesh_ = dxe::Mesh::CreateSphere(0.3);
+		sp1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		ra300->assem_->setParts(sp1);
+
+		auto jo1 = std::make_shared<Parts>(Parts());
+		jo1->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2.0);
+		jo1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		jo1->ofs_pos_ += {0, -1.0, 0};
+		ra300->assem_->setParts(jo1);
+	}
+	asr->assem_st_.push_back(std::move(ra300));
+	// 301
+	auto ra301 = std::make_shared<assem_st>();
+	ra301->id_ = 301;
+	ra301->name = "ra301";
+	ra301->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto sp1 = std::make_shared<Parts>(Parts());
+		sp1->mesh_ = dxe::Mesh::CreateSphere(0.3);
+		sp1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		ra301->assem_->setParts(sp1);
+
+		auto jo1 = std::make_shared<Parts>(Parts());
+		jo1->mesh_ = dxe::Mesh::CreateCylinder(0.2, 0.5);
+		jo1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		jo1->ofs_pos_ += {0, -0.25, 0};
+		ra301->assem_->setParts(jo1);
+	}
+	asr->assem_st_.push_back(std::move(ra301));
+
+	// --- Left Arm : 4XX --- //
+	// 400
+	auto la400 = std::make_shared<assem_st>();
+	la400->id_ = 400;
+	la400->name = "la400";
+	la400->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto sp1 = std::make_shared<Parts>(Parts());
+		sp1->mesh_ = dxe::Mesh::CreateSphere(0.3);
+		sp1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		la400->assem_->setParts(sp1);
+
+		auto jo1 = std::make_shared<Parts>(Parts());
+		jo1->mesh_ = dxe::Mesh::CreateCylinder(0.2, 2.0);
+		jo1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		jo1->ofs_pos_ += {0, -1.0, 0};
+		la400->assem_->setParts(jo1);
+	}
+	asr->assem_st_.push_back(std::move(la400));
+	// 401
+	auto la401 = std::make_shared<assem_st>();
+	la401->id_ = 401;
+	la401->name = "la401";
+	la401->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto sp1 = std::make_shared<Parts>(Parts());
+		sp1->mesh_ = dxe::Mesh::CreateSphere(0.3);
+		sp1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		la401->assem_->setParts(sp1);
+
+		auto jo1 = std::make_shared<Parts>(Parts());
+		jo1->mesh_ = dxe::Mesh::CreateCylinder(0.2, 0.5);
+		jo1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		jo1->ofs_pos_ += {0, -0.25, 0};
+		la401->assem_->setParts(jo1);
+	}
+	asr->assem_st_.push_back(std::move(la401));
+
+	// --- Head : 5XX --- //
+	// 500
+	auto he500 = std::make_shared<assem_st>();
+	he500->id_ = 500;
+	he500->name = "he500";
+	he500->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto jo1 = std::make_shared<Parts>(Parts());
+		jo1->mesh_ = dxe::Mesh::CreateCylinder(0.2, 0.5);
+		jo1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		jo1->ofs_pos_ += {0, 0.25, 0};
+		he500->assem_->setParts(jo1);
+	}
+	asr->assem_st_.push_back(std::move(he500));
+	// 501
+	auto he501 = std::make_shared<assem_st>();
+	he501->id_ = 501;
+	he501->name = "he501";
+	he501->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto bo1 = std::make_shared<Parts>(Parts());
+		bo1->mesh_ = dxe::Mesh::CreateBox(0.5);
+		bo1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		he501->assem_->setParts(bo1);
+	}
+	asr->assem_st_.push_back(std::move(he501));
+
+	// --- Right Leg : 6XX --- //
+	// 600
+	auto rl600 = std::make_shared<assem_st>();
+	rl600->id_ = 600;
+	rl600->name = "rl600";
+	rl600->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto sp1 = std::make_shared<Parts>(Parts());
+		sp1->mesh_ = dxe::Mesh::CreateSphere(0.4);
+		sp1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		rl600->assem_->setParts(sp1);
+
+		auto jo1 = std::make_shared<Parts>(Parts());
+		jo1->mesh_ = dxe::Mesh::CreateCylinder(0.3, 2.5);
+		jo1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		jo1->ofs_pos_ += {0, -2.5 / 2, 0};
+		rl600->assem_->setParts(jo1);
+	}
+	asr->assem_st_.push_back(std::move(rl600));
+	// 601
+	auto rl601 = std::make_shared<assem_st>();
+	rl601->id_ = 601;
+	rl601->name = "rl601";
+	rl601->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto sp1 = std::make_shared<Parts>(Parts());
+		sp1->mesh_ = dxe::Mesh::CreateSphere(0.4);
+		sp1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		rl601->assem_->setParts(sp1);
+
+		auto jo1 = std::make_shared<Parts>(Parts());
+		jo1->mesh_ = dxe::Mesh::CreateCylinder(0.3, 1);
+		jo1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		jo1->ofs_pos_ += {0, -1.0 / 2, 0};
+		rl601->assem_->setParts(jo1);
+
+		auto bo1 = std::make_shared<Parts>(Parts());
+		bo1->mesh_ = dxe::Mesh::CreateBox(0.5);
+		bo1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		bo1->ofs_pos_ += {0, -0.75, 0.5};
+		rl601->assem_->setParts(bo1);
+	}
+	asr->assem_st_.push_back(std::move(rl601));
+
+	// --- Light Leg : 7XX --- //
+	// 700
+	auto ll700 = std::make_shared<assem_st>();
+	ll700->id_ = 700;
+	ll700->name = "ll700";
+	ll700->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto sp1 = std::make_shared<Parts>(Parts());
+		sp1->mesh_ = dxe::Mesh::CreateSphere(0.4);
+		sp1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		ll700->assem_->setParts(sp1);
+
+		auto jo1 = std::make_shared<Parts>(Parts());
+		jo1->mesh_ = dxe::Mesh::CreateCylinder(0.3, 2.5);
+		jo1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		jo1->ofs_pos_ += {0, -2.5 / 2, 0};
+		ll700->assem_->setParts(jo1);
+	}
+	asr->assem_st_.push_back(std::move(ll700));
+	// 701
+	auto ll701 = std::make_shared<assem_st>();
+	ll701->id_ = 701;
+	ll701->name = "ll701";
+	ll701->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto sp1 = std::make_shared<Parts>(Parts());
+		sp1->mesh_ = dxe::Mesh::CreateSphere(0.4);
+		sp1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		ll701->assem_->setParts(sp1);
+
+		auto jo1 = std::make_shared<Parts>(Parts());
+		jo1->mesh_ = dxe::Mesh::CreateCylinder(0.3, 1);
+		jo1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		jo1->ofs_pos_ += {0, -1.0 / 2, 0};
+		ll701->assem_->setParts(jo1);
+
+		auto bo1 = std::make_shared<Parts>(Parts());
+		bo1->mesh_ = dxe::Mesh::CreateBox(0.5);
+		bo1->mesh_->setTexture(dxe::Texture::CreateFromFile(normal_tex));
+		bo1->ofs_pos_ += {0, -0.75, 0.5};
+		ll701->assem_->setParts(bo1);
+	}
+	asr->assem_st_.push_back(std::move(ll701));
+
+	// --- Shoulder : 2XX --- //
 	// 200
 	auto sh200 = std::make_shared<assem_st>();
 	sh200->id_ = 200;
