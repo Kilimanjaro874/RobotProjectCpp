@@ -35,6 +35,8 @@ void ScenePlay::update(float delta_time)
 	actor_->Transform({ 0, 0.0, 0 }, tol::Object::move_type::relative);*/
 
 	actor_->updateTree(delta_time);
+	actor_->Transform({ 0, 0.0011, 0 }, tol::Actor::move_type::relative);
+	actor_->Rotation(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(15)), tol::Actor::move_type::absolute);
 	//------------------------------------------------------------------
 	//
 	// ƒJƒƒ‰§Œä

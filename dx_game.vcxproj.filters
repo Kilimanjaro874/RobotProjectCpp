@@ -175,6 +175,9 @@
     <ClCompile Include="program\game\gm_inverse_kinematics.cpp">
       <Filter>program\game\actor</Filter>
     </ClCompile>
+    <ClCompile Include="program\game\gm_physics_handler.cpp">
+      <Filter>program\game\actor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="program\library\picojson.h">
@@ -301,6 +304,9 @@
       <Filter>program\game\actor</Filter>
     </ClInclude>
     <ClInclude Include="program\game\gm_controller.h">
+      <Filter>program\game\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_physics_handler.h">
       <Filter>program\game\actor</Filter>
     </ClInclude>
   </ItemGroup>

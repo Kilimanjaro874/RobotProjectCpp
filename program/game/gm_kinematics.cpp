@@ -35,6 +35,7 @@ void tol::Kinematics::doKinematics(float delta_time, std::shared_ptr<Object> obj
 	std::shared_ptr<Kinematics> kinematics = obj->getKinematics();
 	std::shared_ptr<Kinematics> parent_kinematics;
 	std::shared_ptr<Coordinate> parent_coordinate;
+	// --- null check --- //
 	if (parent_s) {
 		parent_kinematics = parent_s->getKinematics();
 		parent_coordinate = parent_s->getCoordinate();

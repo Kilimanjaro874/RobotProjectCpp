@@ -83,39 +83,48 @@ void tol::Object::Transform(tnl::Vector3 move, move_type type) {
 /// <summary>
 /// Rotate the object by the value of [rot]
 /// * move_type : 
-///		absolute(default) : 
+///		absolute(default) : set rotation for one frame.(one_flame_rot = rot)
+///		relative : add rotation for one flame.(one_flame_rot *= rot)
 /// </summary>
-/// <param name="rot"></param>
-/// <param name="type"></param>
+/// <param name="rot"> rotation for one frame. </param>
+/// <param name="type"> set/add to rot.</param>
 void tol::Object::Rotation(tnl::Quaternion rot, move_type type) {
-
+	std::shared_ptr<Kinematics> kin = getKinematics();
+	if (kin) {
+		if (move_type::absolute == type) {
+			kin->setRotOneFlame(rot);
+		}
+		else if (move_type::relative == type) {
+			kin->setAddRotOneFlame(rot);
+		}
+	}
 }
 
 tnl::Vector3 tol::Object::getRight()
 {
 	std::shared_ptr<Coordinate> cod = getCoordinate();
-	if (cod == nullptr) { return tnl::Vector3{ 0, 0, 0 }; }
+	if (!cod) { return tnl::Vector3{ 0, 0, 0 }; }
 	return cod->getDirX();
 }
 
 tnl::Vector3 tol::Object::getUp()
 {
 	std::shared_ptr<Coordinate> cod = getCoordinate();
-	if (cod == nullptr) { return tnl::Vector3{ 0, 0, 0 }; }
+	if (!cod) { return tnl::Vector3{ 0, 0, 0 }; }
 	return cod->getDirY();
 }
 
 tnl::Vector3 tol::Object::getForward()
 {
 	std::shared_ptr<Coordinate> cod = getCoordinate();
-	if (cod == nullptr) { return tnl::Vector3{ 0, 0, 0 }; }
+	if (!cod) { return tnl::Vector3{ 0, 0, 0 }; }
 	return cod->getDirZ();
 }
 
 void tol::Object::setRenderScale(float size)
 {
 	std::shared_ptr<Assemble> assem = getAssemble();
-	if (assem == nullptr) { return; }
+	if (!assem) { return; }
 	assem->setPartsScale(size);
 }
 
@@ -126,7 +135,7 @@ std::shared_ptr<tol::Object> tol::Object::getObjectTree(const int id, const std:
 	for (auto itr = children_.begin(); itr != children_.end(); itr++) {
 		auto child = *itr;
 		std::shared_ptr<tol::Object> obj = child->getObjectTree(id, name);
-		if (obj == nullptr) {
+		if (!obj) {
 			continue;
 		}
 		if (obj->id_ == id || obj->name_ == name) {
