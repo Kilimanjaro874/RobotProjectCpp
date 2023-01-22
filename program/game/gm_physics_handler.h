@@ -4,28 +4,31 @@
 
 namespace tol {
 	class Actor;
-	class PIDController;
+	class PIDVelController;
 
 	class PhysicsHandler {
 	public:
-		PhysicsHandler() {}
+		PhysicsHandler(float mass);
 		virtual ~PhysicsHandler() {}
-	private:
+	protected:
 		//// ---- Member variables ---- ////
 		// --- define --- //
 		float mass_;			// kg
+		// --- calc params --- //
+		tnl::Vector3 acc_;
+		tnl::Vector3 velocity_;
+
 		
 		// --- for PID Controll --- //
-		std::shared_ptr<PIDController> pid_cont_ = nullptr;
+		std::shared_ptr<PIDVelController> pid_vel_cont_ = nullptr;
 
 		//// ---- Member functions ---- ////
-
-	};
-
-	class PIDController {
 	public:
+		virtual void update(float delta_time, const tnl::Vector3& vel_dir);
+		// ---- setter ---- //
+		void setPIDController(std::shared_ptr<PIDVelController> pid_vel_cont) { pid_vel_cont_ = pid_vel_cont; }
+		// ---- getter ---- //
+		tnl::Vector3 getVelocity() { return velocity_; }
 
-
-
-	};
+	};	
 }

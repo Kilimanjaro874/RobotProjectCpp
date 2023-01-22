@@ -38,6 +38,7 @@
     <ClCompile Include="program\game\gm_assemble.cpp" />
     <ClCompile Include="program\game\gm_assemble_repository.cpp" />
     <ClCompile Include="program\game\gm_camera.cpp" />
+    <ClCompile Include="program\game\gm_controller.cpp" />
     <ClCompile Include="program\game\gm_coordinate.cpp" />
     <ClCompile Include="program\game\gm_inverse_kinematics.cpp" />
     <ClCompile Include="program\game\gm_kinematics.cpp" />
@@ -46,6 +47,7 @@
     <ClCompile Include="program\game\gm_object.cpp" />
     <ClCompile Include="program\game\gm_parts.cpp" />
     <ClCompile Include="program\game\gm_physics_handler.cpp" />
+    <ClCompile Include="program\game\gm_pid_vel_controller.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_play.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_result.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_title.cpp" />
@@ -81,6 +83,7 @@
     <ClInclude Include="program\game\gm_object.h" />
     <ClInclude Include="program\game\gm_parts.h" />
     <ClInclude Include="program\game\gm_physics_handler.h" />
+    <ClInclude Include="program\game\gm_pid_vel_controller.h" />
     <ClInclude Include="program\game\scene\gm_scene_base.h" />
     <ClInclude Include="program\game\scene\gm_scene_play.h" />
     <ClInclude Include="program\game\scene\gm_scene_result.h" />
