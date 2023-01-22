@@ -300,5 +300,8 @@
     <ClInclude Include="program\game\gm_inverse_kinematics.h">
       <Filter>program\game\actor</Filter>
     </ClInclude>
+    <ClInclude Include="program\game\gm_controller.h">
+      <Filter>program\game\actor</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

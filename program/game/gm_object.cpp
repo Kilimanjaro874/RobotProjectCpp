@@ -91,6 +91,34 @@ void tol::Object::Rotation(tnl::Quaternion rot, move_type type) {
 
 }
 
+tnl::Vector3 tol::Object::getRight()
+{
+	std::shared_ptr<Coordinate> cod = getCoordinate();
+	if (cod == nullptr) { return tnl::Vector3{ 0, 0, 0 }; }
+	return cod->getDirX();
+}
+
+tnl::Vector3 tol::Object::getUp()
+{
+	std::shared_ptr<Coordinate> cod = getCoordinate();
+	if (cod == nullptr) { return tnl::Vector3{ 0, 0, 0 }; }
+	return cod->getDirY();
+}
+
+tnl::Vector3 tol::Object::getForward()
+{
+	std::shared_ptr<Coordinate> cod = getCoordinate();
+	if (cod == nullptr) { return tnl::Vector3{ 0, 0, 0 }; }
+	return cod->getDirZ();
+}
+
+void tol::Object::setRenderScale(float size)
+{
+	std::shared_ptr<Assemble> assem = getAssemble();
+	if (assem == nullptr) { return; }
+	assem->setPartsScale(size);
+}
+
 std::shared_ptr<tol::Object> tol::Object::getObjectTree(const int id, const std::string& name) {
 	if (id_ == id || name_ == name) {
 		return shared_from_this();

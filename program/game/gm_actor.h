@@ -2,9 +2,11 @@
 #include <memory>
 #include "gm_object.h"
 #include "gm_assemble_repository.h"
-
+#include "gm_controller.h"
 
 namespace tol {
+	class Controller;
+
 	class Actor : public Object {
 		
 	public:
@@ -14,6 +16,7 @@ namespace tol {
 		virtual ~Actor() {}
 
 		//// ---- Member variables ---- ////
+	private:
 		
 		//// ---- Member functions ---- ////
 	public:
