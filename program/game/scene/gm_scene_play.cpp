@@ -21,6 +21,10 @@ void ScenePlay::initialzie() {
 	camera_->pos_ = { 0, 150, -300 };
 	assem_repo_ =  tol::AssemRepo::Create();
 	actor_ = tol::Actor::Create(assem_repo_, robot_actor_, robot_ik_csv_);
+	// debug start 
+	auto ac_assem_ = actor_->getAssemble();
+	ac_assem_->setCoordinateView(actor_,2.5, 0.1);
+	// debug end 
 	// --- test --- //
 	std::shared_ptr<tol::PhysicsHandler> ph_handler = std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(500.0));
 	std::shared_ptr<tol::PIDVelController> pid_cont = std::make_shared<tol::PIDVelController>(tol::PIDVelController(2.0, 2.0, 1500.0, 1555.0, 200.0));
