@@ -56,9 +56,11 @@ void ScenePlay::update(float delta_time)
 		input += { 0, 0, -1 };
 	}
 	auto ph_handler = actor_->getPhysicsHandler();
-	ph_handler->update(delta_time, input);
+	ph_handler->update(delta_time, actor_, input);
 	tnl::Vector3 velocity = ph_handler->getVelocity();
 	actor_->Transform(velocity, tol::Actor::move_type::relative);
+	actor_->Rotation(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(1)), tol::Actor::move_type::absolute);
+
 	// move test end
 
 	// general process

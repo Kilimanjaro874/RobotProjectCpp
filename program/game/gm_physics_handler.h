@@ -24,7 +24,7 @@ namespace tol {
 
 		//// ---- Member functions ---- ////
 	public:
-		virtual void update(float delta_time, const tnl::Vector3& vel_dir);
+		virtual void update(float delta_time, std::shared_ptr<Actor> actor, const tnl::Vector3& vel_dir);
 		// ---- setter ---- //
 		void setPIDController(std::shared_ptr<PIDVelController> pid_vel_cont) { pid_vel_cont_ = pid_vel_cont; }
 		// ---- getter ---- //

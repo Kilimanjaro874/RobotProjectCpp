@@ -55,7 +55,7 @@ namespace tol {
 			std::shared_ptr<Coordinate> cod = actor->getCoordinate();
 			tnl::Vector3 tmp_dir = tnl::Vector3::TransformCoord(vel_dir, cod->getRot());
 			if (ph_h) {
-				ph_h->update(delta_time, tmp_dir);
+				//ph_h->update(delta_time, tmp_dir);
 			}
 		}
 	};
@@ -74,7 +74,7 @@ namespace tol {
 			std::shared_ptr<Coordinate> cod = actor->getCoordinate();
 			tnl::Vector3 tmp_dir = tnl::Vector3::TransformCoord(vel_dir, cod->getRot());
 			if (ph_h) {
-				ph_h->update(delta_time, tmp_dir);
+				//ph_h->update(delta_time, tmp_dir);
 			}
 		}
 	};

@@ -14,6 +14,7 @@ void tol::Object::init(
 void tol::Object::init() {
 	// create empty classes
 	coordinate_ = std::make_unique<Coordinate>(Coordinate());
+	coordinate_->init();
 	assemble_ = std::make_unique<Assemble>(Assemble());
 	kinematics_ = std::make_unique<Kinematics>(Kinematics());
 }

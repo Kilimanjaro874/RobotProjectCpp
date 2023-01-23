@@ -37,10 +37,15 @@ void tol::Kinematics::doKinematics(float delta_time, std::shared_ptr<Object> obj
 	std::shared_ptr<Coordinate> parent_coordinate;
 	// --- null check --- //
 	if (parent_s) {
+		// -- Child Object task -- //
 		parent_kinematics = parent_s->getKinematics();
 		parent_coordinate = parent_s->getCoordinate();
 	}
 	else {
+		// -- Root Object task -- //
+		// ¦ this task must do in kinematics class 
+		tnl::Quaternion rot_one_flame = kinematics->getRotOneFlame();
+		coordinate->setAddRot(rot_one_flame);
 		return;		// do not kinematics.
 	}
 	// --- get rot while one flame --- //
