@@ -37,7 +37,6 @@ namespace tol {
 		std::shared_ptr<Coordinate> coordinate_ = nullptr;
 		std::shared_ptr<Assemble> assemble_ = nullptr;
 		std::shared_ptr<Kinematics> kinematics_ = nullptr;
-	
 		// ---- Tree structuer ---- //
 		std::weak_ptr<Object> parent_;
 		std::list<std::shared_ptr<Object>> children_;
