@@ -1,4 +1,6 @@
 #include "gm_kinematics.h"
+#include "gm_object.h"
+#include "gm_coordinate.h"
 
 void tol::Kinematics::init(const std::shared_ptr<Object> parent, const std::shared_ptr<Object> child) {
 	initDKSetting(parent, child);
@@ -6,6 +8,53 @@ void tol::Kinematics::init(const std::shared_ptr<Object> parent, const std::shar
 
 void tol::Kinematics::update(float delta_time, std::shared_ptr<Object> obj) {
 	doKinematics(delta_time, obj);
+}
+
+/// <summary>
+/// Move the object coordinate to the velue of [move].
+///  * bool absolute : 
+///		true  : the object moves to the position of [move].
+///		false(default) : the object moves current position + move amound.(relative)
+/// </summary>
+/// <param name="move"> object move pos or amount of movement.</param>
+/// <param name="type"> set move type. </param>
+void tol::Kinematics::Translate(std::shared_ptr<Object> obj, tnl::Vector3 move, bool absolute_move) {
+	//std::shared_ptr<Coordinate> cod = getCoordinate();
+	//std::shared_ptr<Kinematics> kin = getKinematics();
+	std::shared_ptr<Coordinate> cod = obj->getCoordinate();
+	if (cod == nullptr) { return; }
+	if (absolute_move) {
+		// move
+		cod->setPos(move);
+	}
+	else {
+		// move 
+		cod->setPos(cod->getPos() + move);
+	}
+	// reset dk_setting
+	std::weak_ptr<Object> parent_w = obj->getParent();
+	std::shared_ptr<Object> parent_s = parent_w.lock();
+	if (parent_s) {
+		// nonparent : Unnecessary dk_init.
+		init(parent_s, obj);
+	}
+}
+
+/// <summary>
+/// Rotate the object by the value of [rot]
+/// * bool absolute : 
+///		true : set rotation for one frame.(one_flame_rot = rot)
+///		false(default) : add rotation for one flame.(one_flame_rot *= rot)
+/// </summary>
+/// <param name="rot"> rotation for one frame. </param>
+/// <param name="type"> set/add to rot.</param>
+void tol::Kinematics::Rotation(std::shared_ptr<Object> obj, tnl::Quaternion rot, bool absolute_move) {
+	if (absolute_move) {
+		setRotOneFlame(rot);
+	}
+	else {
+		setAddRotOneFlame(rot);
+	}
 }
 
 /// <summary>
@@ -43,9 +92,7 @@ void tol::Kinematics::doKinematics(float delta_time, std::shared_ptr<Object> obj
 	}
 	else {
 		// -- Root Object task -- //
-		// ¦ this task must do in kinematics class 
-		tnl::Quaternion rot_one_flame = kinematics->getRotOneFlame();
-		coordinate->setAddRot(rot_one_flame);
+		coordinate->setAddRot(kinematics->getRotOneFlame());
 		return;		// do not kinematics.
 	}
 	// --- get rot while one flame --- //
@@ -67,3 +114,4 @@ void tol::Kinematics::doKinematics(float delta_time, std::shared_ptr<Object> obj
 	kinematics->setAddRotOneFlame(rot_ik_one_flame);
 	coordinate->setAddRot(rot_ik_one_flame);
 }
+

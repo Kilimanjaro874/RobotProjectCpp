@@ -18,7 +18,6 @@ namespace tol {
 		tnl::Vector3 acc_;
 		tnl::Vector3 velocity_;
 
-		
 		// --- for PID Controll --- //
 		std::shared_ptr<PIDVelController> pid_vel_cont_ = nullptr;
 

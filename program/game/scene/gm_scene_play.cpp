@@ -4,6 +4,7 @@
 #include "gm_scene_result.h"
 #include "../../dxlib_ext/dxlib_ext.h"
 #include "../gm_object.h"
+
 // test 
 #include "../gm_physics_handler.h"
 #include "../gm_pid_vel_controller.h"
@@ -62,8 +63,8 @@ void ScenePlay::update(float delta_time)
 	auto ph_handler = actor_->getPhysicsHandler();
 	ph_handler->update(delta_time, actor_, input);
 	tnl::Vector3 velocity = ph_handler->getVelocity();
-	actor_->Transform(velocity, tol::Actor::move_type::relative);
-	actor_->Rotation(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(1)), tol::Actor::move_type::absolute);
+	actor_->Translate(velocity);
+	actor_->Rotation(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(1)), true);
 
 	// move test end
 

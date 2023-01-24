@@ -11,7 +11,6 @@ namespace tol {
 	public:
 		Kinematics() {}
 		virtual ~Kinematics() {}
-
 	//// ---- Member variables ---- ////
 	private:
 		// --- for DK package --- //
@@ -30,7 +29,9 @@ namespace tol {
 	public:
 		virtual void init(const std::shared_ptr<Object> parent, const std::shared_ptr<Object> child);
 		virtual void update(float delta_time, std::shared_ptr<Object> obj);
-
+		// ---- for user functions ---- //
+		virtual void Translate(std::shared_ptr<Object> obj, tnl::Vector3 move, bool absolute_move);
+		virtual void Rotation(std::shared_ptr<Object> obj, tnl::Quaternion rot, bool absolute_move);
 	private:
 		void initDKSetting(const std::shared_ptr<Object> parent, const std::shared_ptr<Object> child);
 		void doKinematics(float delta_time, std::shared_ptr<Object> obj);

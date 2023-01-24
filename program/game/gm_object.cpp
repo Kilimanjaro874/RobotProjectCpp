@@ -54,51 +54,30 @@ void tol::Object::renderTree(dxe::Camera* camera) {
 
 /// <summary>
 /// Move the object coordinate to the velue of [move].
-/// * move_type : 
-///		absolute(default) : the object moves to the position of [move].
-///		relative : the object moves current position + move amound.
+///  * bool absolute : 
+///		true  : the object moves to the position of [move].
+///		false(default) : the object moves current position + move amound.(relative)
 /// </summary>
 /// <param name="move"> object move pos or amount of movement.</param>
 /// <param name="type"> set move type. </param>
-void tol::Object::Transform(tnl::Vector3 move, move_type type) {
-	std::shared_ptr<Coordinate> cod = getCoordinate();
+void tol::Object::Translate(tnl::Vector3 move, bool absolute_move) {
 	std::shared_ptr<Kinematics> kin = getKinematics();
-	if (cod == nullptr || kin == nullptr) { return; }
-	if (move_type::absolute == type) {
-		// move
-		cod->setPos(move);
-	}
-	else if (move_type::relative == type) {
-		// move 
-		cod->setPos(cod->getPos() + move);
-	}
-	// reset dk_setting
-	std::weak_ptr<Object> parent_w = getParent();
-	std::shared_ptr<Object> parent_s = parent_w.lock();
-	if (parent_s) {
-		// nonparent : Unnecessary dk_init.
-		kin->init(parent_s, shared_from_this());
+	if (kin) {
+		kin->Translate(shared_from_this(), move, absolute_move);
 	}
 }
 
 /// <summary>
 /// Rotate the object by the value of [rot]
-/// * move_type : 
-///		absolute(default) : set rotation for one frame.(one_flame_rot = rot)
-///		relative : add rotation for one flame.(one_flame_rot *= rot)
+/// * bool absolute : 
+///		true(default) : set rotation for one frame.(one_flame_rot = rot)
+///		false : add rotation for one flame.(one_flame_rot *= rot)
 /// </summary>
 /// <param name="rot"> rotation for one frame. </param>
 /// <param name="type"> set/add to rot.</param>
-void tol::Object::Rotation(tnl::Quaternion rot, move_type type) {
+void tol::Object::Rotation(tnl::Quaternion rot, bool absolute_move) {
 	std::shared_ptr<Kinematics> kin = getKinematics();
-	if (kin) {
-		if (move_type::absolute == type) {
-			kin->setRotOneFlame(rot);
-		}
-		else if (move_type::relative == type) {
-			kin->setAddRotOneFlame(rot);
-		}
-	}
+	kin->Rotation(shared_from_this(), rot, absolute_move);
 }
 
 tnl::Vector3 tol::Object::getRight()
