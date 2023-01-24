@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include "../dxlib_ext/dxlib_ext.h"
+#include "gm_object.h"
 
 namespace tol {
 	class Actor;
@@ -17,15 +18,10 @@ namespace tol {
 		// --- calc params --- //
 		tnl::Vector3 acc_;
 		tnl::Vector3 velocity_;
-
-		// --- for PID Controll --- //
-		std::shared_ptr<PIDVelController> pid_vel_cont_ = nullptr;
-
 		//// ---- Member functions ---- ////
 	public:
-		virtual void update(float delta_time, std::shared_ptr<Actor> actor, const tnl::Vector3& vel_dir);
+		virtual void update(float delta_time, std::shared_ptr<Object> actor, const tnl::Vector3& force_);
 		// ---- setter ---- //
-		void setPIDController(std::shared_ptr<PIDVelController> pid_vel_cont) { pid_vel_cont_ = pid_vel_cont; }
 		// ---- getter ---- //
 		tnl::Vector3 getVelocity() { return velocity_; }
 
