@@ -54,7 +54,7 @@ void ScenePlay::update(float delta_time)
 	else if (tnl::Input::IsKeyDown(eKeys::KB_DOWN)) {
 		input += { 0, 0, -1 };
 	}
-	actor_->operateActorUpdate(delta_time, input);
+	actor_->operateActorUpdate(delta_time, input);		// give player control effect.
 	actor_->Rotation(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(1)), true);
 	// move test end
 

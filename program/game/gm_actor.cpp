@@ -32,7 +32,6 @@ std::shared_ptr<tol::Actor> tol::Actor::Create(std::shared_ptr<AssemRepo> a_repo
 	return act;
 }
 
-
 void tol::Actor::operateActorUpdate(float delta_time, const tnl::Vector3& dir) {
 	if (pid_vel_cont_) {
 		if (ph_handler_) {

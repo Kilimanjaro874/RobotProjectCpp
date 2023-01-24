@@ -76,6 +76,7 @@
     <ClInclude Include="program\game\gm_camera.h" />
     <ClInclude Include="program\game\gm_controller.h" />
     <ClInclude Include="program\game\gm_coordinate.h" />
+    <ClInclude Include="program\game\gm_input_handler.h" />
     <ClInclude Include="program\game\gm_inverse_kinematics.h" />
     <ClInclude Include="program\game\gm_kinematics.h" />
     <ClInclude Include="program\game\gm_main.h" />
