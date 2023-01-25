@@ -37,7 +37,6 @@ void ScenePlay::initialzie() {
 
 void ScenePlay::update(float delta_time)
 {
-	
 	GameManager* mgr = GameManager::GetInstance();
 	
 	// move test start

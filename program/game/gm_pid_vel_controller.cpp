@@ -8,7 +8,6 @@ tol::PIDVelController::PIDVelController(float horzontal_max, float vertical_max,
 	kd_ = kd;
 }
 
-//// ---- PIDVelController cpp  ---- //
 tnl::Vector3 tol::PIDVelController::update(float delta_time, const tnl::Vector3& vel_dir, const tnl::Vector3& vel_current)
 {
 	// --- update vel_ref --- //

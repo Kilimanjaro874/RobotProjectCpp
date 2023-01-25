@@ -7,6 +7,7 @@
 namespace tol {
 	class Object;
 	class InvKinematics;
+
 	class Kinematics {
 	public:
 		Kinematics() {}
@@ -25,6 +26,8 @@ namespace tol {
 		tnl::Quaternion rot_one_flame_;							// rotation of 1 flame.
 		// --- If you need Inverse Kinematics(IK) : attach IKclass --- //
 		std::shared_ptr<InvKinematics> inv_kinematics_ = nullptr;
+		// --- If you need Easing move : attach Easing Class ---- //
+		
 	//// ---- Member functions ---- ////
 	public:
 		virtual void init(const std::shared_ptr<Object> parent, const std::shared_ptr<Object> child);

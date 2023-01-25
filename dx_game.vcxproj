@@ -47,6 +47,7 @@
     <ClCompile Include="program\game\gm_object.cpp" />
     <ClCompile Include="program\game\gm_parts.cpp" />
     <ClCompile Include="program\game\gm_physics_handler.cpp" />
+    <ClCompile Include="program\game\gm_pid_pos_controller.cpp" />
     <ClCompile Include="program\game\gm_pid_vel_controller.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_play.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_result.cpp" />
@@ -84,6 +85,7 @@
     <ClInclude Include="program\game\gm_object.h" />
     <ClInclude Include="program\game\gm_parts.h" />
     <ClInclude Include="program\game\gm_physics_handler.h" />
+    <ClInclude Include="program\game\gm_pid_pos_controller.h" />
     <ClInclude Include="program\game\gm_pid_vel_controller.h" />
     <ClInclude Include="program\game\scene\gm_scene_base.h" />
     <ClInclude Include="program\game\scene\gm_scene_play.h" />
