@@ -319,5 +319,8 @@
     <ClInclude Include="program\game\gm_pid_vel_controller.h">
       <Filter>program\game\actor\option</Filter>
     </ClInclude>
+    <ClInclude Include="program\game\gm_input_handler.h">
+      <Filter>program\game\actor\option</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

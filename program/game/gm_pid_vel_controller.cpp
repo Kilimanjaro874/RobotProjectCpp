@@ -18,10 +18,11 @@ tnl::Vector3 tol::PIDVelController::update(float delta_time, const tnl::Vector3&
 	vel_error_ = vel_ref_ - vel_current;
 	// --- PID controll --- //
 	vel_error_integral_ += (vel_error_ + vel_error_pre_) / 2 * delta_time;
-	tnl::Vector3 pow = vel_error_ * kp_ +
+	tnl::Vector3 force = vel_error_ * kp_ +
 		vel_error_integral_ * ki_ +
 		(vel_error_ - vel_error_pre_) / delta_time;
 	// -- store info -- //
 	vel_error_pre_ = vel_error_;
-	return pow;		// add force (N)
+	return force;		// add force (N)
 }
+

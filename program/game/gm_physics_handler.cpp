@@ -6,13 +6,9 @@ tol::PhysicsHandler::PhysicsHandler(float mass) {
 	mass_ = mass;
 }
 
-void tol::PhysicsHandler::update(float delta_time,  std::shared_ptr<Actor> actor, const tnl::Vector3& vel_dir)
+void tol::PhysicsHandler::update(float delta_time,  std::shared_ptr<Object> actor, const tnl::Vector3& force)
 {
-	
-	auto cod = actor->getCoordinate();
-	tnl::Vector3 vel = tnl::Vector3::TransformCoord(vel_dir, cod->getRot());
-	tnl::Vector3 pow = pid_vel_cont_->update(delta_time, vel, getVelocity());
-	acc_ = pow / mass_;
+	acc_ = force / mass_;
 	velocity_ += acc_ * delta_time;
 }
 

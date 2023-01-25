@@ -37,11 +37,10 @@ namespace tol {
 		Commando() {}
 		virtual ~Commando() {}
 		virtual void execute(float delta_time, std::shared_ptr<Actor> actor) = 0;
-		virtual void execute(float delta_time, std::shared_ptr<Actor> actor, const tnl::Vector3& input) = 0;
 	};
 
 	// ---- implement abstract classes ---- //
-	class MoveHorizontalCommand : public Commando {
+	class MoveRightCommand : public Commando {
 	/// <summary>
 	/// For horizontal movement fuc.
 	/// * Actor : Physics_handler must be initialized and set in advance
@@ -50,10 +49,10 @@ namespace tol {
 		/// <summary>
 		/// vel_dir : tnl::Vector(x, 0, z) [-1 <= x <= 1, -1 <= z <= 1]
 		/// </summary>
-		virtual void execute(float delta_time, std::shared_ptr<Actor> actor, const tnl::Vector3& vel_dir) {
+		virtual void execute(float delta_time, std::shared_ptr<Actor> actor) {
 			std::shared_ptr<PhysicsHandler> ph_h = actor->getPhysicsHandler();
 			std::shared_ptr<Coordinate> cod = actor->getCoordinate();
-			tnl::Vector3 tmp_dir = tnl::Vector3::TransformCoord(vel_dir, cod->getRot());
+			//tnl::Vector3 tmp_dir = tnl::Vector3::TransformCoord(vel_dir, cod->getRot());
 			if (ph_h) {
 				//ph_h->update(delta_time, tmp_dir);
 			}

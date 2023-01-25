@@ -24,7 +24,7 @@ namespace tol {
 		tnl::Vector3 vel_error_;			// error(ref - current param.)
 		tnl::Vector3 vel_error_pre_;		// error befor 1 frame.
 		tnl::Vector3 vel_error_integral_;	// sum of error.
-
+		tnl::Vector3 force_;				// calculated force(N)
 		//// ---- Member functions ---- ////
 	public:
 		virtual tnl::Vector3 update(float delta_time, const tnl::Vector3& vel_dir, const tnl::Vector3& vel_current);
