@@ -32,7 +32,7 @@ namespace tol {
 		void init() override;
 		void update(float delta_time) override;
 		void render(dxe::Camera* camera) override;
-		static std::shared_ptr<Actor> Create(std::shared_ptr<AssemRepo> a_repo, std::string csv_path, std::string ik_csv_path = "");
+		static std::shared_ptr<Actor> Create(std::shared_ptr<AssemRepo> a_repo, std::string csv_path = "", std::string ik_csv_path = "");
 		// ---- for user functions ---- //
 		void operateActorUpdate(float delta_time, const tnl::Vector3& dir);		// give player controll effect.
 		// ---- setter ---- //

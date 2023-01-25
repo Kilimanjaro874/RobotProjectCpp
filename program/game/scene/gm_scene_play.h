@@ -12,8 +12,10 @@ public:
 	~ScenePlay();
 	//// ----- member variables ----- //
 	GmCamera* camera_ = nullptr;
-	std::shared_ptr<tol::Actor> actor_;
-	std::shared_ptr<tol::AssemRepo> assem_repo_;
+	std::shared_ptr<tol::Actor> actor_ = nullptr;
+	std::shared_ptr<tol::AssemRepo> assem_repo_ = nullptr;
+	// --- test --- //
+	std::shared_ptr<tol::Actor> cam_target_ = nullptr;
 	// ---- actor data : csv ---- //
 	// --- robot --- //
 	const std::string robot_actor_ = "gameCSV/Actor_RobotObj_01.csv";

@@ -33,6 +33,11 @@ void ScenePlay::initialzie() {
 	std::shared_ptr<tol::PIDVelController> pid_cont = std::make_shared<tol::PIDVelController>(tol::PIDVelController(2.0, 2.0, 1500.0, 1555.0, 200.0));
 	actor_->setPhysicsHandler(ph_handler);
 	actor_->setPIDVelController(pid_cont);
+
+	// --- test --- //
+	cam_target_ = tol::Actor::Create(assem_repo_);
+	auto cam_assem = cam_target_->getAssemble();
+	cam_assem->setCoordinateView(cam_target_, 5.0, 0.1);
 }
 
 void ScenePlay::update(float delta_time)
@@ -59,6 +64,9 @@ void ScenePlay::update(float delta_time)
 
 	// general process
 	actor_->updateTree(delta_time);
+
+	// --- test --- //
+	cam_target_->updateTree(delta_time);
 	
 	//------------------------------------------------------------------
 	//
@@ -87,4 +95,7 @@ void ScenePlay::render()
 	camera_->update();
 	DrawGridGround(camera_, 5, 300);
 	actor_->renderTree(camera_);
+
+	// --- test --- //
+	cam_target_->renderTree(camera_);
 }

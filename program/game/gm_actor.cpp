@@ -24,7 +24,9 @@ std::shared_ptr<tol::Actor> tol::Actor::Create(std::shared_ptr<AssemRepo> a_repo
 
 	act->init();	// generate empty classes 
 	//act->assemble_ = a_repo->CopyAssemble(200, "", true, 1.0);
-	act->getObjectDataCSV(a_repo, csv_path);
+	if (csv_path != "") {
+		act->getObjectDataCSV(a_repo, csv_path);
+	}
 	if (ik_csv_path != "") {
 		act->getIKsettingDataCSV(ik_csv_path);
 	}
