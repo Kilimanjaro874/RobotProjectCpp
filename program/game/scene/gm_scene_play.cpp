@@ -37,7 +37,12 @@ void ScenePlay::initialzie() {
 	// --- test --- //
 	cam_target_ = tol::Actor::Create(assem_repo_);
 	auto cam_assem = cam_target_->getAssemble();
-	cam_assem->setCoordinateView(cam_target_, 5.0, 0.1);
+	cam_assem->setCoordinateView(cam_target_, 5.0, 0.3);
+	// attach classes
+	std::shared_ptr<tol::PhysicsHandler> ph_cam_phy = std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(5.0));
+	std::shared_ptr<tol::PIDPosController> pid_cam_cont = std::make_shared<tol::PIDPosController>(tol::PIDPosController(0.0002, 0.005, 0.001));
+	cam_target_->setPhysicsHandler(ph_cam_phy);
+	cam_target_->setPIDPosController(pid_cam_cont);
 }
 
 void ScenePlay::update(float delta_time)
@@ -58,7 +63,7 @@ void ScenePlay::update(float delta_time)
 	else if (tnl::Input::IsKeyDown(eKeys::KB_DOWN)) {
 		input += { 0, 0, -1 };
 	}
-	actor_->operateActorUpdate(delta_time, input);		// give player control effect.
+	actor_->pidVellContUpdate(delta_time, input);		// give player control effect.
 	actor_->Rotation(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(1)), true);
 	// move test end
 
@@ -66,6 +71,9 @@ void ScenePlay::update(float delta_time)
 	actor_->updateTree(delta_time);
 
 	// --- test --- //
+	auto actor_cod = actor_->getCoordinate();
+	tnl::Vector3 target_pos = actor_cod->getPos();
+	cam_target_->pidPosContUpdate(delta_time, target_pos);
 	cam_target_->updateTree(delta_time);
 	
 	//------------------------------------------------------------------

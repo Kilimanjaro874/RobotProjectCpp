@@ -47,7 +47,41 @@ void tol::Actor::operateActorUpdate(float delta_time, const tnl::Vector3& dir) {
 			Translate(new_velocity, false);			// move
 		}
 	}
+	else if (pid_pos_cont_) {
+		if (ph_handler_) {
+
+		}
+	}
 }
+
+void tol::Actor::pidVellContUpdate(float delta_time, const tnl::Vector3& dir) {
+	if (pid_vel_cont_) {
+		if (ph_handler_) {
+			auto cod = getCoordinate();
+			// vel_dir : Convert input to local coordinate.
+			tnl::Vector3 vel_dir = tnl::Vector3::TransformCoord(dir, cod->getRot());
+			tnl::Vector3 current_velocity = ph_handler_->getVelocity();
+			tnl::Vector3 local_force = pid_vel_cont_->update(delta_time, vel_dir, current_velocity);
+			ph_handler_->update(delta_time, shared_from_this(), local_force);
+			tnl::Vector3 new_velocity = ph_handler_->getVelocity();
+			Translate(new_velocity, false);			// move
+		}
+	}
+}
+
+void tol::Actor::pidPosContUpdate(float delta_time, const tnl::Vector3& target_pos) {
+	if (pid_pos_cont_) {
+		if (ph_handler_) {
+			auto cod = getCoordinate();
+			tnl::Vector3 current_pos = cod->getPos();
+			tnl::Vector3 force = pid_pos_cont_->update(delta_time, target_pos, current_pos);
+			ph_handler_->update(delta_time, shared_from_this(), force);
+			tnl::Vector3 new_velocity = ph_handler_->getVelocity();
+			Translate(new_velocity, false);
+		}
+	}
+}
+
 
 void tol::Actor::getObjectDataCSV(std::shared_ptr<AssemRepo> a_repo, std::string csv_path) {
 	std::string str_buf;

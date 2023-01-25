@@ -178,11 +178,16 @@
     <ClCompile Include="program\game\gm_inverse_kinematics.cpp">
       <Filter>program\game\actor</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\gm_controller.cpp" />
     <ClCompile Include="program\game\gm_physics_handler.cpp">
       <Filter>program\game\actor\option</Filter>
     </ClCompile>
     <ClCompile Include="program\game\gm_pid_vel_controller.cpp">
+      <Filter>program\game\actor\option</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_controller.cpp">
+      <Filter>program\game\actor\option</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_pid_pos_controller.cpp">
       <Filter>program\game\actor\option</Filter>
     </ClCompile>
   </ItemGroup>
@@ -320,6 +325,9 @@
       <Filter>program\game\actor\option</Filter>
     </ClInclude>
     <ClInclude Include="program\game\gm_input_handler.h">
+      <Filter>program\game\actor\option</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_pid_pos_controller.h">
       <Filter>program\game\actor\option</Filter>
     </ClInclude>
   </ItemGroup>

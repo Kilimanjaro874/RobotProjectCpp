@@ -35,6 +35,8 @@ namespace tol {
 		static std::shared_ptr<Actor> Create(std::shared_ptr<AssemRepo> a_repo, std::string csv_path = "", std::string ik_csv_path = "");
 		// ---- for user functions ---- //
 		void operateActorUpdate(float delta_time, const tnl::Vector3& dir);		// give player controll effect.
+		void pidVellContUpdate(float delta_time, const tnl::Vector3& dir);
+		void pidPosContUpdate(float delta_time, const tnl::Vector3& target_pos);
 		// ---- setter ---- //
 		void setPhysicsHandler(std::shared_ptr<PhysicsHandler> ph_handler) { ph_handler_ = ph_handler; }
 		void setPIDVelController(std::shared_ptr<PIDVelController> pid_vel_cont) { pid_vel_cont_ = pid_vel_cont; }
