@@ -27,7 +27,6 @@ namespace tol {
 	public:
 		static std::shared_ptr<AssemRepo> Create();
 		std::shared_ptr<Assemble> CopyAssemble(int id, std::string name = "", bool is_resize = false, float size = 1.0);
-
 		// ---- setter ---- //
 		
 		// ---- getter ---- //
