@@ -26,5 +26,4 @@ namespace tol {
 	public:
 		virtual tnl::Vector3 update(float delta_time, const tnl::Vector3& pos_ref, const tnl::Vector3& pos_current);
 	};
-
 }

@@ -8,6 +8,7 @@
 // test 
 #include "../gm_physics_handler.h"
 #include "../gm_pid_vel_controller.h"
+#include "../gm_restraint.h"
 
 //static float  dth = 0;
 ScenePlay::~ScenePlay() {
@@ -43,6 +44,10 @@ void ScenePlay::initialzie() {
 	std::shared_ptr<tol::PIDPosController> pid_cam_cont = std::make_shared<tol::PIDPosController>(tol::PIDPosController(0.0002, 0.005, 0.001));
 	cam_target_->setPhysicsHandler(ph_cam_phy);
 	cam_target_->setPIDPosController(pid_cam_cont);
+	std::shared_ptr<tol::Restraint> re_cam = std::make_shared<tol::Restraint>(tol::Restraint());
+	re_cam->init(actor_, 0, "camera_restraint", tol::Restraint::restraint_type::rot_as_rot);
+	auto cam_target_kine = cam_target_->getKinematics();
+	cam_target_kine->setRestraint(re_cam);
 }
 
 void ScenePlay::update(float delta_time)

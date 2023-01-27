@@ -29,12 +29,16 @@ namespace tol {
 		// ---- setter ---- //
 		void setPos(const tnl::Vector3& pos) { pos_ = pos; }
 		void setAddRot(const tnl::Quaternion& rot);
+		void setRot(const tnl::Quaternion& rot) { rot_ = rot; }
+		void setDirX(const tnl::Vector3& dir_x) { c_vec_upd_v_[static_cast<int>(coordinate::x)] = dir_x; }
+		void setDirY(const tnl::Vector3& dir_y) { c_vec_upd_v_[static_cast<int>(coordinate::y)] = dir_y; }
+		void setDirZ(const tnl::Vector3& dir_z) { c_vec_upd_v_[static_cast<int>(coordinate::z)] = dir_z; }
 		// ---- getter ---- //
 		tnl::Vector3 getPos() { return pos_; }
 		tnl::Quaternion getRot() { return rot_; }
-		tnl::Vector3 getDirX() { return c_vec_upd_v_[static_cast<int>(coordinate::x)]; }
-		tnl::Vector3 getDirY() { return c_vec_upd_v_[static_cast<int>(coordinate::y)]; }
-		tnl::Vector3 getDirZ() { return c_vec_upd_v_[static_cast<int>(coordinate::z)]; }
+		tnl::Vector3 getDirX() { return c_vec_v_[static_cast<int>(coordinate::x)]; }
+		tnl::Vector3 getDirY() { return c_vec_v_[static_cast<int>(coordinate::y)]; }
+		tnl::Vector3 getDirZ() { return c_vec_v_[static_cast<int>(coordinate::z)]; }
 		
 	};
 }

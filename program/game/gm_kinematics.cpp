@@ -8,6 +8,9 @@ void tol::Kinematics::init(const std::shared_ptr<Object> parent, const std::shar
 
 void tol::Kinematics::update(float delta_time, std::shared_ptr<Object> obj) {
 	doKinematics(delta_time, obj);
+	if (restraint_) {
+		restraint_->update(delta_time, obj);
+	}
 }
 
 /// <summary>

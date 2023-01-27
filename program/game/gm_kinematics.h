@@ -3,10 +3,12 @@
 #include "../dxlib_ext/dxlib_ext.h"
 #include "gm_object.h"
 #include "gm_inverse_kinematics.h"
+#include "gm_restraint.h"
 
 namespace tol {
 	class Object;
 	class InvKinematics;
+	class Restraint;
 
 	class Kinematics {
 	public:
@@ -26,8 +28,8 @@ namespace tol {
 		tnl::Quaternion rot_one_flame_;							// rotation of 1 flame.
 		// --- If you need Inverse Kinematics(IK) : attach IKclass --- //
 		std::shared_ptr<InvKinematics> inv_kinematics_ = nullptr;
-		// --- If you need Easing move : attach Easing Class ---- //
-		
+		// --- If you need Object constraint : attach restraint Class ---- //
+		std::shared_ptr<Restraint> restraint_ = nullptr;
 	//// ---- Member functions ---- ////
 	public:
 		virtual void init(const std::shared_ptr<Object> parent, const std::shared_ptr<Object> child);
@@ -41,6 +43,7 @@ namespace tol {
 	public:
 		// ---- setter ---- //
 		void setInvKinematics(std::shared_ptr<InvKinematics> ik) { inv_kinematics_ = ik; }
+		void setRestraint(std::shared_ptr<Restraint> re) { restraint_ = re; }
 		void setDkData(const tnl::Vector3& dir, float length) {
 			dk_data_st_.dir_c_p_ = dir;
 			dk_data_st_.len_c_p_ = length;
