@@ -40,6 +40,7 @@
     <ClCompile Include="program\game\gm_camera.cpp" />
     <ClCompile Include="program\game\gm_controller.cpp" />
     <ClCompile Include="program\game\gm_coordinate.cpp" />
+    <ClCompile Include="program\game\gm_input_handler.cpp" />
     <ClCompile Include="program\game\gm_inverse_kinematics.cpp" />
     <ClCompile Include="program\game\gm_kinematics.cpp" />
     <ClCompile Include="program\game\gm_main.cpp" />
@@ -50,6 +51,7 @@
     <ClCompile Include="program\game\gm_pid_pos_controller.cpp" />
     <ClCompile Include="program\game\gm_pid_vel_controller.cpp" />
     <ClCompile Include="program\game\gm_restraint.cpp" />
+    <ClCompile Include="program\game\gm_tps_camera.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_play.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_result.cpp" />
     <ClCompile Include="program\game\scene\gm_scene_title.cpp" />
@@ -88,7 +90,9 @@
     <ClInclude Include="program\game\gm_physics_handler.h" />
     <ClInclude Include="program\game\gm_pid_pos_controller.h" />
     <ClInclude Include="program\game\gm_pid_vel_controller.h" />
+    <ClInclude Include="program\game\gm_player_robot.h" />
     <ClInclude Include="program\game\gm_restraint.h" />
+    <ClInclude Include="program\game\gm_tps_camera.h" />
     <ClInclude Include="program\game\scene\gm_scene_base.h" />
     <ClInclude Include="program\game\scene\gm_scene_play.h" />
     <ClInclude Include="program\game\scene\gm_scene_result.h" />

@@ -38,6 +38,7 @@ namespace tol {
 		std::list<std::shared_ptr<Object>> children_;
 		//// ---- Member functions ---- ////
 	public:
+		virtual void init();
 		virtual void init(
 			std::shared_ptr<Coordinate> cod,
 			std::shared_ptr<Assemble> assem,
@@ -46,7 +47,6 @@ namespace tol {
 		virtual void updateTree(float delta_time);
 		virtual void render(dxe::Camera* camera);
 		virtual void renderTree(dxe::Camera* camera);
-		virtual void init();
 		// ---- for user functions ---- //
 		void Translate(tnl::Vector3 move, bool absolute_move = false);
 		void Rotation(tnl::Quaternion rot, bool absolute_move = true);

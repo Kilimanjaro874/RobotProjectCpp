@@ -68,8 +68,14 @@ void ScenePlay::update(float delta_time)
 	else if (tnl::Input::IsKeyDown(eKeys::KB_DOWN)) {
 		input += { 0, 0, -1 };
 	}
-	actor_->pidVellContUpdate(delta_time, input);		// give player control effect.
-	actor_->Rotation(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(1)), true);
+	tnl::Vector3 input_pad = tnl::Input::GetLeftStick();
+	if (input_pad.length() > 0.1) {
+		actor_->pidVellContUpdate(delta_time, { input_pad.x, 0, -input_pad.y });		// give player control effect.
+	}
+	else {
+		actor_->pidVellContUpdate(delta_time, { 0, 0, 0 });
+	}
+	//actor_->Rotation(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(1)), true);
 	// move test end
 
 	// general process
@@ -93,13 +99,15 @@ void ScenePlay::update(float delta_time)
 	tnl::Input::RunIndexKeyDown([&](uint32_t idx) {
 		camera_->free_look_angle_xy_ += rot[idx];
 		}, eKeys::KB_A, eKeys::KB_D, eKeys::KB_W, eKeys::KB_S);
-
 	if (tnl::Input::IsKeyDown(eKeys::KB_Z)) {
 		camera_->target_distance_ += 1.0f;
 	}
 	if (tnl::Input::IsKeyDown(eKeys::KB_X)) {
 		camera_->target_distance_ -= 1.0f;
 	}
+
+	// test 
+	
 	
 }
 

@@ -14,3 +14,9 @@ void GmCamera::update()
 	// DrawStringEx(50, 120, -1, "f = %f, %f, %f", _aim_pos.x, _aim_pos.y, _aim_pos.z);
 	dxe::Camera::update();
 }
+
+void GmCamera::update(std::shared_ptr<tol::Actor> actor, const tnl::Vector3& offset_pos) {
+	// ---- Camera tracking function for Actor ---- //
+	auto actor_cod = actor->getCoordinate();
+
+}

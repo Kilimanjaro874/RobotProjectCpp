@@ -32,6 +32,12 @@
     <Filter Include="program\game\actor\option">
       <UniqueIdentifier>{edb2d5b7-d5be-4c45-ab8d-dbf5eddd3869}</UniqueIdentifier>
     </Filter>
+    <Filter Include="program\game\system">
+      <UniqueIdentifier>{e91f7adf-b1d7-4963-9f50-7eea04783581}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="program\game\actor\implementaation">
+      <UniqueIdentifier>{80bb5010-2887-4230-af73-e313163df882}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="program\system\sys_main.cpp">
@@ -193,6 +199,12 @@
     <ClCompile Include="program\game\gm_restraint.cpp">
       <Filter>program\game\actor\option</Filter>
     </ClCompile>
+    <ClCompile Include="program\game\gm_tps_camera.cpp">
+      <Filter>program\game\system</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_input_handler.cpp">
+      <Filter>program\game\system</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="program\library\picojson.h">
@@ -324,9 +336,6 @@
     <ClInclude Include="program\game\gm_pid_vel_controller.h">
       <Filter>program\game\actor\option</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\gm_input_handler.h">
-      <Filter>program\game\actor\option</Filter>
-    </ClInclude>
     <ClInclude Include="program\game\gm_pid_pos_controller.h">
       <Filter>program\game\actor\option</Filter>
     </ClInclude>
@@ -335,6 +344,15 @@
     </ClInclude>
     <ClInclude Include="program\game\gm_restraint.h">
       <Filter>program\game\actor\option</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_tps_camera.h">
+      <Filter>program\game\system</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_player_robot.h">
+      <Filter>program\game\actor\implementaation</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_input_handler.h">
+      <Filter>program\game\system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

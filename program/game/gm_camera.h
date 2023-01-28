@@ -1,5 +1,6 @@
 #pragma once
 #include "../dxlib_ext/dxlib_ext_camera.h"
+#include "gm_actor.h"
 
 class GmCamera : public dxe::Camera {
 public :
@@ -16,5 +17,7 @@ public :
 
 	//// ------ ƒƒ“ƒoŠÖ” ------ ////
 	void update();
+	// ---- Camera tracking function for Actor ---- //
+	void update(std::shared_ptr<tol::Actor> actor, const tnl::Vector3& offset_pos);
 };
 
