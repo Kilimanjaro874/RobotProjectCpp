@@ -17,7 +17,5 @@ public :
 
 	//// ------ ƒƒ“ƒoŠÖ” ------ ////
 	void update();
-	// ---- Camera tracking function for Actor ---- //
-	void update(std::shared_ptr<tol::Actor> actor, const tnl::Vector3& offset_pos);
 };
 
