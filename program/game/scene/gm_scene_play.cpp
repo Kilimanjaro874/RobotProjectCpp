@@ -16,7 +16,10 @@ ScenePlay::~ScenePlay() {
 }
 
 void ScenePlay::initialzie() {
-	
+	// ---- Dxlib settings [start] ---- //
+	SetAlwaysRunFlag(false);		// Window inactive : continue game operation.
+
+	// ---- Dxlib settings [end] ---- //
 	GameManager* mgr = GameManager::GetInstance();
 	// ---- get instance ---- //
 	camera_ = new GmCamera();
@@ -53,7 +56,6 @@ void ScenePlay::initialzie() {
 void ScenePlay::update(float delta_time)
 {
 	GameManager* mgr = GameManager::GetInstance();
-	
 	// move test start
 	tnl::Vector3 input = { 0, 0, 0 };
 	if (tnl::Input::IsKeyDown(eKeys::KB_RIGHT)) {
@@ -86,12 +88,12 @@ void ScenePlay::update(float delta_time)
 	tnl::Vector3 target_pos = actor_cod->getPos();
 	cam_target_->pidPosContUpdate(delta_time, target_pos);
 	cam_target_->updateTree(delta_time);
-	
+
 	//------------------------------------------------------------------
 	//
 	// ƒJƒƒ‰§Œä
 	//
-	tnl::Vector3 rot[4] = {
+	/*tnl::Vector3 rot[4] = {
 		{ 0, tnl::ToRadian(1.0f), 0 },
 		{ 0, -tnl::ToRadian(1.0f), 0 },
 		{ tnl::ToRadian(1.0f), 0, 0 },
@@ -104,11 +106,37 @@ void ScenePlay::update(float delta_time)
 	}
 	if (tnl::Input::IsKeyDown(eKeys::KB_X)) {
 		camera_->target_distance_ -= 1.0f;
-	}
+	}*/
 
 	// test 
+	auto cam_target_cod = cam_target_->getCoordinate();
+	tnl::Vector3 cam_pos = cam_target_cod->getPos() - cam_target_cod->getDirZ() * 5.0f;
+	camera_->target_ = cam_target_cod->getPos() + tnl::Vector3(0, 11, 0);
+	camera_->pos_ = cam_pos + tnl::Vector3(0, 20, 0);
 	
-	
+	// ---- Dxlib settings [start] ---- //
+	if (tnl::Input::IsKeyDown(eKeys::KB_ESCAPE)) {
+		is_window_active_ = false;
+	}
+	if (is_window_active_) {
+		// --- for TPS mouse aiming : clear mouse cursor & fixed to center of screen. --- //
+		SetMouseDispFlag(false);		// clear of mouse cursor.
+		SetMousePoint(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2);
+	}
+	if (!is_window_active_) {
+		// --- release mouse cursor --- //
+		SetMouseDispFlag(true);		// appearance of mouse cursor.
+		if (tnl::Input::IsMouseDown(tnl::Input::eMouse::LEFT)) {
+			// back to game (TPS mouse aiming)
+			int x, y;
+			GetMousePoint(&x, &y);
+			if (0 < x && x < DXE_WINDOW_WIDTH && 0 < y && y < DXE_WINDOW_HEIGHT) {
+				is_window_active_ = true;
+				SetMousePoint(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2);		// reset mousePosition immediately.
+			}
+		}
+	}
+	// ---- Dxlib settings [end] ---- //
 }
 
 void ScenePlay::render()

@@ -8,7 +8,7 @@ public :
 	GmCamera() : dxe::Camera(DXE_WINDOW_WIDTH, DXE_WINDOW_HEIGHT) {}
 	~GmCamera(){}
 	tnl::Vector3 free_look_angle_xy_ = { tnl::ToRadian(30), 0, 0 };
-	float target_distance_ = 50;
+	float target_distance_ = 20;
 	// ----- 焦点への単位ベクトル ----- //
 	tnl::Vector3 focus_dir_ = { 0, 0, 1 };		// 初期値
 	tnl::Vector3 focus_dir_tmp_ = focus_dir_;	// Update中の値

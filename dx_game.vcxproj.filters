@@ -199,7 +199,7 @@
     <ClCompile Include="program\game\gm_restraint.cpp">
       <Filter>program\game\actor\option</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\gm_tps_camera.cpp">
+    <ClCompile Include="program\game\gm_camera_director.cpp">
       <Filter>program\game\system</Filter>
     </ClCompile>
     <ClCompile Include="program\game\gm_input_handler.cpp">
@@ -345,7 +345,7 @@
     <ClInclude Include="program\game\gm_restraint.h">
       <Filter>program\game\actor\option</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\gm_tps_camera.h">
+    <ClInclude Include="program\game\gm_camera_director.h">
       <Filter>program\game\system</Filter>
     </ClInclude>
     <ClInclude Include="program\game\gm_player_robot.h">

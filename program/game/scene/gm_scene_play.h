@@ -4,8 +4,10 @@
 #include "../gm_actor.h"
 #include "../gm_camera.h"
 #include "../gm_assemble_repository.h"
+#include "../gm_tps_camera.h"
 
-class GmCamera;
+
+//class GmCamera;
 class ScenePlay : public SceneBase {
 public:
 	ScenePlay() {}
@@ -18,8 +20,11 @@ public:
 	std::shared_ptr<tol::Actor> cam_target_ = nullptr;
 	// ---- actor data : csv ---- //
 	// --- robot --- //
+
 	const std::string robot_actor_ = "gameCSV/Actor_RobotObj_01.csv";
 	const std::string robot_ik_csv_ = "gameCSV/Actor_RobotObj_01_Ksetting.csv";
+	// --- settings --- //
+	bool is_window_active_ = true;		// player toched game window flag.
 
 	//// ----- member functions ----- ////
 	void initialzie() override;
