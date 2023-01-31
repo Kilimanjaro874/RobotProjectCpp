@@ -6,7 +6,6 @@ namespace dxe {
 	class Camera {
 	public :
 
-		Camera(){}
 		Camera(int screen_w, int screen_h) {
 			screen_w_ = screen_w;
 			screen_h_ = screen_h;

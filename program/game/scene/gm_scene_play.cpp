@@ -22,6 +22,7 @@ void ScenePlay::initialzie() {
 	// ---- Dxlib settings [end] ---- //
 	GameManager* mgr = GameManager::GetInstance();
 	// ---- get instance ---- //
+	camera_director_ = std::make_shared<tol::TPSCamDirector>(tol::TPSCamDirector());
 	camera_ = new GmCamera();
 	camera_->pos_ = { 0, 150, -300 };
 	assem_repo_ =  tol::AssemRepo::Create();
@@ -55,6 +56,7 @@ void ScenePlay::initialzie() {
 
 void ScenePlay::update(float delta_time)
 {
+	
 	GameManager* mgr = GameManager::GetInstance();
 	// move test start
 	tnl::Vector3 input = { 0, 0, 0 };
@@ -85,7 +87,7 @@ void ScenePlay::update(float delta_time)
 
 	// --- test --- //
 	auto actor_cod = actor_->getCoordinate();
-	tnl::Vector3 target_pos = actor_cod->getPos();
+	tnl::Vector3 target_pos = actor_cod->getPos() + tnl::Vector3(0, 10, 0);
 	cam_target_->pidPosContUpdate(delta_time, target_pos);
 	cam_target_->updateTree(delta_time);
 
@@ -110,9 +112,10 @@ void ScenePlay::update(float delta_time)
 
 	// test 
 	auto cam_target_cod = cam_target_->getCoordinate();
-	tnl::Vector3 cam_pos = cam_target_cod->getPos() - cam_target_cod->getDirZ() * 5.0f;
-	camera_->target_ = cam_target_cod->getPos() + tnl::Vector3(0, 11, 0);
-	camera_->pos_ = cam_pos + tnl::Vector3(0, 20, 0);
+	tnl::Vector3 cam_pos = -cam_target_cod->getDirZ() * 20.0f;
+	//camera_->target_ = cam_target_cod->getPos() + tnl::Vector3(0, 11, 0);
+	//camera_->pos_ = cam_pos + tnl::Vector3(0, 20, 0);
+	camera_director_->update(delta_time, camera_, cam_target_, cam_pos);
 	
 	// ---- Dxlib settings [start] ---- //
 	if (tnl::Input::IsKeyDown(eKeys::KB_ESCAPE)) {
@@ -120,7 +123,7 @@ void ScenePlay::update(float delta_time)
 	}
 	if (is_window_active_) {
 		// --- for TPS mouse aiming : clear mouse cursor & fixed to center of screen. --- //
-		SetMouseDispFlag(false);		// clear of mouse cursor.
+		SetMouseDispFlag(true);		// clear of mouse cursor.
 		SetMousePoint(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2);
 	}
 	if (!is_window_active_) {
@@ -142,6 +145,7 @@ void ScenePlay::update(float delta_time)
 void ScenePlay::render()
 {
 	camera_->update();
+	//camera_director_->renderUpdate();
 	DrawGridGround(camera_, 5, 300);
 	actor_->renderTree(camera_);
 
