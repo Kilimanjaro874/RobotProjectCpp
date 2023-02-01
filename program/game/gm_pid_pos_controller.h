@@ -24,6 +24,7 @@ namespace tol {
 		tnl::Vector3 pos_error_integral_;	// sum of error.
 		//// ---- Memver functions ---- ////
 	public:
+		// --- return controlled torque (N/m) --- //
 		virtual tnl::Vector3 update(float delta_time, const tnl::Vector3& pos_ref, const tnl::Vector3& pos_current);
 	};
 }

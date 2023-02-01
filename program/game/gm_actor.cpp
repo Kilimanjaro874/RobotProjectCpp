@@ -62,6 +62,19 @@ void tol::Actor::pidPosContUpdate(float delta_time, const tnl::Vector3& target_p
 	}
 }
 
+void tol::Actor::pidRotContUpdate(float delta_time, const tnl::Vector3& look_ref_pos)
+{
+	if (pid_rot_cont_) {
+		if (ph_handler_) {
+			auto cod = getCoordinate();
+			tnl::Vector3 current_dir = cod->getDirZ();
+			float torque = pid_rot_cont_->update(delta_time, look_ref_pos, current_dir);
+			ph_handler_->update(delta_time, shared_from_this(), { 0, 0, 0 }, torque);
+			float ang_vel = ph_handler_->getRotVelocity();
+			Rotation(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, ang_vel), true);
+		}
+	}
+}
 
 void tol::Actor::getObjectDataCSV(std::shared_ptr<AssemRepo> a_repo, std::string csv_path) {
 	std::string str_buf;

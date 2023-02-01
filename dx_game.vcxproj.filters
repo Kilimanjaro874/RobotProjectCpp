@@ -205,6 +205,9 @@
     <ClCompile Include="program\game\gm_input_handler.cpp">
       <Filter>program\game\system</Filter>
     </ClCompile>
+    <ClCompile Include="program\game\gm_pid_rot_controller.cpp">
+      <Filter>program\game\actor\option</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="program\library\picojson.h">
@@ -353,6 +356,9 @@
     </ClInclude>
     <ClInclude Include="program\game\gm_input_handler.h">
       <Filter>program\game\system</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_pid_rot_controller.h">
+      <Filter>program\game\actor\option</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

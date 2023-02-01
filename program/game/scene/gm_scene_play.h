@@ -7,6 +7,7 @@
 #include "../gm_camera_director.h"
 
 
+
 //class GmCamera;
 class ScenePlay : public SceneBase {
 public:
@@ -31,5 +32,4 @@ public:
 	void initialzie() override;
 	void update(float delta_time) override;
 	void render() override;
-
 };

@@ -13,9 +13,11 @@ public :
 	tnl::Vector3 focus_dir_ = { 0, 0, 1 };		// ‰Šú’l
 	tnl::Vector3 focus_dir_tmp_ = focus_dir_;	// Update’†‚Ì’l
 	//tnl::Vector3 _aim_pos;
-	//float _aim_distance = 1000;
+	float aim_distance = 1000;
 
 	//// ------ ƒƒ“ƒoŠÖ” ------ ////
 	void update();
+	// ---- setter ---- //
+	// ---- getter ---- //
+	tnl::Vector3 getForcusPos() { return focus_dir_tmp_ * aim_distance; }
 };
-

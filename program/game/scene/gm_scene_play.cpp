@@ -8,6 +8,7 @@
 // test 
 #include "../gm_physics_handler.h"
 #include "../gm_pid_vel_controller.h"
+#include "../gm_pid_rot_controller.h"
 #include "../gm_restraint.h"
 
 //static float  dth = 0;
@@ -34,17 +35,21 @@ void ScenePlay::initialzie() {
 	// debug end 
 	
 	// --- Actor Control test --- //
-	std::shared_ptr<tol::PhysicsHandler> ph_handler = std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(500.0));
-	std::shared_ptr<tol::PIDVelController> pid_cont = std::make_shared<tol::PIDVelController>(tol::PIDVelController(2.0, 2.0, 1500.0, 1555.0, 200.0));
+	std::shared_ptr<tol::PhysicsHandler> ph_handler =
+		std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(500.0, 500.0 * 2*2/8));
+	std::shared_ptr<tol::PIDVelController> pid_cont =
+		std::make_shared<tol::PIDVelController>(tol::PIDVelController(2.0, 2.0, 1500.0, 1555.0, 200.0));
+	std::shared_ptr<tol::PIDRotController> pid_rot_cont =
+		std::make_shared<tol::PIDRotController>(tol::PIDRotController(tnl::ToRadian(10), 1.0, 1.0, 0.0, 0.0));
 	actor_->setPhysicsHandler(ph_handler);
 	actor_->setPIDVelController(pid_cont);
-
+	actor_->setPIDRotController(pid_rot_cont);
 	// --- test --- //
 	cam_target_ = tol::Actor::Create(assem_repo_);
 	auto cam_assem = cam_target_->getAssemble();
 	cam_assem->setCoordinateView(cam_target_, 5.0, 0.3);
 	// attach classes
-	std::shared_ptr<tol::PhysicsHandler> ph_cam_phy = std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(5.0));
+	std::shared_ptr<tol::PhysicsHandler> ph_cam_phy = std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(5.0, 5.0 * 1*1/8));
 	std::shared_ptr<tol::PIDPosController> pid_cam_cont = std::make_shared<tol::PIDPosController>(tol::PIDPosController(0.0002, 0.005, 0.001));
 	cam_target_->setPhysicsHandler(ph_cam_phy);
 	cam_target_->setPIDPosController(pid_cam_cont);
@@ -58,7 +63,8 @@ void ScenePlay::update(float delta_time)
 {
 	
 	GameManager* mgr = GameManager::GetInstance();
-	// move test start
+	// - move test start - //
+	// translate
 	tnl::Vector3 input = { 0, 0, 0 };
 	if (tnl::Input::IsKeyDown(eKeys::KB_RIGHT)) {
 		input += { 1, 0, 0 };
@@ -80,7 +86,9 @@ void ScenePlay::update(float delta_time)
 		actor_->pidVellContUpdate(delta_time, { 0, 0, 0 });
 	}
 	//actor_->Rotation(tnl::Quaternion::RotationAxis({ 0, 1, 0 }, tnl::ToRadian(1)), true);
-	// move test end
+	// rotation
+	actor_->pidRotContUpdate(delta_time, camera_->getForcusPos());
+	// - move test end - //
 
 	// general process
 	actor_->updateTree(delta_time);
