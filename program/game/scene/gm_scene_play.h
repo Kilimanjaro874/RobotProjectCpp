@@ -4,7 +4,7 @@
 #include "../gm_actor.h"
 #include "../gm_camera.h"
 #include "../gm_assemble_repository.h"
-#include "../gm_camera_director.h"
+#include "../gm_tps_camera_director.h"
 
 
 
@@ -14,8 +14,8 @@ public:
 	ScenePlay() {}
 	~ScenePlay();
 	//// ----- member variables ----- //
-	GmCamera* camera_ = nullptr;
-	std::shared_ptr<tol::TPSCamDirector> camera_director_ = nullptr;
+	dxe::Camera* camera_ = nullptr;
+	std::shared_ptr<tol::TPSCameraDirector> cam_director_ = nullptr;
 	std::shared_ptr<tol::Actor> actor_ = nullptr;
 	std::shared_ptr<tol::AssemRepo> assem_repo_ = nullptr;
 	// --- test --- //

@@ -8,13 +8,12 @@ namespace tol {
 
 	class PIDRotController {
 	public:
-		PIDRotController(float rotation_speed_max, float tolerance_deg, float kp, float ki, float kd);
+		PIDRotController(float tolerance_deg, float kp, float ki, float kd);
 		virtual ~PIDRotController() {}
 
 	private:
 		//// ---- Member variables ---- ////
 		// --- define --- //
-		float rotation_speed_max_;		// rad/s max;
 		float tolerance_deg_;			// allowable angular 
 		float kp_;
 		float ki_;

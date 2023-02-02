@@ -199,14 +199,14 @@
     <ClCompile Include="program\game\gm_restraint.cpp">
       <Filter>program\game\actor\option</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\gm_camera_director.cpp">
-      <Filter>program\game\system</Filter>
-    </ClCompile>
     <ClCompile Include="program\game\gm_input_handler.cpp">
       <Filter>program\game\system</Filter>
     </ClCompile>
     <ClCompile Include="program\game\gm_pid_rot_controller.cpp">
       <Filter>program\game\actor\option</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_tps_camera_director.cpp">
+      <Filter>program\game\system</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -348,9 +348,6 @@
     <ClInclude Include="program\game\gm_restraint.h">
       <Filter>program\game\actor\option</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\gm_camera_director.h">
-      <Filter>program\game\system</Filter>
-    </ClInclude>
     <ClInclude Include="program\game\gm_player_robot.h">
       <Filter>program\game\actor\implementaation</Filter>
     </ClInclude>
@@ -359,6 +356,9 @@
     </ClInclude>
     <ClInclude Include="program\game\gm_pid_rot_controller.h">
       <Filter>program\game\actor\option</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_tps_camera_director.h">
+      <Filter>program\game\system</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

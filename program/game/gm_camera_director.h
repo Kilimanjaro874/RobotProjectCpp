@@ -16,7 +16,8 @@ namespace tol {
 		//// ----- Member variables ------ ////
 		// --- define --- //
 		tnl::Vector3 forcus_point_ = { 0, 0, 1 };	// camera look point.(ref : world coordinate)
-		float focal_length_ = 500;				// camera focus length. (m)
+		float focal_length_ = 500.0f;				// camera focus length. (m)
+		float cam_tar_lentgh = 20.0f;				// camera to camera_target length;	 
 		struct mouse_inputs {
 			int x_delta_move_;		// mouse move x : from Center of Window (while 1flame)
 			int y_delta_move_;		// mouse move y : from Center of Window (while 1flame)
