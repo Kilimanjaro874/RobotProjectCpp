@@ -1,10 +1,10 @@
 IK data:,,Set Obj data:,,Object data:,,Target data:,,IK type,kp,RotAixs,,,Comment:
 id,name,id,name,id,name,id,name,type,,on / off,,,
 ,,,,,,,,,,x,y,z,
-2300,RATA01,300,RA01,1300,RAEE01,2300,RATA01,0: pos_to_pos,0.2,on,on,on,
-2300,RATA02,301,RA02,1300,RAEE01,2300,RATA02,0: pos_to_pos,0.2,on,on,on,
-2300,RATA03,302,RA03,1300,RAEE01,2300,RATA03,0: pos_to_pos,0.2,on,off,on,
-,,,,,,,,,,,,,
+2300,RATA01,300,RA01,1300,RAEE01,2300,RATA01,11: diry_look_pos,0.5,on,off,on,Right wrist IK
+2300,RATA02,301,RA02,1300,RAEE01,2300,RATA01,11: diry_look_pos,0.5,on,off,on,Right wrist IK
+2300,RATA03,302,RA03,1300,RAEE01,2300,RATA01,11: diry_look_pos,0.5,on,off,on,Right wrist IK
+2301,RATA04,300,RA01,1301,RAEE02,2301,RATA02,0: pos_to_pos,0.1,on,off,on,Right elbow IK
 ,,,,,,,,,,,,,
 ,,,,,,,,,,,,,
 ,,,,,,,,,,,,,

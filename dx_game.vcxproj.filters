@@ -208,6 +208,9 @@
     <ClCompile Include="program\game\gm_tps_camera_director.cpp">
       <Filter>program\game\system</Filter>
     </ClCompile>
+    <ClCompile Include="program\game\gm_player_robot.cpp">
+      <Filter>program\game\actor\implementaation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="program\library\picojson.h">

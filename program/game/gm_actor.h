@@ -31,6 +31,8 @@ namespace tol {
 		std::shared_ptr<PIDPosController> pid_pos_cont_ = nullptr;
 		// --- rotation control --- //
 		std::shared_ptr<PIDRotController> pid_rot_cont_ = nullptr;
+		// --- human : upper body aiming control --- //
+		
 		//// ---- Member functions ---- ////
 	public:
 		void init() override;

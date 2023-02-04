@@ -9,6 +9,7 @@ namespace tol {
 	public:
 		TPSCameraDirector(dxe::Camera* camera, const tnl::Vector3 cam_pos, std::shared_ptr<Object> tar_obj);
 		virtual ~TPSCameraDirector() {}
+	protected:
 		//// ---- Member variables ---- ////
 		// --- define --- //
 		tnl::Vector3 forcus_dir_;			// direction of target_obj.(init);
@@ -27,8 +28,7 @@ namespace tol {
 			int y_delta_move_;		// mouse move y : from Center of Window (while 1flame)
 		} mouse_inputs_st_ = { DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2 };
 		float cam_rot_coeff = 0.05f;	// Camera rotation sensitivity by mouse movement.
-	protected:
-
+		//// ---- Member functions ---- ////
 	public:
 		virtual void update(float delta_time, dxe::Camera* camera, std::shared_ptr<Object> tar_obj);
 		// ---- setter ---- //
