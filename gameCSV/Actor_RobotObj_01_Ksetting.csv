@@ -12,12 +12,12 @@ id,name,id,name,id,name,id,name,type,,on / off,,,
 ,,,,,,,,,,,,,
 ,,,,,,,,,,,,,
 ,,,,,,,,,,,,,
-,,,,,,,,,,,,,
-,,,,,,,,,,,,,
-,,,,,,,,,,,,,
-,,,,,,,,,,,,,
-,,,,,,,,,,,,,
-,,,,,,,,,,,,,
+2401,LATA01,400,LA01,1400,LAEE01,2400,LATA01,11: diry_look_pos,0,on,off,on,Left wrist Rot IK
+2402,LATA02,401,LA02,1400,LAEE01,2400,LATA01,11: diry_look_pos,0,on,off,on,Left wrist Rot IK
+2403,LATA03,402,LA03,1400,LAEE01,2400,LATA01,11: diry_look_pos,0.2,on,off,on,Left wrist Rot IK
+2404,LATA04,400,LA01,1401,LAEE02,2401,LATA02,0: pos_to_pos,0.2,on,off,on,Left elbow IK
+2405,LATA05,401,LA02,1402,LAEE03,2402,LATA03,0: pos_to_pos,0.8,on,off,on,Left wrist Pos IK
+2406,LATA06,400,LA01,1402,LAEE03,2402,LATA03,0: pos_to_pos,0.1,on,on,on,Left wrist Pos IK
 ,,,,,,,,,,,,,
 ,,,,,,,,,,,,,
 ,,,,,,,,,,,,,

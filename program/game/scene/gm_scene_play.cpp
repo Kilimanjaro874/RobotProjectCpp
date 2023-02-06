@@ -105,18 +105,18 @@ void ScenePlay::update(float delta_time)
 
 		actor_->pidRotContUpdate(delta_time, cam_director_->getForcusPos());
 
+		auto r_arm_tar = actor_->getObjectTree(2300, "");
+		r_arm_tar->Translate(cam_director_->getForcusPos(), true);
 
+		auto l_arm_tar = actor_->getObjectTree(2400, "");
+		l_arm_tar->Translate(cam_director_->getForcusPos(), true);
 		
 		// - move test end - //
 
 		// general process
 		actor_->updateTree(delta_time);
 
-		auto r_arm_tar = actor_->getObjectTree(2300, "");
-		//auto r_arm_tar_assem = r_arm_tar->getAssemble();
-		//r_arm_tar_assem->setCoordinateView(r_arm_tar, 20, 2);
-		r_arm_tar->Translate(cam_director_->getForcusPos(), true);
-
+		
 		
 
 		
