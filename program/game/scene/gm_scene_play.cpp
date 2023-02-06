@@ -31,9 +31,9 @@ void ScenePlay::initialzie() {
 	
 	// --- Actor Control test --- //
 	std::shared_ptr<tol::PhysicsHandler> ph_handler =
-		std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(500.0, 500.0 * 2*2/8, 100, tnl::ToRadian(90)));
+		std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(500.0, 500.0 * 2*2/8, 2.0, tnl::ToRadian(45)));
 	std::shared_ptr<tol::PIDVelController> pid_cont =
-		std::make_shared<tol::PIDVelController>(tol::PIDVelController(2.0, 2.0, 1500.0, 1555.0, 200.0));
+		std::make_shared<tol::PIDVelController>(tol::PIDVelController(1.0, 1.0, 1800.0, 1855.0, 300.0));
 	std::shared_ptr<tol::PIDRotController> pid_rot_cont =
 		std::make_shared<tol::PIDRotController>(tol::PIDRotController(1.0, 150.0, 1.0, 40.0));
 	actor_->setPhysicsHandler(ph_handler);

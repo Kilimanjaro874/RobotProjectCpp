@@ -30,6 +30,10 @@ tnl::Quaternion tol::InvKinematics::inverseKinematics(float delta_time, std::sha
 	float dth = 0;
 	std::shared_ptr<Coordinate> cod = obj->getCoordinate();
 	for (auto ik : ik_data_st_) {
+		if (ik.ik_id_ == 2306)
+		{
+			printf("deb");
+		}
 		for (int i = 0; i < static_cast<int>(Coordinate::coordinate::end); i++) {
 			if (!ik.is_rot_[i]) {
 				continue; 
@@ -113,13 +117,13 @@ tnl::Quaternion tol::InvKinematics::inverseKinematics(float delta_time, std::sha
 			// --- calc ik ---- //
 			x = tnl::Vector3::Cross(pe, rot_axis);
 			y = tnl::Vector3::Cross(pr, rot_axis);
-			dth = delta_time * 60.0 * ik.kp_ * std::acosf(std::clamp(
+			dth = delta_time * 60 * ik.kp_ * std::acosf(std::clamp(
 				x.dot(y) / x.length() / y.length(),
 				(float)-1, (float)1
 			));
 			if (!isfinite(dth)) { dth = 0; }	// avoid singularity : when object or target exist on the rotation axis.
-			if (dth > tnl::PI / 24) {			// limitter
-				dth = tnl::PI / 24;
+			if (dth > tnl::PI / 180) {			// limitter
+				dth = tnl::PI / 180;
 			}
 			tnl::Vector3 axis = x.cross(y) / x.length() / y.length();	// determine rotate direction.
 			dth *= rot_axis.dot(axis) >= 0 ? 1 : -1;

@@ -212,18 +212,36 @@ void tol::Actor::getIKsettingDataCSV(std::string csv_path) {
 		is_rotatable_axis[static_cast<int>(Coordinate::coordinate::x)] = isrot(c[10]);
 		is_rotatable_axis[static_cast<int>(Coordinate::coordinate::y)] = isrot(c[11]);
 		is_rotatable_axis[static_cast<int>(Coordinate::coordinate::z)] = isrot(c[12]);
-		// --- create InvKinametics Class --- //
-		std::shared_ptr<Object> ik_obj = this->getObjectTree(ik_obj_id, ik_obj_name);
-		std::shared_ptr<Object> ik_tar = this->getObjectTree(ik_tar_id, ik_tar_name);
-		std::shared_ptr<InvKinematics> ik_tmp = std::make_unique<InvKinematics>(InvKinematics());
-		ik_tmp->init(ik_tar, ik_obj, 
-			ik_id, ik_name, static_cast<tol::InvKinematics::ik_type>(ik_type), kp,
-			is_rotatable_axis[static_cast<int>(Coordinate::coordinate::x)],
-			is_rotatable_axis[static_cast<int>(Coordinate::coordinate::y)],
-			is_rotatable_axis[static_cast<int>(Coordinate::coordinate::z)]
-			);
+
+		// --- check: already have InvKinematics component --- //
 		std::shared_ptr<Object> attach_obj = this->getObjectTree(set_obj_id, set_obj_name);
+		if (!attach_obj) { continue;}
 		std::shared_ptr<Kinematics> attach_kinematics = attach_obj->getKinematics();
-		attach_kinematics->setInvKinematics(ik_tmp);
+		if (!attach_kinematics) { continue; }
+		std::shared_ptr<InvKinematics> tmp_ik_component = attach_kinematics->getInvKinematics();
+		if (!tmp_ik_component) {
+			// --- create InvKinametics Class --- //
+			std::shared_ptr<Object> ik_obj = this->getObjectTree(ik_obj_id, ik_obj_name);
+			std::shared_ptr<Object> ik_tar = this->getObjectTree(ik_tar_id, ik_tar_name);
+			tmp_ik_component = std::make_shared<InvKinematics>(InvKinematics());
+			tmp_ik_component->init(ik_tar, ik_obj,
+				ik_id, ik_name, static_cast<tol::InvKinematics::ik_type>(ik_type), kp,
+				is_rotatable_axis[static_cast<int>(Coordinate::coordinate::x)],
+				is_rotatable_axis[static_cast<int>(Coordinate::coordinate::y)],
+				is_rotatable_axis[static_cast<int>(Coordinate::coordinate::z)]
+			);
+			attach_kinematics->setInvKinematics(tmp_ik_component);
+		}
+		else {
+			// --- already have InvKinematics Class --- //
+			std::shared_ptr<Object> ik_obj = this->getObjectTree(ik_obj_id, ik_obj_name);
+			std::shared_ptr<Object> ik_tar = this->getObjectTree(ik_tar_id, ik_tar_name);
+			tmp_ik_component->init(ik_tar, ik_obj,
+				ik_id, ik_name, static_cast<tol::InvKinematics::ik_type>(ik_type), kp,
+				is_rotatable_axis[static_cast<int>(Coordinate::coordinate::x)],
+				is_rotatable_axis[static_cast<int>(Coordinate::coordinate::y)],
+				is_rotatable_axis[static_cast<int>(Coordinate::coordinate::z)]
+			);
+		}
 	}
 }

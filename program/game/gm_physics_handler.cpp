@@ -14,15 +14,11 @@ void tol::PhysicsHandler::update(float delta_time,  std::shared_ptr<Object> acto
 	// transform
 	if (force.length() != 0) {
 		acc_ = force / mass_;
-		if (velocity_.length() < velocity_max_) {
-			velocity_ += acc_ * delta_time;
-		}
+		velocity_ += acc_ * delta_time;
 	}
 	// rotation
 	if (torque != 0) {
 		ang_acc_ = torque / inertia_y_;
-		if (std::fabsf(ang_vel_) < ang_vel_limit_) {
-			ang_vel_ += ang_acc_ * delta_time;
-		}
+		ang_vel_ += ang_acc_ * delta_time;
 	}
 }
