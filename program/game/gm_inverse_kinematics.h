@@ -47,6 +47,7 @@ namespace tol {
 			int ik_id, std::string ik_name,
 			ik_type type, float kp, bool is_x_rot, bool is_y_rot, bool is_z_rot);
 		virtual tnl::Quaternion update(float delta_time, std::shared_ptr<Object> obj);
+
 	private:
 		tnl::Quaternion inverseKinematics(float delta_time, std::shared_ptr<Object> obj);
 	};

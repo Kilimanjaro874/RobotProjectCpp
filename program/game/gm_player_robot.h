@@ -17,6 +17,8 @@ namespace tol {
 		tnl::Vector3 aim_left_target_ = { 0, 0, 0 };
 
 	public:
+		void init() override;
 		void update(float delta_time) override;
+		void render(dxe::Camera* camera) override;
 	};
 }
