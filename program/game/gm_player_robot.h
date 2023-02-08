@@ -11,10 +11,13 @@ namespace tol {
 		//// ---- Member variables ---- ////
 	private:
 		// --- define --- //
+		// -- weapons controls -- //
 		bool is_right_weapon_fire_ = false;		// Right weapon fire trigger
 		bool is_left_weapon_fire_ = false;		// Left weapon fire trigger
-		tnl::Vector3 aim_right_target_ = { 0, 0, 0 };
-		tnl::Vector3 aim_left_target_ = { 0, 0, 0 };
+		std::shared_ptr<Object> right_arm_target_ = nullptr;	// aim target
+		std::shared_ptr<Object> left_arm_target_ = nullptr;		// aim target
+
+
 
 	public:
 		void init() override;

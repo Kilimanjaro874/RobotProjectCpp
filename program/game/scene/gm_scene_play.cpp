@@ -71,16 +71,16 @@ void ScenePlay::update(float delta_time)
 		// - move test start - //
 		// translate
 		tnl::Vector3 input = { 0, 0, 0 };
-		if (tnl::Input::IsKeyDown(eKeys::KB_RIGHT)) {
+		if (tnl::Input::IsKeyDown(eKeys::KB_D)) {
 			input += { 1, 0, 0 };
 		}
-		else if (tnl::Input::IsKeyDown(eKeys::KB_LEFT)) {
+		else if (tnl::Input::IsKeyDown(eKeys::KB_A)) {
 			input += { -1, 0, 0 };
 		}
-		if (tnl::Input::IsKeyDown(eKeys::KB_UP)) {
+		if (tnl::Input::IsKeyDown(eKeys::KB_W)) {
 			input += { 0, 0, 1 };
 		}
-		else if (tnl::Input::IsKeyDown(eKeys::KB_DOWN)) {
+		else if (tnl::Input::IsKeyDown(eKeys::KB_S)) {
 			input += { 0, 0, -1 };
 		}
 		tnl::Vector3 input_pad = tnl::Input::GetLeftStick();
@@ -88,7 +88,7 @@ void ScenePlay::update(float delta_time)
 			actor_->pidVellContUpdate(delta_time, { input_pad.x, 0, -input_pad.y });		// give player control effect.
 		}
 		else {
-			actor_->pidVellContUpdate(delta_time, { 0, 0, 0 });
+			actor_->pidVellContUpdate(delta_time, input);
 		}
 
 		// test 
