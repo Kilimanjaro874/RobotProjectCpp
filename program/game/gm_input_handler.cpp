@@ -8,6 +8,10 @@ void tol::InputHandler::init()
 	button_down_ = std::make_unique<MoveBack>();
 }
 
+void tol::InputHandler::update() {
+
+}
+
 std::shared_ptr<tol::Commando> tol::InputHandler::handleInput()
 {
 	// Left Stick or KB move 

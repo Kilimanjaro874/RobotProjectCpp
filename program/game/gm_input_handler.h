@@ -11,7 +11,17 @@ namespace tol {
 	public:
 		InputHandler() {}
 		virtual ~InputHandler() {}
+		//// ---- Member variables ---- ////
+		struct input_value_st {
+			tnl::Vector3 horizontal_move_ = { 0, 0, 0 };
+			tnl::Vector3 vertical_move_ = { 0, 0, 0 };
+			
+		};
+
+		//// ---- Memver functions ---- ////
+	public:
 		void init();
+		void update();
 		std::shared_ptr<Commando> handleInput();
 	private:
 		std::shared_ptr<Commando> button_right_;
