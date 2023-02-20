@@ -33,6 +33,8 @@ namespace tol {
 		std::shared_ptr<Coordinate> coordinate_ = nullptr;
 		std::shared_ptr<Assemble> assemble_ = nullptr;
 		std::shared_ptr<Kinematics> kinematics_ = nullptr;
+		// ---- option Classes ---- //
+
 		// ---- Tree structuer ---- //
 		std::weak_ptr<Object> parent_;
 		std::list<std::shared_ptr<Object>> children_;
@@ -44,7 +46,8 @@ namespace tol {
 			std::shared_ptr<Assemble> assem,
 			std::shared_ptr<Kinematics> kin);
 		virtual void update(float delta_time);
-		virtual void updateTree(float delta_time);
+		virtual void updateTree(float delta_time
+		);
 		virtual void render(dxe::Camera* camera);
 		virtual void renderTree(dxe::Camera* camera);
 		// ---- for user functions ---- //

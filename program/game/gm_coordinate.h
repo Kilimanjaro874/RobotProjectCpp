@@ -16,6 +16,8 @@ namespace tol {
 		tnl::Quaternion rot_;		// coordinate rotation from ƒ°0(World)
 		std::vector<tnl::Vector3> c_vec_v_;			// orthonormal basis(initial value)
 		std::vector<tnl::Vector3> c_vec_upd_v_;		// (update value)
+		tnl::Vector3 dir_z_init_;
+		tnl::Vector3 dir_z_upd_;
 
 		//// ------ Member functions ---- ////
 	public:

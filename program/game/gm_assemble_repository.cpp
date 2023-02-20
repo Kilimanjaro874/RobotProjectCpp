@@ -322,6 +322,21 @@ std::shared_ptr<tol::AssemRepo> tol::AssemRepo::Create() {
 	}
 	asr->assem_st_.push_back(std::move(sh201));
 
+	// --- Bullets : 9XX ---- //
+	auto bu900 = std::make_shared<assem_st>();
+	bu900->id_ = 900;
+	bu900->name = "machine_gun";
+	bu900->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto sp = std::make_shared<Parts>(Parts());
+		sp->mesh_ = dxe::Mesh::CreateSphere(1.0);
+		sp->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/red"));
+		sp->ofs_pos_ = zero_v;
+		sp->ofs_rot_ = zero_r;
+		bu900->assem_->setParts(sp);
+	}
+	asr->assem_st_.push_back(std::move(bu900));
+
 	return asr;
 }
 
