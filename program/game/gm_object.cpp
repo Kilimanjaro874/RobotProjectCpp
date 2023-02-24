@@ -20,9 +20,12 @@ void tol::Object::init() {
 }
 
 void tol::Object::update(float delta_time) {
-	kinematics_->update(delta_time, shared_from_this());
-	assemble_->update(delta_time, shared_from_this());
-
+	if (kinematics_) {
+		kinematics_->update(delta_time, shared_from_this());
+	}
+	if (assemble_) {
+		assemble_->update(delta_time, shared_from_this());
+	}
 }
 
 void tol::Object::updateTree(float delta_time) {

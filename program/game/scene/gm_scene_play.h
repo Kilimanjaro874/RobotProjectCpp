@@ -5,9 +5,6 @@
 #include "../gm_camera.h"
 #include "../gm_assemble_repository.h"
 #include "../gm_tps_camera_director.h"
-#include "../gm_player_robot.h"
-
-
 
 //class GmCamera;
 class ScenePlay : public SceneBase {

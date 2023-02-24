@@ -21,3 +21,13 @@ void tol::Coordinate::setAddRot(const tnl::Quaternion& rot) {
 		c_vec_upd_v_[i] = tnl::Vector3::TransformCoord(c_vec_v_[i], rot_);
 	}
 }
+
+/// <summary>
+/// Return a copy of this Coordinate Class
+/// </summary>
+/// <returns> Copied this class </returns>
+std::shared_ptr<tol::Coordinate> tol::Coordinate::copyCoordinate() {
+	std::shared_ptr<Coordinate> tmp_cod = std::make_shared<Coordinate>(Coordinate());
+	tmp_cod->init(getPos(), getRot(), getDirX(), getDirY(), getDirZ());
+	return tmp_cod;
+}

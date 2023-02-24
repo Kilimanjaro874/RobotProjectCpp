@@ -21,15 +21,13 @@ void ScenePlay::initialzie() {
 	SetAlwaysRunFlag(false);		// Window inactive : continue game operation.
 	// ---- Dxlib settings [end] ---- //
 	GameManager* mgr = GameManager::GetInstance();
-	assem_repo_ =  tol::AssemRepo::Create();
-	actor_ = tol::Actor::Create(assem_repo_, robot_actor_, robot_ik_csv_);
-
-	// debug start 
-	auto ac_assem_ = actor_->getAssemble();
-	ac_assem_->setCoordinateView(actor_,2.5, 0.1);
-	// debug end 
 	
-	// --- Actor Control test --- //
+	// --- Create : Assemble Repository --- //
+	assem_repo_ =  tol::AssemRepo::Create();
+
+	// --- Actor Settings --- //
+	actor_ = tol::Actor::Create(assem_repo_, robot_actor_, robot_ik_csv_);
+	// -- attach compornents -- //
 	std::shared_ptr<tol::PhysicsHandler> ph_handler =
 		std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(500.0, 500.0 * 2*2/8, 2.0, tnl::ToRadian(45)));
 	std::shared_ptr<tol::PIDVelController> pid_cont =
@@ -39,28 +37,29 @@ void ScenePlay::initialzie() {
 	actor_->setPhysicsHandler(ph_handler);
 	actor_->setPIDVelController(pid_cont);
 	actor_->setPIDRotController(pid_rot_cont);
-	// --- test --- //
-	cam_target_ = tol::Actor::Create(assem_repo_);
-	auto cam_assem = cam_target_->getAssemble();
-	cam_assem->setCoordinateView(cam_target_, 1.0, 0.05);
-	// attach classes
-	std::shared_ptr<tol::PhysicsHandler> ph_cam_phy = std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(5.0, 5.0 * 1*1/8, 100, tnl::ToRadian(90)));
-	std::shared_ptr<tol::PIDPosController> pid_cam_cont = std::make_shared<tol::PIDPosController>(tol::PIDPosController(0.2, 0.005, 10.1));
-	cam_target_->setPhysicsHandler(ph_cam_phy);
-	cam_target_->setPIDPosController(pid_cam_cont);
-	std::shared_ptr<tol::Restraint> re_cam = std::make_shared<tol::Restraint>(tol::Restraint());
-	re_cam->init(actor_, 0, "camera_restraint", tol::Restraint::restraint_type::rot_as_rot);
-	auto cam_target_kine = cam_target_->getKinematics();
-	cam_target_kine->setRestraint(re_cam);
-
-	// --- camera test --- //
-	camera_ = new dxe::Camera(DXE_WINDOW_WIDTH, DXE_WINDOW_HEIGHT);
-	cam_director_ = std::make_shared<tol::TPSCameraDirector>(tol::TPSCameraDirector(camera_, { 0, 10, -20 }, cam_target_));
-	
+	// -- attach weapon component to right&left arms -- //
 	auto r_arm_tar = actor_->getObjectTree(2300, "");
 	auto r_arm_tar_assem = r_arm_tar->getAssemble();
 	r_arm_tar_assem->setCoordinateView(r_arm_tar, 20, 2);
 
+	// --- Camera Settings --- //
+	// -- Create : Camera Target -> chase the actor -- //
+	cam_target_ = tol::Actor::Create(assem_repo_);
+	auto cam_assem = cam_target_->getAssemble();
+	//cam_assem->setCoordinateView(cam_target_, 1.0, 0.05);
+	// -- attach compornents -- //
+	std::shared_ptr<tol::PhysicsHandler> ph_cam_phy = std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(5.0, 5.0 * 1*1/8, 100, tnl::ToRadian(90)));
+	std::shared_ptr<tol::PIDPosController> pid_cam_cont = std::make_shared<tol::PIDPosController>(tol::PIDPosController(0.2, 0.005, 10.1));
+	std::shared_ptr<tol::Restraint> re_cam = std::make_shared<tol::Restraint>(tol::Restraint());
+	re_cam->init(actor_, 0, "camera_restraint", tol::Restraint::restraint_type::rot_as_rot);
+	auto cam_target_kine = cam_target_->getKinematics();
+	cam_target_->setPhysicsHandler(ph_cam_phy);
+	cam_target_->setPIDPosController(pid_cam_cont);
+	cam_target_kine->setRestraint(re_cam);
+	// -- Create : Camera & Director -- //
+	camera_ = new dxe::Camera(DXE_WINDOW_WIDTH, DXE_WINDOW_HEIGHT);
+	cam_director_ = std::make_shared<tol::TPSCameraDirector>(tol::TPSCameraDirector(camera_, { 0, 10, -20 }, cam_target_));
+	
 }
 
 void ScenePlay::update(float delta_time)
@@ -156,11 +155,8 @@ void ScenePlay::update(float delta_time)
 void ScenePlay::render()
 {
 	camera_->update();
-	//camera_director_->renderUpdate();
-	
 	DrawGridGround(camera_, 5, 300);
 	actor_->renderTree(camera_);
-
 	// --- test --- //
 	cam_target_->renderTree(camera_);
 }

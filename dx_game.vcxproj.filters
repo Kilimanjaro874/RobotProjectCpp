@@ -29,14 +29,17 @@
     <Filter Include="program\game\actor">
       <UniqueIdentifier>{2b3fc65d-cb22-4084-ac84-40880c158aa1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="program\game\actor\option">
-      <UniqueIdentifier>{edb2d5b7-d5be-4c45-ab8d-dbf5eddd3869}</UniqueIdentifier>
-    </Filter>
     <Filter Include="program\game\system">
       <UniqueIdentifier>{e91f7adf-b1d7-4963-9f50-7eea04783581}</UniqueIdentifier>
     </Filter>
     <Filter Include="program\game\actor\implementaation">
       <UniqueIdentifier>{80bb5010-2887-4230-af73-e313163df882}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="program\game\actor\components_option">
+      <UniqueIdentifier>{edb2d5b7-d5be-4c45-ab8d-dbf5eddd3869}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="program\game\actor\componets_required">
+      <UniqueIdentifier>{47c3d6fe-109b-4c84-b16d-8ef409b190d3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -160,7 +163,46 @@
     <ClCompile Include="program\game\gm_camera.cpp">
       <Filter>program\game</Filter>
     </ClCompile>
+    <ClCompile Include="program\game\gm_physics_handler.cpp">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_pid_vel_controller.cpp">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_controller.cpp">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_pid_pos_controller.cpp">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_inverse_kinematics.cpp">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_restraint.cpp">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_input_handler.cpp">
+      <Filter>program\game\system</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_pid_rot_controller.cpp">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_tps_camera_director.cpp">
+      <Filter>program\game\system</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_actor_robot.cpp">
+      <Filter>program\game\actor\implementaation</Filter>
+    </ClCompile>
     <ClCompile Include="program\game\gm_assemble.cpp">
+      <Filter>program\game\actor\componets_required</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_coordinate.cpp">
+      <Filter>program\game\actor\componets_required</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_kinematics.cpp">
+      <Filter>program\game\actor\componets_required</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_actor.cpp">
       <Filter>program\game\actor</Filter>
     </ClCompile>
     <ClCompile Include="program\game\gm_assemble_repository.cpp">
@@ -169,47 +211,11 @@
     <ClCompile Include="program\game\gm_object.cpp">
       <Filter>program\game\actor</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\gm_coordinate.cpp">
-      <Filter>program\game\actor</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\gm_actor.cpp">
-      <Filter>program\game\actor</Filter>
-    </ClCompile>
     <ClCompile Include="program\game\gm_parts.cpp">
       <Filter>program\game\actor</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\gm_kinematics.cpp">
-      <Filter>program\game\actor</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\gm_physics_handler.cpp">
-      <Filter>program\game\actor\option</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\gm_pid_vel_controller.cpp">
-      <Filter>program\game\actor\option</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\gm_controller.cpp">
-      <Filter>program\game\actor\option</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\gm_pid_pos_controller.cpp">
-      <Filter>program\game\actor\option</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\gm_inverse_kinematics.cpp">
-      <Filter>program\game\actor\option</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\gm_restraint.cpp">
-      <Filter>program\game\actor\option</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\gm_input_handler.cpp">
-      <Filter>program\game\system</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\gm_pid_rot_controller.cpp">
-      <Filter>program\game\actor\option</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\gm_tps_camera_director.cpp">
-      <Filter>program\game\system</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\gm_player_robot.cpp">
-      <Filter>program\game\actor\implementaation</Filter>
+    <ClCompile Include="program\game\gm_weapon.cpp">
+      <Filter>program\game\actor\components_option</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -312,7 +318,46 @@
     <ClInclude Include="program\game\gm_camera.h">
       <Filter>program\game</Filter>
     </ClInclude>
+    <ClInclude Include="program\game\gm_physics_handler.h">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_controller.h">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_pid_vel_controller.h">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_pid_pos_controller.h">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_inverse_kinematics.h">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_restraint.h">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_actor_robot.h">
+      <Filter>program\game\actor\implementaation</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_input_handler.h">
+      <Filter>program\game\system</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_pid_rot_controller.h">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_tps_camera_director.h">
+      <Filter>program\game\system</Filter>
+    </ClInclude>
     <ClInclude Include="program\game\gm_assemble.h">
+      <Filter>program\game\actor\componets_required</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_coordinate.h">
+      <Filter>program\game\actor\componets_required</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_kinematics.h">
+      <Filter>program\game\actor\componets_required</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_actor.h">
       <Filter>program\game\actor</Filter>
     </ClInclude>
     <ClInclude Include="program\game\gm_assemble_repository.h">
@@ -321,50 +366,11 @@
     <ClInclude Include="program\game\gm_object.h">
       <Filter>program\game\actor</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\gm_coordinate.h">
-      <Filter>program\game\actor</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\gm_actor.h">
-      <Filter>program\game\actor</Filter>
-    </ClInclude>
     <ClInclude Include="program\game\gm_parts.h">
       <Filter>program\game\actor</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\gm_kinematics.h">
-      <Filter>program\game\actor</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\gm_physics_handler.h">
-      <Filter>program\game\actor\option</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\gm_controller.h">
-      <Filter>program\game\actor\option</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\gm_pid_vel_controller.h">
-      <Filter>program\game\actor\option</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\gm_pid_pos_controller.h">
-      <Filter>program\game\actor\option</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\gm_inverse_kinematics.h">
-      <Filter>program\game\actor\option</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\gm_restraint.h">
-      <Filter>program\game\actor\option</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\gm_player_robot.h">
-      <Filter>program\game\actor\implementaation</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\gm_input_handler.h">
-      <Filter>program\game\system</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\gm_pid_rot_controller.h">
-      <Filter>program\game\actor\option</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\gm_tps_camera_director.h">
-      <Filter>program\game\system</Filter>
-    </ClInclude>
     <ClInclude Include="program\game\gm_weapon.h">
-      <Filter>program\game\actor\option</Filter>
+      <Filter>program\game\actor\components_option</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -27,5 +27,6 @@ namespace tol {
 		void setOffsetRot(const tnl::Quaternion& ofs_rot) { ofs_rot_ = ofs_rot; }
 		void setCoordinateView(std::shared_ptr<Object> obj, float length, float radius);
 		// ---- getter ---- //
+		std::shared_ptr<Assemble> copyAssemble();
 	};
 }

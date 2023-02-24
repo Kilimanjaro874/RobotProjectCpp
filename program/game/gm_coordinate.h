@@ -41,6 +41,6 @@ namespace tol {
 		tnl::Vector3 getDirX() { return c_vec_upd_v_[static_cast<int>(coordinate::x)]; }
 		tnl::Vector3 getDirY() { return c_vec_upd_v_[static_cast<int>(coordinate::y)]; }
 		tnl::Vector3 getDirZ() { return c_vec_upd_v_[static_cast<int>(coordinate::z)]; }
-		
+		std::shared_ptr<Coordinate> copyCoordinate();
 	};
 }

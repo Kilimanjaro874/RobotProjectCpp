@@ -4,10 +4,10 @@
 
 namespace tol {
 
-	class PlayerRobo : public Actor {
+	class RobotActor : public Actor {
 	public:
-		PlayerRobo(int id, std::string name) : Actor(id, name) {}
-		virtual ~PlayerRobo() {}
+		RobotActor(int id, std::string name) : Actor(id, name) {}
+		virtual ~RobotActor() {}
 		//// ---- Member variables ---- ////
 	private:
 		// --- define --- //
@@ -16,6 +16,7 @@ namespace tol {
 		bool is_left_weapon_fire_ = false;		// Left weapon fire trigger
 		std::shared_ptr<Object> right_arm_target_ = nullptr;	// aim target
 		std::shared_ptr<Object> left_arm_target_ = nullptr;		// aim target
+
 
 
 

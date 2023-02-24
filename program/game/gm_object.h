@@ -5,7 +5,6 @@
 #include "gm_assemble.h"
 #include "gm_kinematics.h"
 
-
 namespace tol {
 	class Coordinate;
 	class Assemble;
@@ -44,7 +43,8 @@ namespace tol {
 		virtual void init(
 			std::shared_ptr<Coordinate> cod,
 			std::shared_ptr<Assemble> assem,
-			std::shared_ptr<Kinematics> kin);
+			std::shared_ptr<Kinematics> kin
+		);
 		virtual void update(float delta_time);
 		virtual void updateTree(float delta_time
 		);
