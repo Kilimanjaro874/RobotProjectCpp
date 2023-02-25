@@ -5,14 +5,26 @@ void tol::Weapon::update(float delta_time, std::shared_ptr<Object> obj)
 	reload_count_ += delta_time;
 	// --- fire task : generate bullet --- //
 	if (is_fire_ && reload_count_ >= reload_time_) {
-		reload_count_ = 0;
-		is_fire_ = false;
+		reload_count_ = 0.0;
 		genBullet(obj);
 	}
+	is_fire_ = false;
 	// --- bullets update --- //
-	for (auto itr = bullets_.begin(); itr != bullets_.end(); itr++) {
+	for (auto itr = bullets_.begin(); itr != bullets_.end();) {
 		auto tmp_bullet = *itr;
 		auto bullet_kin = tmp_bullet->getKinematics();
+		// --- set state & flag check --- //
+		float flight_distance = tmp_bullet->getOptionParams(0);
+		flight_distance += bullet_speed_ * delta_time;
+		if (flight_distance > bullet_effective_range_) {
+			tmp_bullet->setIsAlive(false);
+		}
+		if (!tmp_bullet->getIsAlive()) {
+			itr = bullets_.erase(itr);
+			continue;
+		}
+		// --- move update --- //
+		tmp_bullet->setOptionParams(0, flight_distance);
 		if (bullet_dir::front == bullet_dir_) {
 
 			auto cod = tmp_bullet->getCoordinate();
@@ -37,6 +49,8 @@ void tol::Weapon::update(float delta_time, std::shared_ptr<Object> obj)
 			);
 		}
 		tmp_bullet->update(delta_time);
+		
+		itr++;
 	}
 }
 
@@ -55,18 +69,13 @@ void tol::Weapon::genBullet(std::shared_ptr<Object> obj) {
 	auto assem = bullet_->getAssemble();
 	auto bullet_assem = assem->copyAssemble();
 	auto bullet_kin = obj->getKinematics();
-
-	/*tmpbullet->init(
-		obj->getCoordinate()->copyCoordinate(),
-		bullet_->getAssemble()->copyAssemble(),
-		obj->getKinematics()->copyKinematics(obj, tmpbullet)
-		);*/
 	tmpbullet->init(
 		bullet_cod,
 		bullet_assem,
 		bullet_kin
 	);
 
-	tmpbullet->setIsPositionalParentage(false);	// ignore parend DK.
-	bullets_.push_back(tmpbullet);				// registor to list.
+	tmpbullet->setIsPositionalParentage(false);		// ignore parend DK.
+	tmpbullet->setOptionParams(1, bullet_damage_);	// set bullet damage to Object option num.
+	bullets_.push_back(tmpbullet);					// registor to list.
 }

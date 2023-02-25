@@ -30,7 +30,11 @@ namespace tol {
 		// ---- General ---- //
 		int id_;
 		std::string name_;
-		bool is_positional_parentage_ = true;	// kinematics setting.
+		bool is_alive_ = true;				// survival flag
+		// --- option nums --- //
+		// for freely used from other classes.(0 : move distance, 1, add damage, )
+		float option_params[5] = { 0, 0, 0, 0, 0 };		
+		bool is_positional_parentage_ = true;			// kinematics effective setting.
 		// ---- owned Classes ---- //
 		std::shared_ptr<Coordinate> coordinate_ = nullptr;
 		std::shared_ptr<Assemble> assemble_ = nullptr;
@@ -70,6 +74,8 @@ namespace tol {
 		void setKinematics(std::shared_ptr<Kinematics> kin) { kinematics_ = kin; }
 		void setWeapon(std::shared_ptr<Weapon> weapon) { weapon_ = weapon; }
 		void setIsPositionalParentage(bool is_positional_parentage) { is_positional_parentage_ = is_positional_parentage; }
+		void setOptionParams(int row, float num) { if (row > 4 || row < 0) { return; } option_params[row] = num; }
+		void setIsAlive(bool alive) { is_alive_ = alive; }
 		// ---- getter ---- //
 		std::weak_ptr<Object> getParent() { return parent_; }
 		std::list<std::shared_ptr<Object>> getChildren() { return children_; }
@@ -78,5 +84,7 @@ namespace tol {
 		std::shared_ptr<Kinematics> getKinematics() { return kinematics_; }
 		std::shared_ptr<Weapon> getWeapon() { return weapon_; }
 		bool getIsPositionalParentage() { return is_positional_parentage_; }
+		float getOptionParams(int row) { if (row > 4 || row < 0) { return NULL; } return option_params[row]; }
+		bool getIsAlive() { return is_alive_; }
 	};
 }

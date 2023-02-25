@@ -40,19 +40,32 @@ void ScenePlay::initialzie() {
 	actor_->setPIDVelController(pid_cont);
 	actor_->setPIDRotController(pid_rot_cont);
 	// -- attach weapon component to right&left arms -- //
+	// - right weapon - //
 	auto r_arm_weapon = actor_->getObjectTree(1300, "RAEE01");
-	auto bullet = std::make_shared<tol::Object>(tol::Object(-1, "bullet"));
-	bullet->init();
-	auto bullet_assem = assem_repo_->CopyAssemble(900, "machine_gun", false);
-	bullet->setAssemble(bullet_assem);
+	auto r_bullet = std::make_shared<tol::Object>(tol::Object(-1, "bullet"));
+	r_bullet->init();
+	auto r_bullet_assem = assem_repo_->CopyAssemble(900, "machine_gun", false);
+	r_bullet->setAssemble(r_bullet_assem);
 	auto r_weapon = std::make_shared<tol::Weapon>(tol::Weapon(
-		1.0, 20.0, 100.0,
+		0.2, 20.0, 800.0, 1000.0, 1.0,
 		tol::Weapon::fire_dir::up,
 		tol::Weapon::bullet_dir::up,
-		bullet
+		r_bullet
 	));
 	r_arm_weapon->setWeapon(r_weapon);
-
+	// - left weapon - //
+	auto l_arm_weapon = actor_->getObjectTree(1400, "LAEE01");
+	auto l_bullet = std::make_shared<tol::Object>(tol::Object(-2, "bullet"));
+	l_bullet->init();
+	auto l_bullet_assem = assem_repo_->CopyAssemble(900, "machine_gun", false);
+	l_bullet->setAssemble(l_bullet_assem);
+	auto l_weapon = std::make_shared<tol::Weapon>(tol::Weapon(
+		0.5, 40.0, 1200.0, 1500.0, 1.0,
+		tol::Weapon::fire_dir::up,
+		tol::Weapon::bullet_dir::up,
+		l_bullet
+	));
+	l_arm_weapon->setWeapon(l_weapon);
 	// -- aim target test -- //
 	auto r_arm_tar = actor_->getObjectTree(2300, "");
 	auto r_arm_tar_assem = r_arm_tar->getAssemble();
@@ -105,6 +118,15 @@ void ScenePlay::update(float delta_time)
 		else {
 			actor_->pidVellContUpdate(delta_time, input);
 		}
+		// --- fire test --- //
+		if (tnl::Input::IsMouseDown(tnl::Input::eMouse::RIGHT)) {
+			auto r_arm_weapon = actor_->getObjectTree(1300, "RAEE01");
+			r_arm_weapon->getWeapon()->setFire(true);
+		}
+		if (tnl::Input::IsMouseDown(tnl::Input::eMouse::LEFT)) {
+			auto l_arm_weapon = actor_->getObjectTree(1400, "LAEE01");
+			l_arm_weapon->getWeapon()->setFire(true);
+		}
 
 		// test 
 		// --- aiming test --- //
@@ -125,11 +147,7 @@ void ScenePlay::update(float delta_time)
 		auto l_arm_tar = actor_->getObjectTree(2400, "");
 		l_arm_tar->Translate(cam_director_->getForcusPos(), true);
 		
-		// --- fire test --- //
-		if (tnl::Input::IsKeyDown(eKeys::KB_F)) {
-			auto r_arm_weapon = actor_->getObjectTree(1300, "RAEE01");
-			r_arm_weapon->getWeapon()->setFire(true);
-		}
+		
 
 		// - move test end - //
 
