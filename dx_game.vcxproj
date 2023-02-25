@@ -38,9 +38,7 @@
     <ClCompile Include="program\game\gm_assemble.cpp" />
     <ClCompile Include="program\game\gm_assemble_repository.cpp" />
     <ClCompile Include="program\game\gm_camera.cpp" />
-    <ClCompile Include="program\game\gm_controller.cpp" />
     <ClCompile Include="program\game\gm_coordinate.cpp" />
-    <ClCompile Include="program\game\gm_input_handler.cpp" />
     <ClCompile Include="program\game\gm_inverse_kinematics.cpp" />
     <ClCompile Include="program\game\gm_kinematics.cpp" />
     <ClCompile Include="program\game\gm_main.cpp" />
@@ -81,9 +79,7 @@
     <ClInclude Include="program\game\gm_assemble.h" />
     <ClInclude Include="program\game\gm_assemble_repository.h" />
     <ClInclude Include="program\game\gm_camera.h" />
-    <ClInclude Include="program\game\gm_controller.h" />
     <ClInclude Include="program\game\gm_coordinate.h" />
-    <ClInclude Include="program\game\gm_input_handler.h" />
     <ClInclude Include="program\game\gm_inverse_kinematics.h" />
     <ClInclude Include="program\game\gm_kinematics.h" />
     <ClInclude Include="program\game\gm_main.h" />

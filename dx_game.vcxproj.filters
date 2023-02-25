@@ -169,9 +169,6 @@
     <ClCompile Include="program\game\gm_pid_vel_controller.cpp">
       <Filter>program\game\actor\components_option</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\gm_controller.cpp">
-      <Filter>program\game\actor\components_option</Filter>
-    </ClCompile>
     <ClCompile Include="program\game\gm_pid_pos_controller.cpp">
       <Filter>program\game\actor\components_option</Filter>
     </ClCompile>
@@ -180,9 +177,6 @@
     </ClCompile>
     <ClCompile Include="program\game\gm_restraint.cpp">
       <Filter>program\game\actor\components_option</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\gm_input_handler.cpp">
-      <Filter>program\game\system</Filter>
     </ClCompile>
     <ClCompile Include="program\game\gm_pid_rot_controller.cpp">
       <Filter>program\game\actor\components_option</Filter>
@@ -321,9 +315,6 @@
     <ClInclude Include="program\game\gm_physics_handler.h">
       <Filter>program\game\actor\components_option</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\gm_controller.h">
-      <Filter>program\game\actor\components_option</Filter>
-    </ClInclude>
     <ClInclude Include="program\game\gm_pid_vel_controller.h">
       <Filter>program\game\actor\components_option</Filter>
     </ClInclude>
@@ -338,9 +329,6 @@
     </ClInclude>
     <ClInclude Include="program\game\gm_actor_robot.h">
       <Filter>program\game\actor\implementaation</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\gm_input_handler.h">
-      <Filter>program\game\system</Filter>
     </ClInclude>
     <ClInclude Include="program\game\gm_pid_rot_controller.h">
       <Filter>program\game\actor\components_option</Filter>

@@ -1,5 +1,6 @@
 #pragma once
 #include "../dxlib_ext/dxlib_ext.h"
+#include "gm_object.h"
 
 class SceneBase;
 class GameManager {
@@ -50,7 +51,7 @@ public :
 
 public :
 	// ゲーム全体で参照したい変数はここで用意
-	
+	std::shared_ptr<tol::Object> obj;
 };
 
 

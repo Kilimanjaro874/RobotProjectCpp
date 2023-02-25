@@ -330,7 +330,7 @@ std::shared_ptr<tol::AssemRepo> tol::AssemRepo::Create() {
 	{
 		auto sp = std::make_shared<Parts>(Parts());
 		sp->mesh_ = dxe::Mesh::CreateSphere(1.0);
-		sp->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/red"));
+		sp->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/red.bmp"));
 		sp->ofs_pos_ = zero_v;
 		sp->ofs_rot_ = zero_r;
 		bu900->assem_->setParts(sp);

@@ -6,6 +6,7 @@
 namespace tol {
 	class Object;
 	class Kinematics;
+
 	class InvKinematics {
 	public:
 		InvKinematics() {}

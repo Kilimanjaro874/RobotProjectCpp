@@ -4,11 +4,13 @@
 #include "gm_coordinate.h"
 #include "gm_assemble.h"
 #include "gm_kinematics.h"
+#include "gm_weapon.h"
 
 namespace tol {
 	class Coordinate;
 	class Assemble;
 	class Kinematics;
+	class Weapon;
 	class Object : public std::enable_shared_from_this<Object> {
 
 	public:
@@ -28,12 +30,13 @@ namespace tol {
 		// ---- General ---- //
 		int id_;
 		std::string name_;
+		bool is_positional_parentage_ = true;	// kinematics setting.
 		// ---- owned Classes ---- //
 		std::shared_ptr<Coordinate> coordinate_ = nullptr;
 		std::shared_ptr<Assemble> assemble_ = nullptr;
 		std::shared_ptr<Kinematics> kinematics_ = nullptr;
 		// ---- option Classes ---- //
-
+		std::shared_ptr<Weapon> weapon_ = nullptr;
 		// ---- Tree structuer ---- //
 		std::weak_ptr<Object> parent_;
 		std::list<std::shared_ptr<Object>> children_;
@@ -65,11 +68,15 @@ namespace tol {
 		void setCoordinate(std::shared_ptr<Coordinate> cod) { coordinate_ = cod; }
 		void setAssemble(std::shared_ptr<Assemble> assem) { assemble_ = assem; }
 		void setKinematics(std::shared_ptr<Kinematics> kin) { kinematics_ = kin; }
+		void setWeapon(std::shared_ptr<Weapon> weapon) { weapon_ = weapon; }
+		void setIsPositionalParentage(bool is_positional_parentage) { is_positional_parentage_ = is_positional_parentage; }
 		// ---- getter ---- //
 		std::weak_ptr<Object> getParent() { return parent_; }
 		std::list<std::shared_ptr<Object>> getChildren() { return children_; }
 		std::shared_ptr<Coordinate> getCoordinate() { return coordinate_; }
 		std::shared_ptr<Assemble> getAssemble() { return assemble_; }
 		std::shared_ptr<Kinematics> getKinematics() { return kinematics_; }
+		std::shared_ptr<Weapon> getWeapon() { return weapon_; }
+		bool getIsPositionalParentage() { return is_positional_parentage_; }
 	};
 }

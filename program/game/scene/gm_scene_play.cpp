@@ -10,6 +10,7 @@
 #include "../gm_pid_vel_controller.h"
 #include "../gm_pid_rot_controller.h"
 #include "../gm_restraint.h"
+#include "../gm_weapon.h"
 
 //static float  dth = 0;
 ScenePlay::~ScenePlay() {
@@ -21,6 +22,7 @@ void ScenePlay::initialzie() {
 	SetAlwaysRunFlag(false);		// Window inactive : continue game operation.
 	// ---- Dxlib settings [end] ---- //
 	GameManager* mgr = GameManager::GetInstance();
+	mgr->obj = actor_;
 	
 	// --- Create : Assemble Repository --- //
 	assem_repo_ =  tol::AssemRepo::Create();
@@ -38,6 +40,20 @@ void ScenePlay::initialzie() {
 	actor_->setPIDVelController(pid_cont);
 	actor_->setPIDRotController(pid_rot_cont);
 	// -- attach weapon component to right&left arms -- //
+	auto r_arm_weapon = actor_->getObjectTree(1300, "RAEE01");
+	auto bullet = std::make_shared<tol::Object>(tol::Object(-1, "bullet"));
+	bullet->init();
+	auto bullet_assem = assem_repo_->CopyAssemble(900, "machine_gun", false);
+	bullet->setAssemble(bullet_assem);
+	auto r_weapon = std::make_shared<tol::Weapon>(tol::Weapon(
+		1.0, 20.0, 100.0,
+		tol::Weapon::fire_dir::up,
+		tol::Weapon::bullet_dir::up,
+		bullet
+	));
+	r_arm_weapon->setWeapon(r_weapon);
+
+	// -- aim target test -- //
 	auto r_arm_tar = actor_->getObjectTree(2300, "");
 	auto r_arm_tar_assem = r_arm_tar->getAssemble();
 	r_arm_tar_assem->setCoordinateView(r_arm_tar, 20, 2);
@@ -91,8 +107,7 @@ void ScenePlay::update(float delta_time)
 		}
 
 		// test 
-
-		// --- test --- //
+		// --- aiming test --- //
 		auto actor_cod = actor_->getCoordinate();
 		tnl::Vector3 target_pos = actor_cod->getPos() + tnl::Vector3(0, 10, 0);
 		cam_target_->pidPosContUpdate(delta_time, target_pos);
@@ -110,6 +125,12 @@ void ScenePlay::update(float delta_time)
 		auto l_arm_tar = actor_->getObjectTree(2400, "");
 		l_arm_tar->Translate(cam_director_->getForcusPos(), true);
 		
+		// --- fire test --- //
+		if (tnl::Input::IsKeyDown(eKeys::KB_F)) {
+			auto r_arm_weapon = actor_->getObjectTree(1300, "RAEE01");
+			r_arm_weapon->getWeapon()->setFire(true);
+		}
+
 		// - move test end - //
 
 		// general process

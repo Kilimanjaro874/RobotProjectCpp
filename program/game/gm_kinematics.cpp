@@ -60,6 +60,12 @@ void tol::Kinematics::Rotation(std::shared_ptr<Object> obj, tnl::Quaternion rot,
 	}
 }
 
+std::shared_ptr<tol::Kinematics> tol::Kinematics::copyKinematics(std::shared_ptr<Object> parent, std::shared_ptr<Object> child) {
+	std::shared_ptr<Kinematics> tmp_kine = std::make_shared<Kinematics>(Kinematics());
+	tmp_kine->init(parent, child);
+	return tmp_kine;
+}
+
 /// <summary>
 /// store coordinate difference info.
 /// (this - parent coordinate origine)
@@ -80,6 +86,7 @@ void tol::Kinematics::initDKSetting(const std::shared_ptr<Object> parent, const 
 }
 
 void tol::Kinematics::doKinematics(float delta_time, std::shared_ptr<Object> obj) {
+	if (!obj->getIsPositionalParentage()) { return; }
 	// --- get informations --- //
 	std::shared_ptr<Coordinate> coordinate = obj->getCoordinate();	// get coordinate
 	std::weak_ptr<Object> parent_w = obj->getParent();		// get parent;
@@ -99,11 +106,13 @@ void tol::Kinematics::doKinematics(float delta_time, std::shared_ptr<Object> obj
 		return;		// do not kinematics.
 	}
 	// --- get rot while one flame --- //
-	tnl::Quaternion rot_one_flame = parent_kinematics->getRotOneFlame();
+	// -- reflact parent's rot influence or not. -- //
+	tnl::Quaternion rot_one_flame = parent_kinematics->getRotOneFlame();	// Reflect parent's rotate info.
 	// --- update coordinate --- //
-	// --  pos -- //
 	kinematics->setRotOneFlame(rot_one_flame);
 	kinematics->setRotDkData(rot_one_flame);
+	// -- pos -- //
+	// - reflect parent's pos influence or not - //
 	tnl::Vector3 pos = parent_coordinate->getPos() + kinematics->dk_pos_parent_to_this_;
 	coordinate->setPos(pos);
 	// -- rot -- //

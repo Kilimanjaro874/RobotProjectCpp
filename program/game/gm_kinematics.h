@@ -37,6 +37,7 @@ namespace tol {
 		// ---- for user functions ---- //
 		virtual void Translate(std::shared_ptr<Object> obj, tnl::Vector3 move, bool absolute_move);
 		virtual void Rotation(std::shared_ptr<Object> obj, tnl::Quaternion rot, bool absolute_move);
+		std::shared_ptr<Kinematics> copyKinematics(std::shared_ptr<Object> parent, std::shared_ptr<Object> child);
 	private:
 		void initDKSetting(const std::shared_ptr<Object> parent, const std::shared_ptr<Object> child);
 		void doKinematics(float delta_time, std::shared_ptr<Object> obj);

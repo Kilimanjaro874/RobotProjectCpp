@@ -122,8 +122,8 @@ tnl::Quaternion tol::InvKinematics::inverseKinematics(float delta_time, std::sha
 				(float)-1, (float)1
 			));
 			if (!isfinite(dth)) { dth = 0; }	// avoid singularity : when object or target exist on the rotation axis.
-			if (dth > tnl::PI / 180) {			// limitter
-				dth = tnl::PI / 180;
+			if (dth > tnl::PI / 90) {			// limitter
+				dth = tnl::PI / 90;
 			}
 			tnl::Vector3 axis = x.cross(y) / x.length() / y.length();	// determine rotate direction.
 			dth *= rot_axis.dot(axis) >= 0 ? 1 : -1;

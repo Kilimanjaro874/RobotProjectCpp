@@ -26,6 +26,9 @@ void tol::Object::update(float delta_time) {
 	if (assemble_) {
 		assemble_->update(delta_time, shared_from_this());
 	}
+	if (weapon_) {
+		weapon_->update(delta_time, shared_from_this());
+	}
 }
 
 void tol::Object::updateTree(float delta_time) {
@@ -41,7 +44,9 @@ void tol::Object::updateTree(float delta_time) {
 
 void tol::Object::render(dxe::Camera* camera) {
 	assemble_->render(camera);
-	
+	if (weapon_) {
+		weapon_->render(camera);
+	}
 }
 
 void tol::Object::renderTree(dxe::Camera* camera) {
