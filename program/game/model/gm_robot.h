@@ -29,8 +29,6 @@ public:
 	tnl::Vector3 acc_;				// 加速度
 	// ----- csvからモジュールを構築するためのパラメータ ----- //
 	
-	
-
 
 	//// ------ メンバ関数 ------- ////
 	static Robot* Create(const tnl::Vector3 pos, const tnl::Quaternion rot);
