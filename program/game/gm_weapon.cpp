@@ -1,12 +1,17 @@
 #include "gm_weapon.h"
+#include "../dxlib_ext/dxlib_ext.h"
+#include "gm_manager.h"
 
 void tol::Weapon::update(float delta_time, std::shared_ptr<Object> obj)
 {
 	reload_count_ += delta_time;
+	is_fired_ = false;
 	// --- fire task : generate bullet --- //
 	if (is_fire_ && reload_count_ >= reload_time_) {
 		reload_count_ = 0.0;
 		genBullet(obj);
+		GameManager* mgr = GameManager::GetInstance();
+		is_fired_ = true;
 	}
 	is_fire_ = false;
 	// --- bullets update --- //

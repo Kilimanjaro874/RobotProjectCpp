@@ -11,7 +11,11 @@ GameManager::GameManager() {
 	scene_now_->initialzie();
 	img_black_ = LoadGraph("graphics/black.bmp");
 	SetBackgroundColor(32, 32, 32);
-	
+	// --- make sound manager --- //
+	sound_mgr_ = std::make_unique<BGM_SE_Mgr>();
+	sound_mgr_->setBaseVolume(sound_mgr_->bgm, 100);
+	sound_mgr_->setSoundsBGMInit("sound/RP_BGM_List01.csv");
+	sound_mgr_->setSoundsSEInit("sound/RP_SE_List01.csv");
 }
 
 //-----------------------------------------------------------------------------------------
@@ -43,8 +47,13 @@ void GameManager::Destroy() {
 
 //-----------------------------------------------------------------------------------------
 void GameManager::chengeScene(SceneBase* next) {
+	// ---- stop SE & BGM ---- //
+	sound_mgr_->stopSoundAll();
+	// ---- set : next scene. ---- //
 	scene_next_ = next;
 	sequence_.change(&GameManager::seqSceneOutTransition);
+	
+
 }
 
 //-----------------------------------------------------------------------------------------

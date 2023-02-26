@@ -44,7 +44,7 @@ void tol::TPSCameraDirector::update(float delta_time, dxe::Camera* camera, std::
 	rot_axis_y_upd_ = rot_axis_y_.TransformCoord(rot_axis_y_, rot_);
 	// --- update camera state --- //
 	auto tar_cod = tar_obj->getCoordinate();
-	camera->pos_ = tar_cod->getPos() - forcus_dir_upd_ * tar_cam_distance_;
+	camera->pos_ = tar_cod->getPos() - forcus_dir_upd_ * tar_cam_distance_ + tnl::Vector3{ 0, 0, 0 };
 	camera->target_ = tar_cod->getPos();
 	forcus_point_ = camera->pos_ + forcus_dir_upd_ * aim_distance_;
 	/*tnl::Vector3 len = camera->target_ - camera->pos_;

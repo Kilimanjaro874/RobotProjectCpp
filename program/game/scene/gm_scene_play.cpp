@@ -22,7 +22,7 @@ void ScenePlay::initialzie() {
 	SetAlwaysRunFlag(false);		// Window inactive : continue game operation.
 	// ---- Dxlib settings [end] ---- //
 	GameManager* mgr = GameManager::GetInstance();
-	mgr->obj = actor_;
+	
 	
 	// --- Create : Assemble Repository --- //
 	assem_repo_ =  tol::AssemRepo::Create();
@@ -32,6 +32,7 @@ void ScenePlay::initialzie() {
 	// -- attach compornents -- //
 	std::shared_ptr<tol::PhysicsHandler> ph_handler =
 		std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(500.0, 500.0 * 2*2/8, 2.0, tnl::ToRadian(45)));
+	ph_handler->setIsAffectedByGravity(true);	// affected by gravity.
 	std::shared_ptr<tol::PIDVelController> pid_cont =
 		std::make_shared<tol::PIDVelController>(tol::PIDVelController(1.0, 1.0, 1800.0, 1855.0, 300.0));
 	std::shared_ptr<tol::PIDRotController> pid_rot_cont =
@@ -47,7 +48,7 @@ void ScenePlay::initialzie() {
 	auto r_bullet_assem = assem_repo_->CopyAssemble(900, "machine_gun", false);
 	r_bullet->setAssemble(r_bullet_assem);
 	auto r_weapon = std::make_shared<tol::Weapon>(tol::Weapon(
-		0.2, 20.0, 800.0, 1000.0, 1.0,
+		0.05, 20.0, 800.0, 1000.0, 1.0,
 		tol::Weapon::fire_dir::up,
 		tol::Weapon::bullet_dir::up,
 		r_bullet
@@ -57,7 +58,7 @@ void ScenePlay::initialzie() {
 	auto l_arm_weapon = actor_->getObjectTree(1400, "LAEE01");
 	auto l_bullet = std::make_shared<tol::Object>(tol::Object(-2, "bullet"));
 	l_bullet->init();
-	auto l_bullet_assem = assem_repo_->CopyAssemble(900, "machine_gun", false);
+	auto l_bullet_assem = assem_repo_->CopyAssemble(901, "rifle", false);
 	l_bullet->setAssemble(l_bullet_assem);
 	auto l_weapon = std::make_shared<tol::Weapon>(tol::Weapon(
 		0.5, 40.0, 1200.0, 1500.0, 1.0,
@@ -69,7 +70,7 @@ void ScenePlay::initialzie() {
 	// -- aim target test -- //
 	auto r_arm_tar = actor_->getObjectTree(2300, "");
 	auto r_arm_tar_assem = r_arm_tar->getAssemble();
-	r_arm_tar_assem->setCoordinateView(r_arm_tar, 20, 2);
+	//r_arm_tar_assem->setCoordinateView(r_arm_tar, 20, 2);
 
 	// --- Camera Settings --- //
 	// -- Create : Camera Target -> chase the actor -- //
@@ -87,8 +88,28 @@ void ScenePlay::initialzie() {
 	cam_target_kine->setRestraint(re_cam);
 	// -- Create : Camera & Director -- //
 	camera_ = new dxe::Camera(DXE_WINDOW_WIDTH, DXE_WINDOW_HEIGHT);
-	cam_director_ = std::make_shared<tol::TPSCameraDirector>(tol::TPSCameraDirector(camera_, { 0, 10, -20 }, cam_target_));
+	cam_director_ = std::make_shared<tol::TPSCameraDirector>(tol::TPSCameraDirector(camera_, { 0, 15, -20 }, cam_target_));
+
+	// --- Create : target test --- //
+	auto target = tol::Actor::Create(assem_repo_);
+	auto target_assem = assem_repo_->CopyAssemble(1000, "BallEnemy");
+	target->setAssemble(target_assem);
+	std::shared_ptr<tol::PhysicsHandler> target_phy = std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(5.0, 5.0 * 1 * 1 / 8, 1, tnl::ToRadian(90)));
+	std::shared_ptr<tol::PIDPosController> target_pos_cont = std::make_shared<tol::PIDPosController>(tol::PIDPosController(0.2, 0.5, 0.1));
+	// pos automatic locations
+	std::vector<tnl::Vector3> auto_locations;
+	auto_locations.push_back(tnl::Vector3{ 0, 30, 0 });
+	auto_locations.push_back(tnl::Vector3{ 100, 30, 100 });
+	auto_locations.push_back(tnl::Vector3{ 200, 30, 200 });
+	target_pos_cont->setAutomaticLocationUpdate(auto_locations, 2.0);
+	target->setPhysicsHandler(target_phy);
+	target->setPIDPosController(target_pos_cont);
+	targets_.push_back(target);
 	
+	// --- UI --- //
+	sight_gh_ = LoadGraph("graphics/sight3.png");
+	// --- BGM --- //
+	mgr->sound_mgr_->playSound(mgr->sound_mgr_->bgm, 2, "", mgr->sound_mgr_->loop);
 }
 
 void ScenePlay::update(float delta_time)
@@ -111,6 +132,9 @@ void ScenePlay::update(float delta_time)
 		else if (tnl::Input::IsKeyDown(eKeys::KB_S)) {
 			input += { 0, 0, -1 };
 		}
+		if (tnl::Input::IsKeyDown(eKeys::KB_SPACE)) {
+			input += {0, 1, 0};
+		}
 		tnl::Vector3 input_pad = tnl::Input::GetLeftStick();
 		if (input_pad.length() > 0.1) {
 			actor_->pidVellContUpdate(delta_time, { input_pad.x, 0, -input_pad.y });		// give player control effect.
@@ -119,22 +143,29 @@ void ScenePlay::update(float delta_time)
 			actor_->pidVellContUpdate(delta_time, input);
 		}
 		// --- fire test --- //
+		auto r_arm_weapon = actor_->getObjectTree(1300, "RAEE01");
 		if (tnl::Input::IsMouseDown(tnl::Input::eMouse::RIGHT)) {
-			auto r_arm_weapon = actor_->getObjectTree(1300, "RAEE01");
 			r_arm_weapon->getWeapon()->setFire(true);
 		}
+		auto l_arm_weapon = actor_->getObjectTree(1400, "LAEE01");
 		if (tnl::Input::IsMouseDown(tnl::Input::eMouse::LEFT)) {
-			auto l_arm_weapon = actor_->getObjectTree(1400, "LAEE01");
 			l_arm_weapon->getWeapon()->setFire(true);
+		}
+		// -- set fired SE -- //
+		if (r_arm_weapon->getWeapon()->getFired()) {
+			mgr->sound_mgr_->playSound(mgr->sound_mgr_->se, 1, "", mgr->sound_mgr_->one_shot);
+		}
+		if (l_arm_weapon->getWeapon()->getFired()) {
+			mgr->sound_mgr_->playSound(mgr->sound_mgr_->se, 2, "", mgr->sound_mgr_->one_shot);
 		}
 
 		// test 
 		// --- aiming test --- //
 		auto actor_cod = actor_->getCoordinate();
-		tnl::Vector3 target_pos = actor_cod->getPos() + tnl::Vector3(0, 10, 0);
+		tnl::Vector3 target_pos = actor_cod->getPos() + tnl::Vector3(0, 15, 0);
 		cam_target_->pidPosContUpdate(delta_time, target_pos);
 		cam_target_->updateTree(delta_time);
-
+		// --- camera move --- //
 		auto cam_target_cod = cam_target_->getCoordinate();
 		cam_director_->update(delta_time, camera_, cam_target_);
 
@@ -148,15 +179,22 @@ void ScenePlay::update(float delta_time)
 		l_arm_tar->Translate(cam_director_->getForcusPos(), true);
 		
 		
+		// --- target test --- //
+		
 
 		// - move test end - //
 
 		// general process
 		actor_->updateTree(delta_time);
-
+		for (auto itr = targets_.begin(); itr != targets_.end();) {
+			auto target = *itr;
+			target->pidPosContUpdate(delta_time, { 0, 0, 0 });
+			target->update(delta_time);
+			itr++;
+		}
 		
 		
-
+		
 		
 
 		
@@ -172,7 +210,7 @@ void ScenePlay::update(float delta_time)
 	}
 	if (is_window_active_) {
 		// --- for TPS mouse aiming : clear mouse cursor & fixed to center of screen. --- //
-		SetMouseDispFlag(true);		// clear of mouse cursor.
+		SetMouseDispFlag(false);		// clear of mouse cursor.
 		SetMousePoint(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2);
 	}
 	if (!is_window_active_) {
@@ -198,4 +236,13 @@ void ScenePlay::render()
 	actor_->renderTree(camera_);
 	// --- test --- //
 	cam_target_->renderTree(camera_);
+	for (auto itr = targets_.begin(); itr != targets_.end();) {
+		auto target = *itr;
+		target->render(camera_);
+		itr++;
+	}
+
+	auto r_arm_tar = actor_->getObjectTree(2300, "");
+	r_arm_tar->render(camera_);
+	DrawRotaGraph(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2, 0.05, 0, sight_gh_, true, false);
 }

@@ -16,6 +16,9 @@ namespace tol {
 		// --- define --- //
 		float mass_;			// kg
 		float inertia_y_;		// moment of inertia about the y-axis kgm2
+		float gravitational_acc_ = -9.8;	// m/s2
+		float floor_y_ = 0;
+		bool is_gravity_enebled_ = false;
 		// --- calc params --- //
 		// -- translate -- //
 		tnl::Vector3 acc_ = { 0, 0, 0 };		// m/s2
@@ -29,9 +32,10 @@ namespace tol {
 	public:
 		virtual void update(float delta_time, std::shared_ptr<Object> actor, const tnl::Vector3& force_, float torque = 0);
 		// ---- setter ---- //
+		void setIsAffectedByGravity(bool is_gravity_enabled) { is_gravity_enebled_ = is_gravity_enabled; }
 		// ---- getter ---- //
 		tnl::Vector3 getVelocity() { return velocity_; }
 		float getRotVelocity() { return ang_vel_; }
-
+		bool getIsAffectedByGravity() { return is_gravity_enebled_; }
 	};	
 }

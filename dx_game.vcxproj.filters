@@ -41,6 +41,9 @@
     <Filter Include="program\game\actor\componets_required">
       <UniqueIdentifier>{47c3d6fe-109b-4c84-b16d-8ef409b190d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="program\game\temporary">
+      <UniqueIdentifier>{8b4ac90c-d10b-4e4d-be24-fa7de4a77434}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="program\system\sys_main.cpp">
@@ -211,6 +214,12 @@
     <ClCompile Include="program\game\gm_weapon.cpp">
       <Filter>program\game\actor\components_option</Filter>
     </ClCompile>
+    <ClCompile Include="program\game\gm_bgm_se_manager.cpp">
+      <Filter>program\game\system</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_easing_handler.cpp">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="program\library\picojson.h">
@@ -359,6 +368,15 @@
     </ClInclude>
     <ClInclude Include="program\game\gm_weapon.h">
       <Filter>program\game\actor\components_option</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_bgm_se_manager.h">
+      <Filter>program\game\system</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_easing_handler.h">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_gen_targets.h">
+      <Filter>program\game\temporary</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

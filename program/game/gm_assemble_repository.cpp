@@ -323,6 +323,7 @@ std::shared_ptr<tol::AssemRepo> tol::AssemRepo::Create() {
 	asr->assem_st_.push_back(std::move(sh201));
 
 	// --- Bullets : 9XX ---- //
+	// 900 
 	auto bu900 = std::make_shared<assem_st>();
 	bu900->id_ = 900;
 	bu900->name = "machine_gun";
@@ -336,6 +337,54 @@ std::shared_ptr<tol::AssemRepo> tol::AssemRepo::Create() {
 		bu900->assem_->setParts(sp);
 	}
 	asr->assem_st_.push_back(std::move(bu900));
+	// 901
+	auto bu901 = std::make_shared<assem_st>();
+	bu901->id_ = 901;
+	bu901->name = "rifle";
+	bu901->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto sp = std::make_shared<Parts>(Parts());
+		sp->mesh_ = dxe::Mesh::CreateSphere(1.0);
+		sp->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue.bmp"));
+		sp->ofs_pos_ = zero_v;
+		sp->ofs_rot_ = zero_r;
+		bu901->assem_->setParts(sp);
+	}
+	asr->assem_st_.push_back(std::move(bu901));
+
+	// --- Enemy : 10XX --- //
+	// --- 1000 --- //
+	auto en1000 = std::make_shared<assem_st>();
+	en1000->id_ = 1000;
+	en1000->name = "BallEnemy";
+	en1000->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto sp = std::make_shared<Parts>(Parts());
+		sp->mesh_ = dxe::Mesh::CreateSphere(20.0);
+		sp->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/red.bmp"));
+		sp->ofs_pos_ = zero_v;
+		sp->ofs_rot_ = zero_r;
+		en1000->assem_->setParts(sp);
+	}
+	asr->assem_st_.push_back(std::move(en1000));
+
+	// --- Target : 20XX --- //
+	// 2000
+	auto tar2000 = std::make_shared<assem_st>();
+	tar2000->id_ = 2000;
+	tar2000->name = "move_sight";
+	tar2000->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto sp = std::make_shared<Parts>(Parts());
+		sp->mesh_ = dxe::Mesh::CreatePlane(tnl::Vector3{30, 30, 0});
+		sp->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/sight2.png"));
+		sp->ofs_pos_ = zero_v;
+		sp->ofs_rot_ = zero_r;
+		tar2000->assem_->setParts(sp);
+	}
+	asr->assem_st_.push_back(std::move(tar2000));
+
+
 
 	return asr;
 }

@@ -13,6 +13,8 @@ tnl::Vector3 tol::PIDVelController::update(float delta_time, const tnl::Vector3&
 	// --- update vel_ref --- //
 	vel_ref_ += vel_dir;
 	vel_ref_.normalize();
+	DrawStringEx(300, 100, -1, "vel_ref-> x:%f, y:%f, z:%f", vel_ref_.x, vel_ref_.y, vel_ref_.z);
+
 	vel_ref_ = { vel_dir.x * horizontal_max_, vel_dir.y * vertical_max_, vel_dir.z * horizontal_max_ };
 	vel_error_ = vel_ref_ - vel_current;
 	// --- PID controll --- //

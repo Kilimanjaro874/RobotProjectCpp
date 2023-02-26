@@ -1,6 +1,8 @@
 #pragma once
 #include "../dxlib_ext/dxlib_ext.h"
 #include "gm_object.h"
+#include "gm_bgm_se_manager.h"
+#include <memory>
 
 class SceneBase;
 class GameManager {
@@ -51,7 +53,8 @@ public :
 
 public :
 	// ゲーム全体で参照したい変数はここで用意
-	std::shared_ptr<tol::Object> obj;
+	std::unique_ptr<BGM_SE_Mgr> sound_mgr_ = nullptr;
+	float clear_time_ = 0.0;
 };
 
 

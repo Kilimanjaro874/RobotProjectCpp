@@ -33,6 +33,7 @@ namespace tol {
 	private:
 		// --- define --- //
 		bool is_fire_ = false;
+		bool is_fired_ = false;
 		float reload_time_;
 		float bullet_damage_;
 		float bullet_speed_;
@@ -55,6 +56,7 @@ namespace tol {
 		void setFire(bool is_fire) { is_fire_ = is_fire; }
 		// ---- getter ---- //
 		bool getFire() { return is_fire_; }
+		bool getFired() { return is_fired_; }
 		bool isAlive() { return is_alive_; }
 	private:
 		void genBullet(std::shared_ptr<Object> obj);
