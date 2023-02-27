@@ -1,7 +1,8 @@
 #pragma once
 #include "../dxlib_ext/dxlib_ext.h"
-#include "../game/gm_input_manager.h"
-#include "../game/gm_bgm_se_manager.h"
+#include "gm_object.h"
+#include "gm_bgm_se_manager.h"
+#include <memory>
 
 class SceneBase;
 class GameManager {
@@ -52,9 +53,8 @@ public :
 
 public :
 	// ゲーム全体で参照したい変数はここで用意
-	//InputMgr _input_mg1;				// プレイヤーの入力情報を操作量に変換するクラス
-	BGM_SE_Mgr* _soundMgr;
-	float _clear_time = 0;
+	std::unique_ptr<BGM_SE_Mgr> sound_mgr_ = nullptr;
+	float clear_time_ = 0.0;
 };
 
 

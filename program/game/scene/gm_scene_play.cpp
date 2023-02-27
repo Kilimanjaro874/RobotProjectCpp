@@ -3,188 +3,246 @@
 #include "gm_scene_play.h"
 #include "gm_scene_result.h"
 #include "../../dxlib_ext/dxlib_ext.h"
+#include "../gm_object.h"
 
+// test 
+#include "../gm_physics_handler.h"
+#include "../gm_pid_vel_controller.h"
+#include "../gm_pid_rot_controller.h"
+#include "../gm_restraint.h"
+#include "../gm_weapon.h"
 
+//static float  dth = 0;
 ScenePlay::~ScenePlay() {
-	delete _camera;
-	delete _robo;
-	delete _controller;
-	delete _background;
-	delete _aim_pos;
-	delete _hit_manager;
-	for( auto tar : _target_obj_v) { delete tar; }
+	delete camera_;
 }
 
-
 void ScenePlay::initialzie() {
-	// ----- DxLib設定 ----- //
+	// ---- Dxlib settings [start] ---- //
+	SetAlwaysRunFlag(false);		// Window inactive : continue game operation.
+	// ---- Dxlib settings [end] ---- //
 	GameManager* mgr = GameManager::GetInstance();
-	_hit_manager = new HitManager();
-	SetMouseDispFlag(false);			// マウス表示を消去
-	SetMousePoint(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2);		// TPSでマウス位置を画面中央に固定
-	// ----- ステージ生成 ----- //
-	_floor_obj_li.resize(1);
-	_floor_obj_li[0]= dxe::Mesh::CreatePlane({ 1500, 1500, 0 });
-	_floor_obj_li[0]->setTexture(dxe::Texture::CreateFromFile("graphics/gray.bmp"));
-	_floor_obj_li[0]->rot_q_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(90));
-	_floor_obj_li[0]->pos_ += {0, -1, 0};
-	// 背景
-	_background = new Parts();
-	_background->mesh_ = dxe::Mesh::CreateSphere(800);
-	_background->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue2.bmp"));
-																	
-	// ----- 自作クラス設定 ----- //
-	_camera = new GmCamera();
-	_camera->pos_ = { 0, 150, -300 };
-
-	//------------------------------------------------------------------
-	//
-	// Test
-	//
-	// 操作ロボット生成
-	_robo = Robot::Create({ 0, 0, 0 }, tnl::Quaternion::RotationAxis({ 0, 1, 0 }, 0));
-	_robo->partsUpdateTree(_robo, 0);
-	_controller = new RobotCont(_robo, mgr->_soundMgr);
-	// Target 
-	_aim_pos = new Parts();
-	_aim_pos->mesh_ = dxe::Mesh::CreateSphere(25);
-	_aim_pos->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue.bmp"));
-
-	// BGM
-	mgr->_soundMgr->playSound(mgr->_soundMgr->bgm, 2, "", mgr->_soundMgr->loop);
-
-	// TargetObjects
-	setTargets();
 	
+	
+	// --- Create : Assemble Repository --- //
+	assem_repo_ =  tol::AssemRepo::Create();
 
-	// sight
-	_sight_UI_gh = LoadGraph("graphics/sight.png");
+	// --- Actor Settings --- //
+	actor_ = tol::Actor::Create(assem_repo_, robot_actor_, robot_ik_csv_);
+	// -- attach compornents -- //
+	std::shared_ptr<tol::PhysicsHandler> ph_handler =
+		std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(500.0, 500.0 * 2*2/8, 2.0, tnl::ToRadian(45)));
+	ph_handler->setIsAffectedByGravity(true);	// affected by gravity.
+	std::shared_ptr<tol::PIDVelController> pid_cont =
+		std::make_shared<tol::PIDVelController>(tol::PIDVelController(1.0, 1.0, 1800.0, 1855.0, 300.0));
+	std::shared_ptr<tol::PIDRotController> pid_rot_cont =
+		std::make_shared<tol::PIDRotController>(tol::PIDRotController(1.0, 150.0, 1.0, 40.0));
+	actor_->setPhysicsHandler(ph_handler);
+	actor_->setPIDVelController(pid_cont);
+	actor_->setPIDRotController(pid_rot_cont);
+	// -- attach weapon component to right&left arms -- //
+	// - right weapon - //
+	auto r_arm_weapon = actor_->getObjectTree(1300, "RAEE01");
+	auto r_bullet = std::make_shared<tol::Object>(tol::Object(-1, "bullet"));
+	r_bullet->init();
+	auto r_bullet_assem = assem_repo_->CopyAssemble(900, "machine_gun", false);
+	r_bullet->setAssemble(r_bullet_assem);
+	auto r_weapon = std::make_shared<tol::Weapon>(tol::Weapon(
+		0.05, 20.0, 800.0, 1000.0, 1.0,
+		tol::Weapon::fire_dir::up,
+		tol::Weapon::bullet_dir::up,
+		r_bullet
+	));
+	r_arm_weapon->setWeapon(r_weapon);
+	// - left weapon - //
+	auto l_arm_weapon = actor_->getObjectTree(1400, "LAEE01");
+	auto l_bullet = std::make_shared<tol::Object>(tol::Object(-2, "bullet"));
+	l_bullet->init();
+	auto l_bullet_assem = assem_repo_->CopyAssemble(901, "rifle", false);
+	l_bullet->setAssemble(l_bullet_assem);
+	auto l_weapon = std::make_shared<tol::Weapon>(tol::Weapon(
+		0.5, 40.0, 1200.0, 1500.0, 1.0,
+		tol::Weapon::fire_dir::up,
+		tol::Weapon::bullet_dir::up,
+		l_bullet
+	));
+	l_arm_weapon->setWeapon(l_weapon);
+	// -- aim target test -- //
+	auto r_arm_tar = actor_->getObjectTree(2300, "");
+	auto r_arm_tar_assem = r_arm_tar->getAssemble();
+	//r_arm_tar_assem->setCoordinateView(r_arm_tar, 20, 2);
+
+	// --- Camera Settings --- //
+	// -- Create : Camera Target -> chase the actor -- //
+	cam_target_ = tol::Actor::Create(assem_repo_);
+	auto cam_assem = cam_target_->getAssemble();
+	//cam_assem->setCoordinateView(cam_target_, 1.0, 0.05);
+	// -- attach compornents -- //
+	std::shared_ptr<tol::PhysicsHandler> ph_cam_phy = std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(5.0, 5.0 * 1*1/8, 100, tnl::ToRadian(90)));
+	std::shared_ptr<tol::PIDPosController> pid_cam_cont = std::make_shared<tol::PIDPosController>(tol::PIDPosController(0.2, 0.005, 10.1));
+	std::shared_ptr<tol::Restraint> re_cam = std::make_shared<tol::Restraint>(tol::Restraint());
+	re_cam->init(actor_, 0, "camera_restraint", tol::Restraint::restraint_type::rot_as_rot);
+	auto cam_target_kine = cam_target_->getKinematics();
+	cam_target_->setPhysicsHandler(ph_cam_phy);
+	cam_target_->setPIDPosController(pid_cam_cont);
+	cam_target_kine->setRestraint(re_cam);
+	// -- Create : Camera & Director -- //
+	camera_ = new dxe::Camera(DXE_WINDOW_WIDTH, DXE_WINDOW_HEIGHT);
+	cam_director_ = std::make_shared<tol::TPSCameraDirector>(tol::TPSCameraDirector(camera_, { 0, 15, -20 }, cam_target_));
+
+	// --- Create : target test --- //
+	auto target = tol::Actor::Create(assem_repo_);
+	auto target_assem = assem_repo_->CopyAssemble(1000, "BallEnemy");
+	target->setAssemble(target_assem);
+	std::shared_ptr<tol::PhysicsHandler> target_phy = std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(5.0, 5.0 * 1 * 1 / 8, 1, tnl::ToRadian(90)));
+	std::shared_ptr<tol::PIDPosController> target_pos_cont = std::make_shared<tol::PIDPosController>(tol::PIDPosController(0.2, 0.5, 0.1));
+	// pos automatic locations
+	std::vector<tnl::Vector3> auto_locations;
+	auto_locations.push_back(tnl::Vector3{ 0, 30, 0 });
+	auto_locations.push_back(tnl::Vector3{ 100, 30, 100 });
+	auto_locations.push_back(tnl::Vector3{ 200, 30, 200 });
+	target_pos_cont->setAutomaticLocationUpdate(auto_locations, 2.0);
+	target->setPhysicsHandler(target_phy);
+	target->setPIDPosController(target_pos_cont);
+	targets_.push_back(target);
+	
+	// --- UI --- //
+	sight_gh_ = LoadGraph("graphics/sight3.png");
+	// --- BGM --- //
+	mgr->sound_mgr_->playSound(mgr->sound_mgr_->bgm, 2, "", mgr->sound_mgr_->loop);
 }
 
 void ScenePlay::update(float delta_time)
 {
-	GameManager* mgr = GameManager::GetInstance();
-	_controller->update(delta_time, _camera);
-	// 右武器の当たり判定
-	_hit_manager->CheckBulletTargetHit(_controller->_r_weapon->_bullets, _target_obj_v, mgr->_soundMgr);
-	// 左武器の当たり判定
-	_hit_manager->CheckBulletTargetHit(_controller->_l_weapon->_bullets, _target_obj_v, mgr->_soundMgr);
+	// -- process : when window active -- //
+	if (is_window_active_) {
+		GameManager* mgr = GameManager::GetInstance();
+		// - move test start - //
+		// translate
+		tnl::Vector3 input = { 0, 0, 0 };
+		if (tnl::Input::IsKeyDown(eKeys::KB_D)) {
+			input += { 1, 0, 0 };
+		}
+		else if (tnl::Input::IsKeyDown(eKeys::KB_A)) {
+			input += { -1, 0, 0 };
+		}
+		if (tnl::Input::IsKeyDown(eKeys::KB_W)) {
+			input += { 0, 0, 1 };
+		}
+		else if (tnl::Input::IsKeyDown(eKeys::KB_S)) {
+			input += { 0, 0, -1 };
+		}
+		if (tnl::Input::IsKeyDown(eKeys::KB_SPACE)) {
+			input += {0, 1, 0};
+		}
+		tnl::Vector3 input_pad = tnl::Input::GetLeftStick();
+		if (input_pad.length() > 0.1) {
+			actor_->pidVellContUpdate(delta_time, { input_pad.x, 0, -input_pad.y });		// give player control effect.
+		}
+		else {
+			actor_->pidVellContUpdate(delta_time, input);
+		}
+		// --- fire test --- //
+		auto r_arm_weapon = actor_->getObjectTree(1300, "RAEE01");
+		if (tnl::Input::IsMouseDown(tnl::Input::eMouse::RIGHT)) {
+			r_arm_weapon->getWeapon()->setFire(true);
+		}
+		auto l_arm_weapon = actor_->getObjectTree(1400, "LAEE01");
+		if (tnl::Input::IsMouseDown(tnl::Input::eMouse::LEFT)) {
+			l_arm_weapon->getWeapon()->setFire(true);
+		}
+		// -- set fired SE -- //
+		if (r_arm_weapon->getWeapon()->getFired()) {
+			mgr->sound_mgr_->playSound(mgr->sound_mgr_->se, 1, "", mgr->sound_mgr_->one_shot);
+		}
+		if (l_arm_weapon->getWeapon()->getFired()) {
+			mgr->sound_mgr_->playSound(mgr->sound_mgr_->se, 2, "", mgr->sound_mgr_->one_shot);
+		}
+
+		// test 
+		// --- aiming test --- //
+		auto actor_cod = actor_->getCoordinate();
+		tnl::Vector3 target_pos = actor_cod->getPos() + tnl::Vector3(0, 15, 0);
+		cam_target_->pidPosContUpdate(delta_time, target_pos);
+		cam_target_->updateTree(delta_time);
+		// --- camera move --- //
+		auto cam_target_cod = cam_target_->getCoordinate();
+		cam_director_->update(delta_time, camera_, cam_target_);
 
 
-	// ターゲットとの当たり判定
-	for(int i = 0; i < _target_obj_v.size(); i++) {
-		_target_obj_v[i]->partsUpdate(delta_time);
-		_target_obj_v[i]->move(delta_time);
-		if (_target_obj_v[i]->_hp == 0) {
-			delete _target_obj_v[i];
-			_target_obj_v.erase(std::cbegin(_target_obj_v) + i);
+		actor_->pidRotContUpdate(delta_time, cam_director_->getForcusPos());
+
+		auto r_arm_tar = actor_->getObjectTree(2300, "");
+		r_arm_tar->Translate(cam_director_->getForcusPos(), true);
+
+		auto l_arm_tar = actor_->getObjectTree(2400, "");
+		l_arm_tar->Translate(cam_director_->getForcusPos(), true);
+		
+		
+		// --- target test --- //
+		
+
+		// - move test end - //
+
+		// general process
+		actor_->updateTree(delta_time);
+		for (auto itr = targets_.begin(); itr != targets_.end();) {
+			auto target = *itr;
+			target->pidPosContUpdate(delta_time, { 0, 0, 0 });
+			target->update(delta_time);
+			itr++;
+		}
+		
+		
+		
+		
+
+		
+	}
+	// -- process : when window nonactive -- //
+	else {
+
+	}
+	
+	// ---- Dxlib settings [start] ---- //
+	if (tnl::Input::IsKeyDown(eKeys::KB_ESCAPE)) {
+		is_window_active_ = false;
+	}
+	if (is_window_active_) {
+		// --- for TPS mouse aiming : clear mouse cursor & fixed to center of screen. --- //
+		SetMouseDispFlag(false);		// clear of mouse cursor.
+		SetMousePoint(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2);
+	}
+	if (!is_window_active_) {
+		// --- release mouse cursor --- //
+		SetMouseDispFlag(true);		// appearance of mouse cursor.
+		if (tnl::Input::IsMouseDown(tnl::Input::eMouse::LEFT)) {
+			// back to game (TPS mouse aiming)
+			int x, y;
+			GetMousePoint(&x, &y);
+			if (0 < x && x < DXE_WINDOW_WIDTH && 0 < y && y < DXE_WINDOW_HEIGHT) {
+				is_window_active_ = true;
+				SetMousePoint(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2);		// reset mousePosition immediately.
+			}
 		}
 	}
-	if (_target_obj_v.size() == 0) {
-		_is_clear = true; 
-		mgr->_clear_time = _clear_time;
-		mgr->chengeScene(new SceneResult());
-	}
-
-	
-	// sightDXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT
-	if (!_is_clear) { _clear_time += delta_time; }	
+	// ---- Dxlib settings [end] ---- //
 }
 
 void ScenePlay::render()
 {
-	_camera->update();
-	
-	//------------------------------------------------------------------
-	//
-	// Test
-	//
-	_robo->partsRenderTree(_robo, _camera);
-	_background->mesh_->render(_camera);
-
-	for (auto floor : _floor_obj_li) {
-		floor->render(_camera);
+	camera_->update();
+	DrawGridGround(camera_, 5, 300);
+	actor_->renderTree(camera_);
+	// --- test --- //
+	cam_target_->renderTree(camera_);
+	for (auto itr = targets_.begin(); itr != targets_.end();) {
+		auto target = *itr;
+		target->render(camera_);
+		itr++;
 	}
 
-	//_target_obj_v[0]->partsRender(_camera);
-	for (auto tar : _target_obj_v) {
-		tar->partsRender(_camera);
-	}
-	DrawGridGround(_camera, 5, 300);
-	DrawRotaGraph(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2, 0.01, 0, _sight_UI_gh, true, false);
-	DrawStringEx(50, 50, 1, "target Num = %d", _target_obj_v.size());
-	DrawStringEx(50, 70, 1, "time = %5.2f", _clear_time);
-
-}
-
-void ScenePlay::setTargets() {
-	// ----- フィールドに出現するターゲットの初期化 ----- //
-	// * CSVデータから読み取れるよう後に変更する
-	// 1
-	std::vector<tnl::Vector3> points1;
-	points1.push_back({ -50, 10, 500 });
-	points1.push_back({ 50, 10, 500 });
-	_target_obj_v.push_back(ShotTarget::init(points1, 2.5));
-	// 2
-	std::vector<tnl::Vector3> points2;
-	points2.push_back({ 0, 150, 500 });
-	points2.push_back({ 0, 50, 500 });
-	_target_obj_v.push_back( ShotTarget::init(points2, 2.5));
-	// 3
-	std::vector<tnl::Vector3> points3;
-	points3.push_back({ -100, 100, 500 });
-	points3.push_back({ 100, 100, 500 });
-	_target_obj_v.push_back(ShotTarget::init(points3, 2.5));
-	// 4 
-	std::vector<tnl::Vector3> points4;
-	points4.push_back({ -500, 300, 0 });
-	points4.push_back({ -500, 244, 144 });
-	points4.push_back({ -500, 200, 200 });
-	points4.push_back({ -500, 144, 144 });
-	points4.push_back({ -500, 100, 0 });
-	points4.push_back({ -500, 144, -144 });
-	points4.push_back({ -500, 200, -200 });
-	points4.push_back({ -500, 244, -144 });
-	_target_obj_v.push_back(ShotTarget::init(points4, 3.0));
-	// 5
-	std::vector<tnl::Vector3> points5;
-	points5.push_back({ 300, 300, 0 });
-	points5.push_back({ 300, 50, 0 });
-	points5.push_back({ 300, 50, 100 });
-	points5.push_back({ 300, 50, -100 });
-	points5.push_back({ 300, 200, 0 });
-	points5.push_back({ 300, 200, 100 });
-	points5.push_back({ 300, 200, -100 });
-	points5.push_back({ 300, 200, 0 });
-	_target_obj_v.push_back(ShotTarget::init(points5, 3.0));
-	// 6
-	std::vector<tnl::Vector3> points6;
-	points6.push_back({ -300, 50, -300 });
-	points6.push_back({ -300, 50, 300 });
-	points6.push_back({ 300, 50, 300 });
-	points6.push_back({ 300, 50, -300 });
-	_target_obj_v.push_back(ShotTarget::init(points6, 5.0));
-	
-	// 7
-	std::vector<tnl::Vector3> points7;
-	points7.push_back({ 0, 60, -100 });
-	points7.push_back({ 0, 10, -150 });
-	points7.push_back({ 50, 60, -100 });
-	points7.push_back({ 50, 10, -150 });
-	_target_obj_v.push_back(ShotTarget::init(points7, 2.0));
-	// 8
-	std::vector<tnl::Vector3> points8;
-	points8.push_back({ 50, 60, -100 });
-	points8.push_back({ 50, 10, -150 });
-	points8.push_back({ 100, 60, -100 });
-	points8.push_back({ 100, 10, -150 });
-	_target_obj_v.push_back(ShotTarget::init(points8, 2.0));
-	// 9+
-	std::vector<tnl::Vector3> points9;
-	points9.push_back({ -50, 60, -100 });
-	points9.push_back({ -50, 10, -150 });
-	points9.push_back({ 0, 60, -100 });
-	points9.push_back({ 0, 10, -150 });
-	_target_obj_v.push_back(ShotTarget::init(points9, 2.0));
-
+	auto r_arm_tar = actor_->getObjectTree(2300, "");
+	r_arm_tar->render(camera_);
+	DrawRotaGraph(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2, 0.05, 0, sight_gh_, true, false);
 }

@@ -12,17 +12,10 @@ void SceneTitle::update(float delta_time)
 	GameManager* mgr = GameManager::GetInstance();
 	if (!_init) {
 		_init = true;
-		
-	}
-	
-	if (tnl::Input::IsKeyDown(eKeys::KB_S) && _stop == false) {
-		_stop = true;
-		mgr->_soundMgr->playSound(mgr->_soundMgr->bgm, 3, "", mgr->_soundMgr->loop); 
 	}
 
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
 		mgr->chengeScene( new ScenePlay() );
-		mgr->_soundMgr->stopSoundAll();
 	}
 }
 

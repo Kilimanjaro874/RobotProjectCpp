@@ -23,14 +23,26 @@
     <Filter Include="program\dxlib_ext\create_mesh">
       <UniqueIdentifier>{73d678e2-9f7c-43cb-beae-677730ce2cbf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="program\game\model">
-      <UniqueIdentifier>{e828080f-9f72-4b0c-82e8-961950527584}</UniqueIdentifier>
-    </Filter>
     <Filter Include="program\game\scene">
       <UniqueIdentifier>{36a023e8-05af-4131-819f-285ef87e3f60}</UniqueIdentifier>
     </Filter>
-    <Filter Include="program\game\model\robot">
-      <UniqueIdentifier>{f43aa23c-4998-47ed-9c50-4ea63f6a3e74}</UniqueIdentifier>
+    <Filter Include="program\game\actor">
+      <UniqueIdentifier>{2b3fc65d-cb22-4084-ac84-40880c158aa1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="program\game\system">
+      <UniqueIdentifier>{e91f7adf-b1d7-4963-9f50-7eea04783581}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="program\game\actor\implementaation">
+      <UniqueIdentifier>{80bb5010-2887-4230-af73-e313163df882}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="program\game\actor\components_option">
+      <UniqueIdentifier>{edb2d5b7-d5be-4c45-ab8d-dbf5eddd3869}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="program\game\actor\componets_required">
+      <UniqueIdentifier>{47c3d6fe-109b-4c84-b16d-8ef409b190d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="program\game\temporary">
+      <UniqueIdentifier>{8b4ac90c-d10b-4e4d-be24-fa7de4a77434}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -151,44 +163,62 @@
     <ClCompile Include="program\game\scene\gm_scene_title.cpp">
       <Filter>program\game\scene</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_airplane.cpp">
-      <Filter>program\game\model</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\model\gm_anim_sprite3d.cpp">
-      <Filter>program\game\model</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\model\gm_model.cpp">
-      <Filter>program\game\model</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\model\gm_parts.cpp">
-      <Filter>program\game\model</Filter>
-    </ClCompile>
     <ClCompile Include="program\game\gm_camera.cpp">
       <Filter>program\game</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_module.cpp">
-      <Filter>program\game\model\robot</Filter>
+    <ClCompile Include="program\game\gm_physics_handler.cpp">
+      <Filter>program\game\actor\components_option</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_robot.cpp">
-      <Filter>program\game\model\robot</Filter>
+    <ClCompile Include="program\game\gm_pid_vel_controller.cpp">
+      <Filter>program\game\actor\components_option</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\gm_input_manager.cpp">
-      <Filter>program\game</Filter>
+    <ClCompile Include="program\game\gm_pid_pos_controller.cpp">
+      <Filter>program\game\actor\components_option</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\gm_robot_controller.cpp">
-      <Filter>program\game</Filter>
+    <ClCompile Include="program\game\gm_inverse_kinematics.cpp">
+      <Filter>program\game\actor\components_option</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_weapon.cpp">
-      <Filter>program\game\model\robot</Filter>
+    <ClCompile Include="program\game\gm_restraint.cpp">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_pid_rot_controller.cpp">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_tps_camera_director.cpp">
+      <Filter>program\game\system</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_actor_robot.cpp">
+      <Filter>program\game\actor\implementaation</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_assemble.cpp">
+      <Filter>program\game\actor\componets_required</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_coordinate.cpp">
+      <Filter>program\game\actor\componets_required</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_kinematics.cpp">
+      <Filter>program\game\actor\componets_required</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_actor.cpp">
+      <Filter>program\game\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_assemble_repository.cpp">
+      <Filter>program\game\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_object.cpp">
+      <Filter>program\game\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_parts.cpp">
+      <Filter>program\game\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="program\game\gm_weapon.cpp">
+      <Filter>program\game\actor\components_option</Filter>
     </ClCompile>
     <ClCompile Include="program\game\gm_bgm_se_manager.cpp">
-      <Filter>program\game</Filter>
+      <Filter>program\game\system</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\model\gm_shot_target.cpp">
-      <Filter>program\game\model</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\gm_hit_manager.cpp">
-      <Filter>program\game</Filter>
+    <ClCompile Include="program\game\gm_easing_handler.cpp">
+      <Filter>program\game\actor\components_option</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -288,44 +318,65 @@
     <ClInclude Include="program\game\scene\gm_scene_title.h">
       <Filter>program\game\scene</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_airplane.h">
-      <Filter>program\game\model</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\model\gm_anim_sprite3d.h">
-      <Filter>program\game\model</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\model\gm_model.h">
-      <Filter>program\game\model</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\model\gm_parts.h">
-      <Filter>program\game\model</Filter>
-    </ClInclude>
     <ClInclude Include="program\game\gm_camera.h">
       <Filter>program\game</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_module.h">
-      <Filter>program\game\model\robot</Filter>
+    <ClInclude Include="program\game\gm_physics_handler.h">
+      <Filter>program\game\actor\components_option</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_robot.h">
-      <Filter>program\game\model\robot</Filter>
+    <ClInclude Include="program\game\gm_pid_vel_controller.h">
+      <Filter>program\game\actor\components_option</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\gm_input_manager.h">
-      <Filter>program\game</Filter>
+    <ClInclude Include="program\game\gm_pid_pos_controller.h">
+      <Filter>program\game\actor\components_option</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\gm_robot_controller.h">
-      <Filter>program\game</Filter>
+    <ClInclude Include="program\game\gm_inverse_kinematics.h">
+      <Filter>program\game\actor\components_option</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_weapon.h">
-      <Filter>program\game\model\robot</Filter>
+    <ClInclude Include="program\game\gm_restraint.h">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_actor_robot.h">
+      <Filter>program\game\actor\implementaation</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_pid_rot_controller.h">
+      <Filter>program\game\actor\components_option</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_tps_camera_director.h">
+      <Filter>program\game\system</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_assemble.h">
+      <Filter>program\game\actor\componets_required</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_coordinate.h">
+      <Filter>program\game\actor\componets_required</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_kinematics.h">
+      <Filter>program\game\actor\componets_required</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_actor.h">
+      <Filter>program\game\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_assemble_repository.h">
+      <Filter>program\game\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_object.h">
+      <Filter>program\game\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_parts.h">
+      <Filter>program\game\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_weapon.h">
+      <Filter>program\game\actor\components_option</Filter>
     </ClInclude>
     <ClInclude Include="program\game\gm_bgm_se_manager.h">
-      <Filter>program\game</Filter>
+      <Filter>program\game\system</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\model\gm_shot_taget.h">
-      <Filter>program\game\model</Filter>
+    <ClInclude Include="program\game\gm_easing_handler.h">
+      <Filter>program\game\actor\components_option</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\gm_hit_manager.h">
-      <Filter>program\game</Filter>
+    <ClInclude Include="program\game\gm_gen_targets.h">
+      <Filter>program\game\temporary</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
