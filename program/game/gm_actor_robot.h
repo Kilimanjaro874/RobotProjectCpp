@@ -17,9 +17,6 @@ namespace tol {
 		std::shared_ptr<Object> right_arm_target_ = nullptr;	// aim target
 		std::shared_ptr<Object> left_arm_target_ = nullptr;		// aim target
 
-
-
-
 	public:
 		void init() override;
 		void update(float delta_time) override;

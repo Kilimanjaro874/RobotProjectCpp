@@ -76,7 +76,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 		if (fps_lim > fps_mils) {
 			timeBeginPeriod(1);
 			Sleep(DWORD(fps_lim - fps_mils));
-			timeEndPeriod(1);
+			timeBeginPeriod(1);
 		}
 
 	}

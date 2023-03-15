@@ -36,4 +36,7 @@ public:
 	void initialzie() override;
 	void update(float delta_time) override;
 	void render() override;
+
+	// temp
+	void targetsInit();
 };

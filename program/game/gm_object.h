@@ -5,12 +5,15 @@
 #include "gm_assemble.h"
 #include "gm_kinematics.h"
 #include "gm_weapon.h"
+#include "gm_circle_collider.h"
 
 namespace tol {
 	class Coordinate;
 	class Assemble;
 	class Kinematics;
 	class Weapon;
+	class CircleCollider;
+
 	class Object : public std::enable_shared_from_this<Object> {
 
 	public:
@@ -41,6 +44,7 @@ namespace tol {
 		std::shared_ptr<Kinematics> kinematics_ = nullptr;
 		// ---- option Classes ---- //
 		std::shared_ptr<Weapon> weapon_ = nullptr;
+		std::shared_ptr<CircleCollider> cir_collider_ = nullptr;
 		// ---- Tree structuer ---- //
 		std::weak_ptr<Object> parent_;
 		std::list<std::shared_ptr<Object>> children_;
@@ -73,6 +77,7 @@ namespace tol {
 		void setAssemble(std::shared_ptr<Assemble> assem) { assemble_ = assem; }
 		void setKinematics(std::shared_ptr<Kinematics> kin) { kinematics_ = kin; }
 		void setWeapon(std::shared_ptr<Weapon> weapon) { weapon_ = weapon; }
+		void setCircleCollider(std::shared_ptr<CircleCollider> collider) { cir_collider_ = collider; }
 		void setIsPositionalParentage(bool is_positional_parentage) { is_positional_parentage_ = is_positional_parentage; }
 		void setOptionParams(int row, float num) { if (row > 4 || row < 0) { return; } option_params[row] = num; }
 		void setIsAlive(bool alive) { is_alive_ = alive; }
@@ -83,6 +88,7 @@ namespace tol {
 		std::shared_ptr<Assemble> getAssemble() { return assemble_; }
 		std::shared_ptr<Kinematics> getKinematics() { return kinematics_; }
 		std::shared_ptr<Weapon> getWeapon() { return weapon_; }
+		std::shared_ptr<CircleCollider> getCircleCollider() { return cir_collider_; }
 		bool getIsPositionalParentage() { return is_positional_parentage_; }
 		float getOptionParams(int row) { if (row > 4 || row < 0) { return NULL; } return option_params[row]; }
 		bool getIsAlive() { return is_alive_; }

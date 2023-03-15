@@ -23,7 +23,6 @@ void ScenePlay::initialzie() {
 	// ---- Dxlib settings [end] ---- //
 	GameManager* mgr = GameManager::GetInstance();
 	
-	
 	// --- Create : Assemble Repository --- //
 	assem_repo_ =  tol::AssemRepo::Create();
 
@@ -89,22 +88,8 @@ void ScenePlay::initialzie() {
 	// -- Create : Camera & Director -- //
 	camera_ = new dxe::Camera(DXE_WINDOW_WIDTH, DXE_WINDOW_HEIGHT);
 	cam_director_ = std::make_shared<tol::TPSCameraDirector>(tol::TPSCameraDirector(camera_, { 0, 15, -20 }, cam_target_));
-
-	// --- Create : target test --- //
-	auto target = tol::Actor::Create(assem_repo_);
-	auto target_assem = assem_repo_->CopyAssemble(1000, "BallEnemy");
-	target->setAssemble(target_assem);
-	std::shared_ptr<tol::PhysicsHandler> target_phy = std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(5.0, 5.0 * 1 * 1 / 8, 1, tnl::ToRadian(90)));
-	std::shared_ptr<tol::PIDPosController> target_pos_cont = std::make_shared<tol::PIDPosController>(tol::PIDPosController(0.2, 0.5, 0.1));
-	// pos automatic locations
-	std::vector<tnl::Vector3> auto_locations;
-	auto_locations.push_back(tnl::Vector3{ 0, 30, 0 });
-	auto_locations.push_back(tnl::Vector3{ 100, 30, 100 });
-	auto_locations.push_back(tnl::Vector3{ 200, 30, 200 });
-	target_pos_cont->setAutomaticLocationUpdate(auto_locations, 2.0);
-	target->setPhysicsHandler(target_phy);
-	target->setPIDPosController(target_pos_cont);
-	targets_.push_back(target);
+	// tmp : test
+	targetsInit();
 	
 	// --- UI --- //
 	sight_gh_ = LoadGraph("graphics/sight3.png");
@@ -192,12 +177,6 @@ void ScenePlay::update(float delta_time)
 			target->update(delta_time);
 			itr++;
 		}
-		
-		
-		
-		
-
-		
 	}
 	// -- process : when window nonactive -- //
 	else {
@@ -245,4 +224,22 @@ void ScenePlay::render()
 	auto r_arm_tar = actor_->getObjectTree(2300, "");
 	r_arm_tar->render(camera_);
 	DrawRotaGraph(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2, 0.05, 0, sight_gh_, true, false);
+}
+
+void ScenePlay::targetsInit() {
+	// --- Create : target test --- //
+	auto target = tol::Actor::Create(assem_repo_);
+	auto target_assem = assem_repo_->CopyAssemble(1000, "BallEnemy");
+	target->setAssemble(target_assem);
+	std::shared_ptr<tol::PhysicsHandler> target_phy = std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(5.0, 5.0 * 1 * 1 / 8, 1, tnl::ToRadian(90)));
+	std::shared_ptr<tol::PIDPosController> target_pos_cont = std::make_shared<tol::PIDPosController>(tol::PIDPosController(0.2, 0.5, 0.1));
+	// pos automatic locations
+	std::vector<tnl::Vector3> auto_locations;
+	auto_locations.push_back(tnl::Vector3{ 0, 30, 0 });
+	auto_locations.push_back(tnl::Vector3{ 100, 30, 100 });
+	auto_locations.push_back(tnl::Vector3{ 200, 30, 200 });
+	target_pos_cont->setAutomaticLocationUpdate(auto_locations, 2.0);
+	target->setPhysicsHandler(target_phy);
+	target->setPIDPosController(target_pos_cont);
+	targets_.push_back(target);
 }

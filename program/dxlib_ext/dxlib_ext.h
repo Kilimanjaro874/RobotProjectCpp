@@ -22,7 +22,7 @@
 
 const int DXE_WINDOW_WIDTH = 1280;
 const int DXE_WINDOW_HEIGHT = 720;
-const float DXE_FIX_FPS = 60.0f;
+const float DXE_FIX_FPS = 120.0f;
 
 void DrawStringEx(const int x, const int y, const int color, const char* _str, ...);
 void DrawLineEx(const tnl::Vector3& p, const tnl::Vector3& v, const float length, const int color = -1);

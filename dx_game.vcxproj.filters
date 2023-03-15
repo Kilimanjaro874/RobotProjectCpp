@@ -217,7 +217,7 @@
     <ClCompile Include="program\game\gm_bgm_se_manager.cpp">
       <Filter>program\game\system</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\gm_easing_handler.cpp">
+    <ClCompile Include="program\game\gm_circle_collider.cpp">
       <Filter>program\game\actor\components_option</Filter>
     </ClCompile>
   </ItemGroup>
@@ -372,11 +372,11 @@
     <ClInclude Include="program\game\gm_bgm_se_manager.h">
       <Filter>program\game\system</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\gm_easing_handler.h">
-      <Filter>program\game\actor\components_option</Filter>
-    </ClInclude>
     <ClInclude Include="program\game\gm_gen_targets.h">
       <Filter>program\game\temporary</Filter>
+    </ClInclude>
+    <ClInclude Include="program\game\gm_circle_collider.h">
+      <Filter>program\game\actor\components_option</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

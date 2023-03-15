@@ -29,6 +29,9 @@ void tol::Object::update(float delta_time) {
 	if (weapon_) {
 		weapon_->update(delta_time, shared_from_this());
 	}
+	if (cir_collider_) {
+		cir_collider_->update(delta_time);
+	}
 }
 
 void tol::Object::updateTree(float delta_time) {
