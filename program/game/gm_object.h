@@ -29,6 +29,11 @@ namespace tol {
 			:id_(id), name_(name) {}
 		virtual ~Object() {}
 		//// ---- Member variables ---- ////
+		enum class parameter {
+			move_distance_,
+			damage_,
+			hp_,
+		};
 	protected:
 		// ---- General ---- //
 		int id_;

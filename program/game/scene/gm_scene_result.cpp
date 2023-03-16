@@ -17,5 +17,7 @@ void SceneResult::update(float delta_time)
 
 void SceneResult::render()
 {
-	DrawStringEx(50, 50, -1, "scene result");
+	GameManager* mgr = GameManager::GetInstance();
+	DrawStringEx(50, 50, -1, "Result");
+	DrawStringEx(50, 70, -1, "Clear Time : %5.2f sec", mgr->clear_time_);
 }

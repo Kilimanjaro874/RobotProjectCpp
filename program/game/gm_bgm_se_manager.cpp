@@ -19,7 +19,7 @@ void BGM_SE_Mgr::setBaseVolume(enum sound_type st, int volume) {
 	}
 }
 
-void BGM_SE_Mgr::playSound(enum sound_type st, int id, std::string name, play_type pt) {
+void BGM_SE_Mgr::playSound(enum sound_type st, int id, std::string name, play_type pt, bool stop) {
 	
 	if (st == bgm) {
 		for (auto bgm : _bgm_st) {
@@ -31,6 +31,9 @@ void BGM_SE_Mgr::playSound(enum sound_type st, int id, std::string name, play_ty
 				switch (pt)
 				{
 				case BGM_SE_Mgr::one_shot:
+					if (stop) {
+						if (CheckSoundMem(bgm._handler_id) == 1) { break; }
+					}
 					PlaySoundMem(bgm._handler_id, DX_PLAYTYPE_BACK);
 					break;
 				case BGM_SE_Mgr::loop:
@@ -54,6 +57,9 @@ void BGM_SE_Mgr::playSound(enum sound_type st, int id, std::string name, play_ty
 				switch (pt)
 				{
 				case BGM_SE_Mgr::one_shot:
+					if (stop) {
+						if (CheckSoundMem(se._handler_id) == 1) { break; }
+					}
 					PlaySoundMem(se._handler_id, DX_PLAYTYPE_BACK);
 					break;
 				case BGM_SE_Mgr::loop:

@@ -18,6 +18,7 @@ namespace tol {
 		// --- define --- //
 		float radius_ = 0.0f;
 		bool is_hit_ = false;
+		std::shared_ptr<Object> hit_object_ = nullptr;
 		//// ---- Member functions ---- ////
 	public:
 		void update(float delta_time);
@@ -26,5 +27,6 @@ namespace tol {
 		// ---- getter ---- //
 		float getCircleSize() { return radius_; }
 		bool getIsHit() { return is_hit_; }
+		std::shared_ptr<Object> getHitObject() { return hit_object_; }
 	};
 }

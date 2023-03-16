@@ -1,3 +1,5 @@
+#include <fstream>
+#include <sstream>
 #include "../gm_manager.h"
 #include "../gm_camera.h"
 #include "gm_scene_play.h"
@@ -47,7 +49,7 @@ void ScenePlay::initialzie() {
 	auto r_bullet_assem = assem_repo_->CopyAssemble(900, "machine_gun", false);
 	r_bullet->setAssemble(r_bullet_assem);
 	auto r_weapon = std::make_shared<tol::Weapon>(tol::Weapon(
-		0.20, 20.0, 800.0, 1000.0, 1.0,
+		0.15, 5.0, 800.0, 1000.0, 1.0,
 		tol::Weapon::fire_dir::up,
 		tol::Weapon::bullet_dir::up,
 		r_bullet
@@ -93,8 +95,11 @@ void ScenePlay::initialzie() {
 	
 	// --- UI --- //
 	sight_gh_ = LoadGraph("graphics/sight3.png");
+	center_gh_ = LoadGraph("graphics/sight.png");
+	// --- flag setting --- //
+	mgr->clear_time_ = 0.0;
 	// --- BGM --- //
-	mgr->sound_mgr_->playSound(mgr->sound_mgr_->bgm, 2, "", mgr->sound_mgr_->loop);
+	mgr->sound_mgr_->playSound(mgr->sound_mgr_->bgm, 2, "", mgr->sound_mgr_->loop, false);
 }
 
 void ScenePlay::update(float delta_time)
@@ -138,10 +143,10 @@ void ScenePlay::update(float delta_time)
 		}
 		// -- set fired SE -- //
 		if (r_arm_weapon->getWeapon()->getFired()) {
-			mgr->sound_mgr_->playSound(mgr->sound_mgr_->se, 1, "", mgr->sound_mgr_->one_shot);
+			mgr->sound_mgr_->playSound(mgr->sound_mgr_->se, 1, "", mgr->sound_mgr_->one_shot, false);
 		}
 		if (l_arm_weapon->getWeapon()->getFired()) {
-			mgr->sound_mgr_->playSound(mgr->sound_mgr_->se, 2, "", mgr->sound_mgr_->one_shot);
+			mgr->sound_mgr_->playSound(mgr->sound_mgr_->se, 2, "", mgr->sound_mgr_->one_shot, false);
 		}
 
 		// test 
@@ -163,10 +168,8 @@ void ScenePlay::update(float delta_time)
 		auto l_arm_tar = actor_->getObjectTree(2400, "");
 		l_arm_tar->Translate(cam_director_->getForcusPos(), true);
 		
-		
 		// --- target test --- //
 		targetsHitCheck(delta_time);
-
 		// - move test end - //
 
 		// general process
@@ -177,6 +180,22 @@ void ScenePlay::update(float delta_time)
 			target->update(delta_time);
 			itr++;
 		}
+		// UI
+		DrawStringEx(50, 10, -1, "Number of target = %d", targets_.size());
+		DrawStringEx(50, 30, -1, "Time = %5.2f", mgr->clear_time_);
+
+		// game end check 
+		if (targets_.size() == 0) {
+			game_clear = true;
+		}
+		if (!game_clear) {
+			mgr->clear_time_ += delta_time;
+		}
+		// move scene
+		if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN) || game_clear) {
+			mgr->chengeScene(new SceneResult());
+		}
+
 	}
 	// -- process : when window nonactive -- //
 	else {
@@ -223,31 +242,8 @@ void ScenePlay::render()
 
 	auto r_arm_tar = actor_->getObjectTree(2300, "");
 	r_arm_tar->render(camera_);
-	DrawRotaGraph(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2, 0.05, 0, sight_gh_, true, false);
-}
-
-
-void ScenePlay::targetsInit() {
-	// --- Create : target test --- //
-	auto target = tol::Actor::Create(assem_repo_);
-	target->getKinematics()->Translate(target, tnl::Vector3{ 100, 30, 0 }, true);
-	auto target_assem = assem_repo_->CopyAssemble(1000, "BallEnemy");
-	target->setAssemble(target_assem);
-	std::shared_ptr<tol::CircleCollider> collider = std::make_shared<tol::CircleCollider>(tol::CircleCollider(500));
-	target->setCircleCollider(collider);
-	std::shared_ptr<tol::PhysicsHandler> target_phy = std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(5.0, 5.0 * 1 * 1 / 8, 1, tnl::ToRadian(90)));
-	std::shared_ptr<tol::PIDPosController> target_pos_cont = std::make_shared<tol::PIDPosController>(tol::PIDPosController(0.2, 0.5, 0.1));
-	// pos automatic locations
-	std::vector<tnl::Vector3> auto_locations;
-	auto_locations.push_back(tnl::Vector3{ 100, 30, 0 });
-	auto_locations.push_back(tnl::Vector3{ 100, 30, 100 });
-	auto_locations.push_back(tnl::Vector3{ 200, 30, 200 });
-	target_pos_cont->setAutomaticLocationUpdate(auto_locations, 2.0);
-	target->setPhysicsHandler(target_phy);
-	target->setPIDPosController(target_pos_cont);
-	targets_.push_back(target);
-
-
+	DrawRotaGraph(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2, 0.06, 0, sight_gh_, true, false);
+	DrawRotaGraph(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2, 0.02, 0, center_gh_, true, false);
 }
 
 void ScenePlay::targetsHitCheck(float delta_time) {
@@ -264,12 +260,93 @@ void ScenePlay::targetsHitCheck(float delta_time) {
 			(*itr)->getCircleCollider()->hitCheck((*itr), (*itr2));
 			itr2++;
 		}
-		for (auto itr3 = r_bullets.begin(); itr3 != r_bullets.end();) {
+		for (auto itr3 = l_bullets.begin(); itr3 != l_bullets.end();) {
 			(*itr)->getCircleCollider()->hitCheck((*itr), (*itr3));
 			itr3++;
 		}
-
+		if ((*itr)->getOptionParams(static_cast<int>(tol::Object::parameter::hp_)) < 0.0) {
+			itr = targets_.erase(itr);
+			continue;
+		}
 		itr++;
 
+	}
+}
+
+// test 
+void ScenePlay::targetsInit() {
+	std::string str_buf;
+	std::string str_conma_buf;
+	static std::string str[103][38];
+	// open csv
+	int i = 0; int j = 0;
+	std::ifstream ifs(targets_csv_);
+	if (!ifs) {
+		printf("error! File can't opened");
+		return;
+	}
+	// make : return vector func.
+	auto can_to_vec = [](std::string x, std::string y, std::string z) -> bool {
+		return { x != "" && y != "" && z != "" };
+	};
+	auto vec = [](std::string x, std::string y, std::string z)-> tnl::Vector3 {
+		return { stof(x), stof(y), stof(z) };
+	};
+
+	while (std::getline(ifs, str_buf)) {
+		std::string tmp = "";
+		std::istringstream stream(str_buf);
+
+		while (std::getline(stream, tmp, ','))
+		{
+			str[i][j] = tmp;
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+	for (int i = 3; i < 103; i++) {
+		if (str[i][0] == "") {
+			continue;
+		}
+		auto c = str[i];
+		// get data
+		tnl::Vector3 init_pos = { 0, 0, 0 };
+		if (can_to_vec(c[0], c[1], c[2])) {
+			init_pos = vec(c[0], c[1], c[2]);
+		}
+		int id = stoi(c[3]);
+		std::string name = c[4];
+		float hp = stof(c[5]);
+		float coll_size = stof(c[6]);
+		float mass = stof(c[7]);
+		float inertia = stof(c[8]);
+		float velocity = stof(c[9]);
+		float angle = stof(c[10]);
+		float kp = stof(c[11]);
+		float ki = stof(c[12]);
+		float kd = stof(c[13]);
+		std::vector<tnl::Vector3> positons;
+		for (int i = 14; i < 38; i+=3) {
+			if (can_to_vec(c[i], c[i + 1], c[i + 2])) {
+				tnl::Vector3 tmp = vec(c[i], c[i + 1], c[i + 2]);
+				positons.push_back(tmp);
+			}
+		}
+		// create : targets
+		auto target = tol::Actor::Create(assem_repo_);
+		target->setOptionParams(static_cast<int>(tol::Object::parameter::hp_), hp);
+		target->getKinematics()->Translate(target, init_pos, true);
+		auto target_assem = assem_repo_->CopyAssemble(id, name);
+		target->setAssemble(target_assem);
+		std::shared_ptr<tol::CircleCollider> collider = std::make_shared<tol::CircleCollider>(tol::CircleCollider(coll_size));
+		target->setCircleCollider(collider);
+		std::shared_ptr<tol::PhysicsHandler> target_phy = std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(mass, inertia, velocity, tnl::ToRadian(angle)));
+		std::shared_ptr<tol::PIDPosController> target_pos_cont = std::make_shared<tol::PIDPosController>(tol::PIDPosController(kp, ki, kd));
+		// pos automatic locations
+		target_pos_cont->setAutomaticLocationUpdate(positons, 2.0);
+		target->setPhysicsHandler(target_phy);
+		target->setPIDPosController(target_pos_cont);
+		targets_.push_back(target);
 	}
 }

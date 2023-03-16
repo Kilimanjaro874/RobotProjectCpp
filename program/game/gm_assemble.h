@@ -16,6 +16,9 @@ namespace tol {
 		tnl::Quaternion ofs_rot_;
 		std::vector<std::shared_ptr<Parts>> parts_;
 		std::vector<std::shared_ptr<Parts>> coordinate_;
+		float damage_time_ = 0.0;
+		float damage_count_ = 0.0;
+		bool damage_flag_;
 	public:
 		virtual void update(float delta_time, std::shared_ptr<Object> obj);
 		virtual void render(dxe::Camera* camera);
@@ -26,6 +29,7 @@ namespace tol {
 		void setOffsetPos(const tnl::Vector3& ofs_pos) { ofs_pos_ = ofs_pos; }
 		void setOffsetRot(const tnl::Quaternion& ofs_rot) { ofs_rot_ = ofs_rot; }
 		void setCoordinateView(std::shared_ptr<Object> obj, float length, float radius);
+		void setDamageRenderTime(float damage_time);
 		// ---- getter ---- //
 		std::shared_ptr<Assemble> copyAssemble();
 	};

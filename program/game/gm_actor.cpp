@@ -101,6 +101,7 @@ void tol::Actor::getObjectDataCSV(std::shared_ptr<AssemRepo> a_repo, std::string
 		}
 		j = 0;
 		i++;
+		if (i > 102) { break; }
 	}
 	for (int i = 3; i < 103; i++) {		// ignore headers
 		if (str[i][0] == "") {
@@ -187,6 +188,7 @@ void tol::Actor::getIKsettingDataCSV(std::string csv_path) {
 		}
 		j = 0;
 		i++;
+		if (i > 102) { break; }
 	}
 	for (int i = 3; i < 103; i++) {
 		if (str[i][0] == "") {

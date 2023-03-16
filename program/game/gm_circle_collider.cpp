@@ -4,10 +4,10 @@
 void tol::CircleCollider::update(float delta_time) {
 	if (is_hit_) {
 		GameManager* mgr = GameManager::GetInstance();
-		mgr->sound_mgr_->playSound(mgr->sound_mgr_->se, 3, "", mgr->sound_mgr_->one_shot);
-
+		mgr->sound_mgr_->playSound(mgr->sound_mgr_->se, 3, "", mgr->sound_mgr_->one_shot, true);
 	}
 	is_hit_ = false;
+	hit_object_ = nullptr;
 }
 
 void tol::CircleCollider::hitCheck(std::shared_ptr<Object> this_obj, std::shared_ptr<Object> other_obj){
@@ -16,9 +16,9 @@ void tol::CircleCollider::hitCheck(std::shared_ptr<Object> this_obj, std::shared
 	tnl::Vector3 other_pos = other_obj->getCoordinate()->getPos();
 	tnl::Vector3 this_pos = this_obj->getCoordinate()->getPos();
 	tnl::Vector3 length = other_pos - this_pos;
-	if ((radius_ + other_cir_radius) < length.length()) {
+	if ((radius_ + other_cir_radius) > length.length()) {
 		is_hit_ = true;
-		
+		hit_object_ = other_obj;
 		return;
 	}
 }

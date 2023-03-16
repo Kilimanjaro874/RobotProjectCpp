@@ -26,12 +26,16 @@ public:
 	// --- robot --- //
 	const std::string robot_actor_ = "gameCSV/Actor_RobotObj_01.csv";
 	const std::string robot_ik_csv_ = "gameCSV/Actor_RobotObj_01_Ksetting.csv";
+	const std::string targets_csv_ = "gameCSV/Actor_Targets.csv";
 	// --- enemy --- //
 	std::list < std::shared_ptr<tol::Actor>> targets_;
 	// --- settings --- //
 	bool is_window_active_ = true;		// player toched game window flag.
 	// --- UI --- //
 	int sight_gh_;						// Aiming sight
+	int center_gh_;						// center sight
+	// --- flag --- //
+	bool game_clear = false;
 	//// ----- member functions ----- ////
 	void initialzie() override;
 	void update(float delta_time) override;

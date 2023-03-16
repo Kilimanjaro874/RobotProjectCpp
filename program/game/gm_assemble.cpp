@@ -23,6 +23,21 @@ void tol::Assemble::update(float delta_time, std::shared_ptr<tol::Object> obj) {
 			 p->mesh_->rot_q_ = p->ofs_rot_ * rot;
 		 }
 	 }
+	 // change color
+	 if (damage_flag_) {
+		 for (auto p : parts_) {
+			 p->mesh_->setBlendMode(DX_BLENDMODE_SUB);
+		 }
+		 damage_count_ += delta_time;
+		 if (damage_count_ > damage_time_) {
+			 damage_flag_ = false;
+			 damage_count_ = 0.0;
+			 damage_time_ = 0.0;
+			 for (auto p : parts_) {
+				 p->mesh_->setBlendMode(DX_BLENDMODE_NOBLEND);
+			 }
+		 }
+	 }
 }
 
 void tol::Assemble::render(dxe::Camera* camera) {
@@ -55,6 +70,11 @@ void tol::Assemble::setPartsScale(float scale) {
 		p->mesh_->scl_ = scale;
 		p->ofs_pos_ *= scale;
 	}
+}
+
+void tol::Assemble::setDamageRenderTime(float damage_time) {
+	damage_time_ = damage_time;
+	damage_flag_ = true;
 }
 
 /// <summary>

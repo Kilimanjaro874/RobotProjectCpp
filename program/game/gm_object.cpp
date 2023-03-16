@@ -30,7 +30,15 @@ void tol::Object::update(float delta_time) {
 		weapon_->update(delta_time, shared_from_this());
 	}
 	if (cir_collider_) {
+		if (cir_collider_->getIsHit()) {
+			assemble_->setDamageRenderTime(0.2);
+			auto hitObj = cir_collider_->getHitObject();
+			if (hitObj) {
+				option_params[static_cast<int>(parameter::hp_)] -= hitObj->getOptionParams(static_cast<int>(parameter::damage_));
+			}
+		}
 		cir_collider_->update(delta_time);
+		
 	}
 }
 

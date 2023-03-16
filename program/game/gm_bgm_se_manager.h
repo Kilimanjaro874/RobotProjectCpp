@@ -33,7 +33,7 @@ public:
 	void setSoundsBGMInit(std::string bgm_path);
 	void setSoundsSEInit(std::string se_path);
 	void setBaseVolume(enum sound_type, int volume);
-	void playSound(enum sound_type st, int id, std::string name, play_type pt);
+	void playSound(enum sound_type st, int id, std::string name, play_type pt, bool stop);
 	void stopSound(enum sound_type st, int id, std::string name);
 	void setVolume(enum sound_type st, int id, std::string name);
 	void serchSoundSt(enum sound_type st, int id, std::string name);
