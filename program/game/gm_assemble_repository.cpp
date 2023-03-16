@@ -384,8 +384,35 @@ std::shared_ptr<tol::AssemRepo> tol::AssemRepo::Create() {
 	}
 	asr->assem_st_.push_back(std::move(tar2000));
 
+	// --- etc. : 30XX --- //
+	auto back_ground3000 = std::make_shared<assem_st>();
+	back_ground3000->id_ = 3000;
+	back_ground3000->name = "back_ground_normal";
+	back_ground3000->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto sp = std::make_shared<Parts>(Parts());
+		sp->mesh_ = dxe::Mesh::CreateSphere(2000);
+		sp->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/blue2.bmp"));
+		sp->ofs_pos_ = zero_v;
+		sp->ofs_rot_ = zero_r;
+		back_ground3000->assem_->setParts(sp);
+	}
+	asr->assem_st_.push_back(std::move(back_ground3000));
 
-
+	auto floor3001 = std::make_shared<assem_st>();
+	floor3001->id_ = 3001;
+	floor3001->name = "floor_normal";
+	floor3001->assem_ = std::make_shared<Assemble>(Assemble());
+	{
+		auto pl = std::make_shared<Parts>(Parts());
+		pl->mesh_ = dxe::Mesh::CreatePlane({ 2500, 2500, 0 });
+		pl->mesh_->setTexture(dxe::Texture::CreateFromFile("graphics/white.bmp"));
+		pl->ofs_rot_ = tnl::Quaternion::RotationAxis({ 1, 0, 0 }, tnl::ToRadian(-90));
+		pl->ofs_pos_ = zero_v;
+		floor3001->assem_->setParts(pl);
+	}
+	asr->assem_st_.push_back(std::move(floor3001));
+	
 	return asr;
 }
 

@@ -12,13 +12,14 @@ public:
 	ScenePlay() {}
 	~ScenePlay();
 	//// ----- member variables ----- //
+	// ---- actors ---- //
 	dxe::Camera* camera_ = nullptr;
 	std::shared_ptr<tol::TPSCameraDirector> cam_director_ = nullptr;
 	std::shared_ptr<tol::Actor> actor_ = nullptr;
 	std::shared_ptr<tol::AssemRepo> assem_repo_ = nullptr;
-	// ---- actors ---- //
-	// --- player --- //
-	
+	// --- etc. --- //
+	std::shared_ptr<tol::Actor> back_ground_ = nullptr;
+	std::shared_ptr<tol::Actor> floor_ = nullptr;
 
 	// --- test --- //
 	std::shared_ptr<tol::Actor> cam_target_ = nullptr;

@@ -92,6 +92,13 @@ void ScenePlay::initialzie() {
 	cam_director_ = std::make_shared<tol::TPSCameraDirector>(tol::TPSCameraDirector(camera_, { 0, 15, -20 }, cam_target_));
 	// tmp : test
 	targetsInit();
+	// -- etc. -- //
+	back_ground_ = tol::Actor::Create(assem_repo_);
+	auto back_ground_assem = assem_repo_->CopyAssemble(3000, "back_ground_normal");
+	back_ground_->setAssemble(back_ground_assem);
+	floor_ = tol::Actor::Create(assem_repo_);
+	auto floor_assem = assem_repo_->CopyAssemble(3001, "floor_normal");
+	floor_->setAssemble(floor_assem);
 	
 	// --- UI --- //
 	sight_gh_ = LoadGraph("graphics/sight3.png");
@@ -180,9 +187,7 @@ void ScenePlay::update(float delta_time)
 			target->update(delta_time);
 			itr++;
 		}
-		// UI
-		DrawStringEx(50, 10, -1, "Number of target = %d", targets_.size());
-		DrawStringEx(50, 30, -1, "Time = %5.2f", mgr->clear_time_);
+		
 
 		// game end check 
 		if (targets_.size() == 0) {
@@ -229,7 +234,11 @@ void ScenePlay::update(float delta_time)
 
 void ScenePlay::render()
 {
+	GameManager* mgr = GameManager::GetInstance();
 	camera_->update();
+	//floor_->update(0);
+	//floor_->render(camera_);
+	back_ground_->render(camera_);
 	DrawGridGround(camera_, 5, 300);
 	actor_->renderTree(camera_);
 	// --- test --- //
@@ -244,6 +253,9 @@ void ScenePlay::render()
 	r_arm_tar->render(camera_);
 	DrawRotaGraph(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2, 0.06, 0, sight_gh_, true, false);
 	DrawRotaGraph(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2, 0.02, 0, center_gh_, true, false);
+	// UI
+	DrawStringEx(50, 10, 1, "Number of target = %d", targets_.size());
+	DrawStringEx(50, 30, 1, "Time = %5.2f", mgr->clear_time_);
 }
 
 void ScenePlay::targetsHitCheck(float delta_time) {
