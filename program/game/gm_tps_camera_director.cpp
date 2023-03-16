@@ -36,7 +36,7 @@ void tol::TPSCameraDirector::update(float delta_time, dxe::Camera* camera, std::
 	tnl::Quaternion yq = tnl::Quaternion::RotationAxis(rot_axis_x_upd_, angle_move_y);
 	rot_ *= xq * yq;
 	tnl::Vector3 angle = rot_.getEuler();
-	DrawStringEx(50, 200, -1, "angle = %f, %f, %f", angle.x, angle.y, angle.z);
+	//DrawStringEx(50, 200, -1, "angle = %f, %f, %f", angle.x, angle.y, angle.z);
 	// --- update defines --- //
 	forcus_dir_upd_ = forcus_dir_.TransformCoord(forcus_dir_, rot_);
 	

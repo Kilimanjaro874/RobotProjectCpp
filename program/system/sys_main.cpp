@@ -17,7 +17,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 {
 
 	// ウィンドウモードで起動
-	ChangeWindowMode( true ) ;
+	ChangeWindowMode( false ) ;
 
 	// ウィンドウサイズ設定
 	SetGraphMode(DXE_WINDOW_WIDTH, DXE_WINDOW_HEIGHT, 32 ) ;

@@ -47,7 +47,7 @@ void ScenePlay::initialzie() {
 	auto r_bullet_assem = assem_repo_->CopyAssemble(900, "machine_gun", false);
 	r_bullet->setAssemble(r_bullet_assem);
 	auto r_weapon = std::make_shared<tol::Weapon>(tol::Weapon(
-		0.05, 20.0, 800.0, 1000.0, 1.0,
+		0.20, 20.0, 800.0, 1000.0, 1.0,
 		tol::Weapon::fire_dir::up,
 		tol::Weapon::bullet_dir::up,
 		r_bullet
@@ -165,7 +165,7 @@ void ScenePlay::update(float delta_time)
 		
 		
 		// --- target test --- //
-		
+		targetsHitCheck(delta_time);
 
 		// - move test end - //
 
@@ -226,20 +226,50 @@ void ScenePlay::render()
 	DrawRotaGraph(DXE_WINDOW_WIDTH / 2, DXE_WINDOW_HEIGHT / 2, 0.05, 0, sight_gh_, true, false);
 }
 
+
 void ScenePlay::targetsInit() {
 	// --- Create : target test --- //
 	auto target = tol::Actor::Create(assem_repo_);
+	target->getKinematics()->Translate(target, tnl::Vector3{ 100, 30, 0 }, true);
 	auto target_assem = assem_repo_->CopyAssemble(1000, "BallEnemy");
 	target->setAssemble(target_assem);
+	std::shared_ptr<tol::CircleCollider> collider = std::make_shared<tol::CircleCollider>(tol::CircleCollider(500));
+	target->setCircleCollider(collider);
 	std::shared_ptr<tol::PhysicsHandler> target_phy = std::make_shared<tol::PhysicsHandler>(tol::PhysicsHandler(5.0, 5.0 * 1 * 1 / 8, 1, tnl::ToRadian(90)));
 	std::shared_ptr<tol::PIDPosController> target_pos_cont = std::make_shared<tol::PIDPosController>(tol::PIDPosController(0.2, 0.5, 0.1));
 	// pos automatic locations
 	std::vector<tnl::Vector3> auto_locations;
-	auto_locations.push_back(tnl::Vector3{ 0, 30, 0 });
+	auto_locations.push_back(tnl::Vector3{ 100, 30, 0 });
 	auto_locations.push_back(tnl::Vector3{ 100, 30, 100 });
 	auto_locations.push_back(tnl::Vector3{ 200, 30, 200 });
 	target_pos_cont->setAutomaticLocationUpdate(auto_locations, 2.0);
 	target->setPhysicsHandler(target_phy);
 	target->setPIDPosController(target_pos_cont);
 	targets_.push_back(target);
+
+
+}
+
+void ScenePlay::targetsHitCheck(float delta_time) {
+	
+	auto r_arm_weapon = actor_->getObjectTree(1300, "RAEE01");
+	std::list<std::shared_ptr<tol::Object>> r_bullets = r_arm_weapon->getWeapon()->getBullets();
+	auto l_arm_weapon = actor_->getObjectTree(1400, "LAEE01");
+	std::list<std::shared_ptr<tol::Object>> l_bullets = l_arm_weapon->getWeapon()->getBullets();
+
+	for (auto itr = targets_.begin(); itr != targets_.end();) {
+		(*itr)->update(delta_time);
+
+		for (auto itr2 = r_bullets.begin(); itr2 != r_bullets.end();) {
+			(*itr)->getCircleCollider()->hitCheck((*itr), (*itr2));
+			itr2++;
+		}
+		for (auto itr3 = r_bullets.begin(); itr3 != r_bullets.end();) {
+			(*itr)->getCircleCollider()->hitCheck((*itr), (*itr3));
+			itr3++;
+		}
+
+		itr++;
+
+	}
 }

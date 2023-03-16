@@ -29,8 +29,8 @@ void tol::PhysicsHandler::update(float delta_time,  std::shared_ptr<Object> acto
 	}
 
 	// transform
-	DrawStringEx(300, 130, -1, "acc_-> x:%5.2f, y:%5.2f, z:%5.2f", acc_.x, acc_.y, acc_.z);
-	DrawStringEx(700, 130, -1, "force_-> x:%5.2f, y:%5.2f, z:%5.2f", force.x, force.y, force.z);
+	//DrawStringEx(300, 130, -1, "acc_-> x:%5.2f, y:%5.2f, z:%5.2f", acc_.x, acc_.y, acc_.z);
+	//DrawStringEx(700, 130, -1, "force_-> x:%5.2f, y:%5.2f, z:%5.2f", force.x, force.y, force.z);
 	if (force.length() != 0) {
 		acc_ = force / mass_;
 		velocity_ += acc_ * delta_time;
@@ -41,8 +41,8 @@ void tol::PhysicsHandler::update(float delta_time,  std::shared_ptr<Object> acto
 	}
 	
 	auto aPos = actor->getCoordinate()->getPos();
-	DrawStringEx(300, 160, -1, "vel_-> x:%5.2f, y:%5.2f, z:%5.2f", velocity_.x, velocity_.y, velocity_.z);
-	DrawStringEx(300, 190, -1, "pos_-> x:%5.2f, y:%5.2f, z:%5.2f", aPos.x, aPos.y, aPos.z);
+	//DrawStringEx(300, 160, -1, "vel_-> x:%5.2f, y:%5.2f, z:%5.2f", velocity_.x, velocity_.y, velocity_.z);
+	//DrawStringEx(300, 190, -1, "pos_-> x:%5.2f, y:%5.2f, z:%5.2f", aPos.x, aPos.y, aPos.z);
 	// rotation
 	if (torque != 0) {
 		ang_acc_ = torque / inertia_y_;

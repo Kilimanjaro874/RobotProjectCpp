@@ -58,6 +58,7 @@ namespace tol {
 		bool getFire() { return is_fire_; }
 		bool getFired() { return is_fired_; }
 		bool isAlive() { return is_alive_; }
+		std::list<std::shared_ptr<Object>> getBullets() { return bullets_; }
 	private:
 		void genBullet(std::shared_ptr<Object> obj);
 	};

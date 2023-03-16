@@ -35,7 +35,7 @@ namespace tol {
 		std::string name_;
 		bool is_alive_ = true;				// survival flag
 		// --- option nums --- //
-		// for freely used from other classes.(0 : move distance, 1, add damage, )
+		// for freely used from other classes.(0 : move distance, 1, add damage, 2. hp )
 		float option_params[5] = { 0, 0, 0, 0, 0 };		
 		bool is_positional_parentage_ = true;			// kinematics effective setting.
 		// ---- owned Classes ---- //

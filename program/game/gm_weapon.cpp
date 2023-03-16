@@ -79,7 +79,8 @@ void tol::Weapon::genBullet(std::shared_ptr<Object> obj) {
 		bullet_assem,
 		bullet_kin
 	);
-
+	auto collider = std::make_shared<tol::CircleCollider>(tol::CircleCollider(5));
+	tmpbullet->setCircleCollider(collider);
 	tmpbullet->setIsPositionalParentage(false);		// ignore parend DK.
 	tmpbullet->setOptionParams(1, bullet_damage_);	// set bullet damage to Object option num.
 	bullets_.push_back(tmpbullet);					// registor to list.

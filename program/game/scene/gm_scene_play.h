@@ -39,4 +39,5 @@ public:
 
 	// temp
 	void targetsInit();
+	void targetsHitCheck(float delta_time);
 };

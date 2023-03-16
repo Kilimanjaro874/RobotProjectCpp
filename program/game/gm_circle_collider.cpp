@@ -2,6 +2,11 @@
 #include "gm_manager.h"
 
 void tol::CircleCollider::update(float delta_time) {
+	if (is_hit_) {
+		GameManager* mgr = GameManager::GetInstance();
+		mgr->sound_mgr_->playSound(mgr->sound_mgr_->se, 3, "", mgr->sound_mgr_->one_shot);
+
+	}
 	is_hit_ = false;
 }
 
@@ -11,11 +16,9 @@ void tol::CircleCollider::hitCheck(std::shared_ptr<Object> this_obj, std::shared
 	tnl::Vector3 other_pos = other_obj->getCoordinate()->getPos();
 	tnl::Vector3 this_pos = this_obj->getCoordinate()->getPos();
 	tnl::Vector3 length = other_pos - this_pos;
-	if ((radius_ + other_cir_radius) > length.length()) {
+	if ((radius_ + other_cir_radius) < length.length()) {
 		is_hit_ = true;
-		GameManager* mgr = GameManager::GetInstance();
-		mgr->sound_mgr_->playSound(mgr->sound_mgr_->se, 3, "", mgr->sound_mgr_->one_shot);
-
+		
 		return;
 	}
 }
